@@ -1,0 +1,30 @@
+enum ReservationStatus {
+  HOLD
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum RefundStatus {
+  NONE
+  PENDING
+  COMPLETED
+}
+
+enum CheckinStatus {
+  PENDING
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+enum PaymentMethod {
+  STRIPE
+  SSLCOMMERZ
+}

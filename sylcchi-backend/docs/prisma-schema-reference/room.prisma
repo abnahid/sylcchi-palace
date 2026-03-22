@@ -1,0 +1,39 @@
+model RoomType {
+  id    String @id @default(uuid()) @db.Uuid
+  name  String @unique
+  rooms Room[]
+
+  @@map("room_types")
+}
+
+model Room {
+  id           String @id @default(uuid()) @db.Uuid
+  name         String
+  description  String?
+  price        Decimal @db.Decimal(10, 2)
+  capacity     Int
+  roomTypeId   String @map("room_type_id") @db.Uuid
+  isAvailable  Boolean @default(true) @map("is_available")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  roomType     RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  images       RoomImage[]
+  reservations Reservation[]
+  checkins     Checkin[]
+  reviews      Review[]
+  wishlists    Wishlist[]
+
+  @@map("rooms")
+}
+
+model RoomImage {
+  id        String @id @default(uuid()) @db.Uuid
+  roomId    String @map("room_id") @db.Uuid
+  imageUrl  String @map("image_url")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("room_images")
+}

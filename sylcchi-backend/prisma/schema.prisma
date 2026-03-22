@@ -1,0 +1,224 @@
+// THIS FILE IS AUTO-GENERATED.
+// Edit feature files in docs/prisma-schema-reference and run: npm run prisma:build-schema
+
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/base.prisma
+// -----------------------------------------------------------------------------
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/enums.prisma
+// -----------------------------------------------------------------------------
+enum ReservationStatus {
+  HOLD
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum RefundStatus {
+  NONE
+  PENDING
+  COMPLETED
+}
+
+enum CheckinStatus {
+  PENDING
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+enum PaymentMethod {
+  STRIPE
+  SSLCOMMERZ
+}
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/auth.prisma
+// -----------------------------------------------------------------------------
+model Role {
+  id    String @id @default(uuid()) @db.Uuid
+  name  String @unique
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id            String @id @default(uuid()) @db.Uuid
+  name          String
+  email         String @unique
+  password      String
+  phone         String?
+  roleId        String @map("role_id") @db.Uuid
+  isVerified    Boolean @default(false) @map("is_verified")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  role          Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  reviews       Review[]
+  wishlists     Wishlist[]
+  reservations  Reservation[]
+
+  @@map("users")
+}
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/room.prisma
+// -----------------------------------------------------------------------------
+model RoomType {
+  id    String @id @default(uuid()) @db.Uuid
+  name  String @unique
+  rooms Room[]
+
+  @@map("room_types")
+}
+
+model Room {
+  id           String @id @default(uuid()) @db.Uuid
+  name         String
+  description  String?
+  price        Decimal @db.Decimal(10, 2)
+  capacity     Int
+  roomTypeId   String @map("room_type_id") @db.Uuid
+  isAvailable  Boolean @default(true) @map("is_available")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  roomType     RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  images       RoomImage[]
+  reservations Reservation[]
+  checkins     Checkin[]
+  reviews      Review[]
+  wishlists    Wishlist[]
+
+  @@map("rooms")
+}
+
+model RoomImage {
+  id        String @id @default(uuid()) @db.Uuid
+  roomId    String @map("room_id") @db.Uuid
+  imageUrl  String @map("image_url")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("room_images")
+}
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/review.prisma
+// -----------------------------------------------------------------------------
+model Review {
+  id        String @id @default(uuid()) @db.Uuid
+  userId    String @map("user_id") @db.Uuid
+  roomId    String @map("room_id") @db.Uuid
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+  @@map("reviews")
+}
+
+model Wishlist {
+  id        String @id @default(uuid()) @db.Uuid
+  userId    String @map("user_id") @db.Uuid
+  roomId    String @map("room_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+  @@map("wishlists")
+}
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/reservation.prisma
+// -----------------------------------------------------------------------------
+model Reservation {
+  id             String @id @default(uuid()) @db.Uuid
+  userId         String @map("user_id") @db.Uuid
+  roomId         String @map("room_id") @db.Uuid
+  checkInDate    DateTime @map("check_in_date") @db.Timestamp(6)
+  checkOutDate   DateTime @map("check_out_date") @db.Timestamp(6)
+  status         ReservationStatus @default(HOLD)
+  numberOfGuests Int @map("number_of_guests")
+  totalPrice     Decimal @map("total_price") @db.Decimal(10, 2)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room           Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  documents      ReservationDocument[]
+  payment        Payment?
+  checkin        Checkin?
+
+  @@index([userId])
+  @@index([roomId])
+  @@index([status])
+  @@map("reservations")
+}
+
+model ReservationDocument {
+  id            String @id @default(uuid()) @db.Uuid
+  reservationId String @map("reservation_id") @db.Uuid
+  documentType  String @map("document_type")
+  documentUrl   String @map("document_url")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@map("reservation_documents")
+}
+
+model Checkin {
+  id            String @id @default(uuid()) @db.Uuid
+  reservationId String @unique @map("reservation_id") @db.Uuid
+  roomId        String @map("room_id") @db.Uuid
+  checkinTime   DateTime @map("checkin_time") @db.Timestamp(6)
+  checkoutTime  DateTime? @map("checkout_time") @db.Timestamp(6)
+  status        CheckinStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  room          Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("checkins")
+}
+// -----------------------------------------------------------------------------
+// Source: docs/prisma-schema-reference/payment.prisma
+// -----------------------------------------------------------------------------
+model Payment {
+  id            String @id @default(uuid()) @db.Uuid
+  reservationId String @unique @map("reservation_id") @db.Uuid
+  amount        Decimal @db.Decimal(10, 2)
+  currency      String @default("USD")
+  paymentMethod PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  refundStatus  RefundStatus @default(NONE) @map("refund_status")
+  refundAmount  Decimal? @map("refund_amount") @db.Decimal(10, 2)
+  transactionId String? @unique @map("transaction_id")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
