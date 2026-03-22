@@ -1,9 +1,5 @@
-// THIS FILE IS AUTO-GENERATED.
-// Edit feature files in docs/prisma-schema-reference and run: npm run prisma:build-schema
+// Main Prisma schema (single source of truth)
 
-// -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/base.prisma
-// -----------------------------------------------------------------------------
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -13,9 +9,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/enums.prisma
-// -----------------------------------------------------------------------------
 enum ReservationStatus {
   HOLD
   CONFIRMED
@@ -48,7 +41,7 @@ enum PaymentMethod {
 }
 
 // -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/auth.prisma
+// Source: prisma/schema/auth.prisma
 // -----------------------------------------------------------------------------
 model Role {
   id    String @id @default(uuid()) @db.Uuid
@@ -78,7 +71,7 @@ model User {
 }
 
 // -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/room.prisma
+// Source: prisma/schema/room.prisma
 // -----------------------------------------------------------------------------
 model RoomType {
   id    String @id @default(uuid()) @db.Uuid
@@ -121,7 +114,7 @@ model RoomImage {
 }
 
 // -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/review.prisma
+// Source: prisma/schema/review.prisma
 // -----------------------------------------------------------------------------
 model Review {
   id        String   @id @default(uuid()) @db.Uuid
@@ -153,7 +146,7 @@ model Wishlist {
 }
 
 // -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/reservation.prisma
+// Source: prisma/schema/reservation.prisma
 // -----------------------------------------------------------------------------
 model Reservation {
   id             String            @id @default(uuid()) @db.Uuid
@@ -209,7 +202,7 @@ model Checkin {
 }
 
 // -----------------------------------------------------------------------------
-// Source: docs/prisma-schema-reference/payment.prisma
+// Source: prisma/schema/payment.prisma
 // -----------------------------------------------------------------------------
 model Payment {
   id            String        @id @default(uuid()) @db.Uuid

@@ -1,4 +1,0 @@
-# Do NOT use prisma/schema/ directory for active Prisma schemas
-# Use only: prisma/schema.prisma
-
-prisma/schema/
