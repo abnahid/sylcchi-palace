@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { envVars } from "../app/config/env";
+import { envVars } from "./env";
 
 function extractPublicId(filePath: string): string | null {
   if (!filePath) {

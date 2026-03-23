@@ -39,34 +39,81 @@ enum PaymentMethod {
   STRIPE
   SSLCOMMERZ
 }
-// -----------------------------------------------------------------------------
-// Source: prisma/schema/auth.prisma
-// -----------------------------------------------------------------------------
-model Role {
-  id    String @id @default(uuid()) @db.Uuid
-  name  String @unique
-  users User[]
 
-  @@map("roles")
+enum UserRole {
+  CUSTOMER
+  MANAGER
+  ADMIN
 }
 
 model User {
-  id            String @id @default(uuid()) @db.Uuid
+  id            String   @id @default(uuid()) @db.Uuid
   name          String
-  email         String @unique
-  password      String
+  email         String   @unique
   phone         String?
-  roleId        String @map("role_id") @db.Uuid
-  isVerified    Boolean @default(false) @map("is_verified")
+  role          UserRole @default(CUSTOMER)
+  emailVerified Boolean  @default(false)
+  tokenVersion  Int      @default(0) @map("token_version")
+  image         String?
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  role          Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  reviews       Review[]
-  wishlists     Wishlist[]
-  reservations  Reservation[]
+  sessions     Session[]
+  accounts     Account[]
+  reviews      Review[]
+  wishlists    Wishlist[]
+  reservations Reservation[]
 
   @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id") @db.Uuid
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verifications")
 }
 
 model RoomType {
@@ -78,17 +125,17 @@ model RoomType {
 }
 
 model Room {
-  id           String @id @default(uuid()) @db.Uuid
-  name         String
-  description  String?
-  price        Decimal @db.Decimal(10, 2)
-  capacity     Int
-  roomTypeId   String @map("room_type_id") @db.Uuid
-  isAvailable  Boolean @default(true) @map("is_available")
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  capacity    Int
+  roomTypeId  String   @map("room_type_id") @db.Uuid
+  isAvailable Boolean  @default(true) @map("is_available")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  roomType     RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  roomType     RoomType      @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
   images       RoomImage[]
   reservations Reservation[]
   checkins     Checkin[]
@@ -99,42 +146,43 @@ model Room {
 }
 
 model RoomImage {
-  id        String @id @default(uuid()) @db.Uuid
-  roomId    String @map("room_id") @db.Uuid
-  imageUrl  String @map("image_url")
+  id        String   @id @default(uuid()) @db.Uuid
+  roomId    String   @map("room_id") @db.Uuid
+  imageUrl  String   @map("image_url")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
-  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@map("room_images")
 }
 // -----------------------------------------------------------------------------
 // Source: prisma/schema/review.prisma
 // -----------------------------------------------------------------------------
+
 model Review {
-  id        String @id @default(uuid()) @db.Uuid
-  userId    String @map("user_id") @db.Uuid
-  roomId    String @map("room_id") @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  roomId    String   @map("room_id") @db.Uuid
   rating    Int
   comment   String?
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@unique([userId, roomId])
   @@map("reviews")
 }
 
 model Wishlist {
-  id        String @id @default(uuid()) @db.Uuid
-  userId    String @map("user_id") @db.Uuid
-  roomId    String @map("room_id") @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  roomId    String   @map("room_id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@unique([userId, roomId])
   @@map("wishlists")
@@ -142,23 +190,24 @@ model Wishlist {
 // -----------------------------------------------------------------------------
 // Source: prisma/schema/reservation.prisma
 // -----------------------------------------------------------------------------
-model Reservation {
-  id             String @id @default(uuid()) @db.Uuid
-  userId         String @map("user_id") @db.Uuid
-  roomId         String @map("room_id") @db.Uuid
-  checkInDate    DateTime @map("check_in_date") @db.Timestamp(6)
-  checkOutDate   DateTime @map("check_out_date") @db.Timestamp(6)
-  status         ReservationStatus @default(HOLD)
-  numberOfGuests Int @map("number_of_guests")
-  totalPrice     Decimal @map("total_price") @db.Decimal(10, 2)
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  room           Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  documents      ReservationDocument[]
-  payment        Payment?
-  checkin        Checkin?
+model Reservation {
+  id             String            @id @default(uuid()) @db.Uuid
+  userId         String            @map("user_id") @db.Uuid
+  roomId         String            @map("room_id") @db.Uuid
+  checkInDate    DateTime          @map("check_in_date") @db.Timestamp(6)
+  checkOutDate   DateTime          @map("check_out_date") @db.Timestamp(6)
+  status         ReservationStatus @default(HOLD)
+  numberOfGuests Int               @map("number_of_guests")
+  totalPrice     Decimal           @map("total_price") @db.Decimal(10, 2)
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room                  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  documents ReservationDocument[]
+  payment   Payment?
+  checkin   Checkin?
 
   @@index([userId])
   @@index([roomId])
@@ -167,50 +216,51 @@ model Reservation {
 }
 
 model ReservationDocument {
-  id            String @id @default(uuid()) @db.Uuid
-  reservationId String @map("reservation_id") @db.Uuid
-  documentType  String @map("document_type")
-  documentUrl   String @map("document_url")
+  id            String   @id @default(uuid()) @db.Uuid
+  reservationId String   @map("reservation_id") @db.Uuid
+  documentType  String   @map("document_type")
+  documentUrl   String   @map("document_url")
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
-  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   @@map("reservation_documents")
 }
 
 model Checkin {
-  id            String @id @default(uuid()) @db.Uuid
-  reservationId String @unique @map("reservation_id") @db.Uuid
-  roomId        String @map("room_id") @db.Uuid
-  checkinTime   DateTime @map("checkin_time") @db.Timestamp(6)
-  checkoutTime  DateTime? @map("checkout_time") @db.Timestamp(6)
+  id            String        @id @default(uuid()) @db.Uuid
+  reservationId String        @unique @map("reservation_id") @db.Uuid
+  roomId        String        @map("room_id") @db.Uuid
+  checkinTime   DateTime      @map("checkin_time") @db.Timestamp(6)
+  checkoutTime  DateTime?     @map("checkout_time") @db.Timestamp(6)
   status        CheckinStatus @default(PENDING)
   notes         String?
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
-  room          Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  room        Room        @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@map("checkins")
 }
 // -----------------------------------------------------------------------------
 // Source: prisma/schema/payment.prisma
 // -----------------------------------------------------------------------------
+
 model Payment {
-  id            String @id @default(uuid()) @db.Uuid
-  reservationId String @unique @map("reservation_id") @db.Uuid
-  amount        Decimal @db.Decimal(10, 2)
-  currency      String @default("USD")
+  id            String        @id @default(uuid()) @db.Uuid
+  reservationId String        @unique @map("reservation_id") @db.Uuid
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("USD")
   paymentMethod PaymentMethod
   status        PaymentStatus @default(PENDING)
-  refundStatus  RefundStatus @default(NONE) @map("refund_status")
-  refundAmount  Decimal? @map("refund_amount") @db.Decimal(10, 2)
-  transactionId String? @unique @map("transaction_id")
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  refundStatus  RefundStatus  @default(NONE) @map("refund_status")
+  refundAmount  Decimal?      @map("refund_amount") @db.Decimal(10, 2)
+  transactionId String?       @unique @map("transaction_id")
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   @@map("payments")
 }
