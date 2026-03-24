@@ -127,7 +127,10 @@ model RoomType {
 model Room {
   id          String   @id @default(uuid()) @db.Uuid
   name        String
+  slug        String?  @unique
   description String?
+  facilities  String[] @default([])
+  rules       String[] @default([])
   price       Decimal  @db.Decimal(10, 2)
   capacity    Int
   roomTypeId  String   @map("room_type_id") @db.Uuid
@@ -159,6 +162,7 @@ model RoomImage {
 // -----------------------------------------------------------------------------
 // Source: prisma/schema/review.prisma
 // -----------------------------------------------------------------------------
+
 model Review {
   id        String   @id @default(uuid()) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
@@ -191,6 +195,7 @@ model Wishlist {
 // -----------------------------------------------------------------------------
 // Source: prisma/schema/reservation.prisma
 // -----------------------------------------------------------------------------
+
 model Reservation {
   id             String            @id @default(uuid()) @db.Uuid
   userId         String            @map("user_id") @db.Uuid
@@ -247,6 +252,7 @@ model Checkin {
 // -----------------------------------------------------------------------------
 // Source: prisma/schema/payment.prisma
 // -----------------------------------------------------------------------------
+
 model Payment {
   id            String        @id @default(uuid()) @db.Uuid
   reservationId String        @unique @map("reservation_id") @db.Uuid

@@ -7866,6 +7866,7 @@ export namespace Prisma {
   export type RoomMinAggregateOutputType = {
     id: string | null
     name: string | null
+    slug: string | null
     description: string | null
     price: Decimal | null
     capacity: number | null
@@ -7878,6 +7879,7 @@ export namespace Prisma {
   export type RoomMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    slug: string | null
     description: string | null
     price: Decimal | null
     capacity: number | null
@@ -7890,7 +7892,10 @@ export namespace Prisma {
   export type RoomCountAggregateOutputType = {
     id: number
     name: number
+    slug: number
     description: number
+    facilities: number
+    rules: number
     price: number
     capacity: number
     roomTypeId: number
@@ -7914,6 +7919,7 @@ export namespace Prisma {
   export type RoomMinAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
     description?: true
     price?: true
     capacity?: true
@@ -7926,6 +7932,7 @@ export namespace Prisma {
   export type RoomMaxAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
     description?: true
     price?: true
     capacity?: true
@@ -7938,7 +7945,10 @@ export namespace Prisma {
   export type RoomCountAggregateInputType = {
     id?: true
     name?: true
+    slug?: true
     description?: true
+    facilities?: true
+    rules?: true
     price?: true
     capacity?: true
     roomTypeId?: true
@@ -8037,7 +8047,10 @@ export namespace Prisma {
   export type RoomGroupByOutputType = {
     id: string
     name: string
+    slug: string | null
     description: string | null
+    facilities: string[]
+    rules: string[]
     price: Decimal
     capacity: number
     roomTypeId: string
@@ -8068,7 +8081,10 @@ export namespace Prisma {
   export type RoomSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
     description?: boolean
+    facilities?: boolean
+    rules?: boolean
     price?: boolean
     capacity?: boolean
     roomTypeId?: boolean
@@ -8087,7 +8103,10 @@ export namespace Prisma {
   export type RoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
     description?: boolean
+    facilities?: boolean
+    rules?: boolean
     price?: boolean
     capacity?: boolean
     roomTypeId?: boolean
@@ -8100,7 +8119,10 @@ export namespace Prisma {
   export type RoomSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    slug?: boolean
     description?: boolean
+    facilities?: boolean
+    rules?: boolean
     price?: boolean
     capacity?: boolean
     roomTypeId?: boolean
@@ -8113,7 +8135,10 @@ export namespace Prisma {
   export type RoomSelectScalar = {
     id?: boolean
     name?: boolean
+    slug?: boolean
     description?: boolean
+    facilities?: boolean
+    rules?: boolean
     price?: boolean
     capacity?: boolean
     roomTypeId?: boolean
@@ -8122,7 +8147,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "capacity" | "roomTypeId" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
+  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "facilities" | "rules" | "price" | "capacity" | "roomTypeId" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
     images?: boolean | Room$imagesArgs<ExtArgs>
@@ -8152,7 +8177,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      slug: string | null
       description: string | null
+      facilities: string[]
+      rules: string[]
       price: Prisma.Decimal
       capacity: number
       roomTypeId: string
@@ -8590,7 +8618,10 @@ export namespace Prisma {
   interface RoomFieldRefs {
     readonly id: FieldRef<"Room", 'String'>
     readonly name: FieldRef<"Room", 'String'>
+    readonly slug: FieldRef<"Room", 'String'>
     readonly description: FieldRef<"Room", 'String'>
+    readonly facilities: FieldRef<"Room", 'String[]'>
+    readonly rules: FieldRef<"Room", 'String[]'>
     readonly price: FieldRef<"Room", 'Decimal'>
     readonly capacity: FieldRef<"Room", 'Int'>
     readonly roomTypeId: FieldRef<"Room", 'String'>
@@ -17076,7 +17107,10 @@ export namespace Prisma {
   export const RoomScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    slug: 'slug',
     description: 'description',
+    facilities: 'facilities',
+    rules: 'rules',
     price: 'price',
     capacity: 'capacity',
     roomTypeId: 'roomTypeId',
@@ -17736,7 +17770,10 @@ export namespace Prisma {
     NOT?: RoomWhereInput | RoomWhereInput[]
     id?: UuidFilter<"Room"> | string
     name?: StringFilter<"Room"> | string
+    slug?: StringNullableFilter<"Room"> | string | null
     description?: StringNullableFilter<"Room"> | string | null
+    facilities?: StringNullableListFilter<"Room">
+    rules?: StringNullableListFilter<"Room">
     price?: DecimalFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"Room"> | number
     roomTypeId?: UuidFilter<"Room"> | string
@@ -17754,7 +17791,10 @@ export namespace Prisma {
   export type RoomOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    facilities?: SortOrder
+    rules?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
     roomTypeId?: SortOrder
@@ -17771,11 +17811,14 @@ export namespace Prisma {
 
   export type RoomWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    slug?: string
     AND?: RoomWhereInput | RoomWhereInput[]
     OR?: RoomWhereInput[]
     NOT?: RoomWhereInput | RoomWhereInput[]
     name?: StringFilter<"Room"> | string
     description?: StringNullableFilter<"Room"> | string | null
+    facilities?: StringNullableListFilter<"Room">
+    rules?: StringNullableListFilter<"Room">
     price?: DecimalFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"Room"> | number
     roomTypeId?: UuidFilter<"Room"> | string
@@ -17788,12 +17831,15 @@ export namespace Prisma {
     checkins?: CheckinListRelationFilter
     reviews?: ReviewListRelationFilter
     wishlists?: WishlistListRelationFilter
-  }, "id">
+  }, "id" | "slug">
 
   export type RoomOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    facilities?: SortOrder
+    rules?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
     roomTypeId?: SortOrder
@@ -17813,7 +17859,10 @@ export namespace Prisma {
     NOT?: RoomScalarWhereWithAggregatesInput | RoomScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Room"> | string
     name?: StringWithAggregatesFilter<"Room"> | string
+    slug?: StringNullableWithAggregatesFilter<"Room"> | string | null
     description?: StringNullableWithAggregatesFilter<"Room"> | string | null
+    facilities?: StringNullableListFilter<"Room">
+    rules?: StringNullableListFilter<"Room">
     price?: DecimalWithAggregatesFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntWithAggregatesFilter<"Room"> | number
     roomTypeId?: UuidWithAggregatesFilter<"Room"> | string
@@ -18714,7 +18763,10 @@ export namespace Prisma {
   export type RoomCreateInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -18731,7 +18783,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -18748,7 +18803,10 @@ export namespace Prisma {
   export type RoomUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -18765,7 +18823,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -18782,7 +18843,10 @@ export namespace Prisma {
   export type RoomCreateManyInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -18794,7 +18858,10 @@ export namespace Prisma {
   export type RoomUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -18805,7 +18872,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -19757,6 +19827,14 @@ export namespace Prisma {
     name?: SortOrder
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -19796,7 +19874,10 @@ export namespace Prisma {
   export type RoomCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
+    facilities?: SortOrder
+    rules?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
     roomTypeId?: SortOrder
@@ -19813,6 +19894,7 @@ export namespace Prisma {
   export type RoomMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
@@ -19825,6 +19907,7 @@ export namespace Prisma {
   export type RoomMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    slug?: SortOrder
     description?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
@@ -20560,6 +20643,14 @@ export namespace Prisma {
     deleteMany?: RoomScalarWhereInput | RoomScalarWhereInput[]
   }
 
+  export type RoomCreatefacilitiesInput = {
+    set: string[]
+  }
+
+  export type RoomCreaterulesInput = {
+    set: string[]
+  }
+
   export type RoomTypeCreateNestedOneWithoutRoomsInput = {
     create?: XOR<RoomTypeCreateWithoutRoomsInput, RoomTypeUncheckedCreateWithoutRoomsInput>
     connectOrCreate?: RoomTypeCreateOrConnectWithoutRoomsInput
@@ -20634,6 +20725,16 @@ export namespace Prisma {
     connectOrCreate?: WishlistCreateOrConnectWithoutRoomInput | WishlistCreateOrConnectWithoutRoomInput[]
     createMany?: WishlistCreateManyRoomInputEnvelope
     connect?: WishlistWhereUniqueInput | WishlistWhereUniqueInput[]
+  }
+
+  export type RoomUpdatefacilitiesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type RoomUpdaterulesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -21918,7 +22019,10 @@ export namespace Prisma {
   export type RoomCreateWithoutRoomTypeInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -21934,7 +22038,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutRoomTypeInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -21979,7 +22086,10 @@ export namespace Prisma {
     NOT?: RoomScalarWhereInput | RoomScalarWhereInput[]
     id?: UuidFilter<"Room"> | string
     name?: StringFilter<"Room"> | string
+    slug?: StringNullableFilter<"Room"> | string | null
     description?: StringNullableFilter<"Room"> | string | null
+    facilities?: StringNullableListFilter<"Room">
+    rules?: StringNullableListFilter<"Room">
     price?: DecimalFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"Room"> | number
     roomTypeId?: UuidFilter<"Room"> | string
@@ -22276,7 +22386,10 @@ export namespace Prisma {
   export type RoomCreateWithoutImagesInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -22292,7 +22405,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutImagesInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -22324,7 +22440,10 @@ export namespace Prisma {
   export type RoomUpdateWithoutImagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -22340,7 +22459,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutImagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -22395,7 +22517,10 @@ export namespace Prisma {
   export type RoomCreateWithoutReviewsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -22411,7 +22536,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutReviewsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -22488,7 +22616,10 @@ export namespace Prisma {
   export type RoomUpdateWithoutReviewsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -22504,7 +22635,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutReviewsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -22559,7 +22693,10 @@ export namespace Prisma {
   export type RoomCreateWithoutWishlistsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -22575,7 +22712,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutWishlistsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -22652,7 +22792,10 @@ export namespace Prisma {
   export type RoomUpdateWithoutWishlistsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -22668,7 +22811,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutWishlistsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -22723,7 +22869,10 @@ export namespace Prisma {
   export type RoomCreateWithoutReservationsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -22739,7 +22888,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutReservationsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -22898,7 +23050,10 @@ export namespace Prisma {
   export type RoomUpdateWithoutReservationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -22914,7 +23069,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutReservationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -23138,7 +23296,10 @@ export namespace Prisma {
   export type RoomCreateWithoutCheckinsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -23154,7 +23315,10 @@ export namespace Prisma {
   export type RoomUncheckedCreateWithoutCheckinsInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     roomTypeId: string
@@ -23227,7 +23391,10 @@ export namespace Prisma {
   export type RoomUpdateWithoutCheckinsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -23243,7 +23410,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutCheckinsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     roomTypeId?: StringFieldUpdateOperationsInput | string
@@ -23549,7 +23719,10 @@ export namespace Prisma {
   export type RoomCreateManyRoomTypeInput = {
     id?: string
     name: string
+    slug?: string | null
     description?: string | null
+    facilities?: RoomCreatefacilitiesInput | string[]
+    rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
     isAvailable?: boolean
@@ -23560,7 +23733,10 @@ export namespace Prisma {
   export type RoomUpdateWithoutRoomTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -23576,7 +23752,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateWithoutRoomTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
@@ -23592,7 +23771,10 @@ export namespace Prisma {
   export type RoomUncheckedUpdateManyWithoutRoomTypeInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    facilities?: RoomUpdatefacilitiesInput | string[]
+    rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
     isAvailable?: BoolFieldUpdateOperationsInput | boolean

@@ -1,7 +1,10 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import status from "http-status";
+import jwt from "jsonwebtoken";
+import { envVars } from "../config/env";
 import { AppError } from "../errorHelpers/AppError";
 import { auth } from "../lib/auth";
+import { prisma } from "../lib/prisma";
 
 declare global {
   namespace Express {
@@ -41,6 +44,22 @@ function toWebHeaders(req: Request): Headers {
   return headers;
 }
 
+function getBearerToken(req: Request): string | undefined {
+  const authHeader = req.headers.authorization;
+
+  if (typeof authHeader !== "string") {
+    return undefined;
+  }
+
+  const prefix = "Bearer ";
+  if (!authHeader.startsWith(prefix)) {
+    return undefined;
+  }
+
+  const token = authHeader.slice(prefix.length).trim();
+  return token || undefined;
+}
+
 export const requireAuth = async (
   req: Request,
   _res: Response,
@@ -50,12 +69,69 @@ export const requireAuth = async (
     headers: toWebHeaders(req),
   });
 
-  if (!session) {
+  if (session) {
+    req.user = session.user as Express.Request["user"];
+    req.session = session.session as Express.Request["session"];
+
+    next();
+    return;
+  }
+
+  // Fallback for API clients (e.g. Postman) that send JWT bearer tokens.
+  const accessToken = getBearerToken(req);
+
+  if (!accessToken) {
     throw new AppError("Authentication required", status.UNAUTHORIZED);
   }
 
-  req.user = session.user as Express.Request["user"];
-  req.session = session.session as Express.Request["session"];
+  let subject: string | undefined;
+
+  try {
+    const decoded = jwt.verify(accessToken, envVars.JWT_SECRET);
+
+    if (!decoded || typeof decoded === "string") {
+      throw new AppError("Invalid access token", status.UNAUTHORIZED);
+    }
+
+    if (decoded.type !== "access") {
+      throw new AppError("Invalid token type", status.UNAUTHORIZED);
+    }
+
+    if (typeof decoded.sub !== "string") {
+      throw new AppError("Invalid token subject", status.UNAUTHORIZED);
+    }
+
+    subject = decoded.sub;
+  } catch {
+    throw new AppError("Invalid or expired access token", status.UNAUTHORIZED);
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: subject },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      emailVerified: true,
+      image: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError("User not found", status.UNAUTHORIZED);
+  }
+
+  req.user = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: String(user.role),
+    emailVerified: user.emailVerified,
+    image: user.image,
+  };
+
+  req.session = undefined;
 
   next();
 };

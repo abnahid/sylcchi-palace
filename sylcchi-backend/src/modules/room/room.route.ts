@@ -4,5 +4,16 @@ import { RoomController } from "./room.controller";
 
 export const roomRouter = Router();
 
-// POST only: Admin can create rooms.
+roomRouter.get("/types", routeAccess.public, RoomController.listRoomTypes);
+roomRouter.post("/types", ...routeAccess.admin, RoomController.createRoomType);
+
+roomRouter.get("/", routeAccess.public, RoomController.listRooms);
+roomRouter.get("/:slug", routeAccess.public, RoomController.getSingleRoom);
+
 roomRouter.post("/", ...routeAccess.admin, RoomController.createRoom);
+roomRouter.patch(
+  "/:id",
+  ...routeAccess.adminOrManager,
+  RoomController.updateRoom,
+);
+roomRouter.delete("/:id", ...routeAccess.admin, RoomController.deleteRoom);

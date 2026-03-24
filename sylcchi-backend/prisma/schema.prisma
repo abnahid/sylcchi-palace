@@ -127,7 +127,10 @@ model RoomType {
 model Room {
   id          String   @id @default(uuid()) @db.Uuid
   name        String
+  slug        String?  @unique
   description String?
+  facilities  String[] @default([])
+  rules       String[] @default([])
   price       Decimal  @db.Decimal(10, 2)
   capacity    Int
   roomTypeId  String   @map("room_type_id") @db.Uuid
