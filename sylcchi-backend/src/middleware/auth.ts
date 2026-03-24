@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import status from "http-status";
 import { AppError } from "../errorHelpers/AppError";
 import { auth } from "../lib/auth";
@@ -75,4 +75,25 @@ export const requireRole = (...roles: string[]) => {
 
     next();
   };
+};
+
+export const USER_ROLES = {
+  ADMIN: "ADMIN",
+  MANAGER: "MANAGER",
+  CUSTOMER: "CUSTOMER",
+} as const;
+
+export const routeAccess: {
+  public: RequestHandler;
+  admin: RequestHandler[];
+  manager: RequestHandler[];
+  adminOrManager: RequestHandler[];
+} = {
+  public: (_req, _res, next) => next(),
+  admin: [requireAuth, requireRole(USER_ROLES.ADMIN)],
+  manager: [requireAuth, requireRole(USER_ROLES.MANAGER)],
+  adminOrManager: [
+    requireAuth,
+    requireRole(USER_ROLES.ADMIN, USER_ROLES.MANAGER),
+  ],
 };
