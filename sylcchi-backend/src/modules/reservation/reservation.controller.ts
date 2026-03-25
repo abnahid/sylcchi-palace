@@ -75,6 +75,23 @@ function getOptionalString(
   return trimmed === "" ? undefined : trimmed;
 }
 
+function getOptionalPositiveNumber(
+  obj: Record<string, unknown>,
+  key: string,
+): number | undefined {
+  const value = obj[key];
+
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+
+  if (typeof value !== "number" || Number.isNaN(value) || value <= 0) {
+    throw new AppError(`${key} must be a positive number`, status.BAD_REQUEST);
+  }
+
+  return value;
+}
+
 function getRequiredPositiveInt(
   obj: Record<string, unknown>,
   key: string,
@@ -341,6 +358,22 @@ export const ReservationController = {
     res.status(status.OK).json({
       success: true,
       message: "Booking cancelled successfully",
+      data: result,
+    });
+  },
+
+  markRefundCompleted: async (req: Request, res: Response) => {
+    const body = asBodyObject(req.body);
+    const bookingId = getRequiredString(body, "bookingId");
+
+    const result = await ReservationService.markRefundCompleted(
+      bookingId,
+      getOptionalPositiveNumber(body, "refundAmount"),
+    );
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Refund marked as completed",
       data: result,
     });
   },

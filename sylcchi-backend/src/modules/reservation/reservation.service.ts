@@ -5,6 +5,7 @@ import {
   PaymentMethod,
   PaymentStatus,
   Prisma,
+  RefundStatus,
 } from "../../../generated/prisma";
 import { envVars } from "../../config/env";
 import { AppError } from "../../errorHelpers/AppError";
@@ -769,15 +770,103 @@ export const ReservationService = {
       throw new AppError("Booking is already cancelled", status.BAD_REQUEST);
     }
 
-    return prisma.reservation.update({
-      where: { id: bookingId },
-      data: {
-        bookingStatus: BookingStatus.CANCELLED,
-      },
-      include: {
-        room: true,
-        payment: true,
-      },
+    return prisma.$transaction(async (tx) => {
+      await tx.reservation.update({
+        where: { id: bookingId },
+        data: {
+          bookingStatus: BookingStatus.CANCELLED,
+        },
+      });
+
+      // Temporary policy: paid booking cancellations require manual refund handling.
+      if (booking.paymentStatus === BookingPaymentStatus.PAID) {
+        await tx.payment.updateMany({
+          where: {
+            reservationId: bookingId,
+            refundStatus: RefundStatus.NONE,
+          },
+          data: {
+            refundStatus: RefundStatus.PENDING,
+          },
+        });
+      }
+
+      return tx.reservation.findUnique({
+        where: { id: bookingId },
+        include: {
+          room: true,
+          payment: true,
+        },
+      });
+    });
+  },
+
+  markRefundCompleted: async (bookingId: string, refundAmount?: number) => {
+    return prisma.$transaction(async (tx) => {
+      const booking = await tx.reservation.findUnique({
+        where: { id: bookingId },
+        include: {
+          payment: true,
+        },
+      });
+
+      if (!booking) {
+        throw new AppError("Booking not found", status.NOT_FOUND);
+      }
+
+      if (!booking.payment) {
+        throw new AppError("Payment record not found", status.NOT_FOUND);
+      }
+
+      if (booking.bookingStatus !== BookingStatus.CANCELLED) {
+        throw new AppError(
+          "Booking must be cancelled before completing refund",
+          status.BAD_REQUEST,
+        );
+      }
+
+      if (
+        booking.paymentStatus !== BookingPaymentStatus.PAID ||
+        booking.payment.status !== PaymentStatus.SUCCESS
+      ) {
+        throw new AppError(
+          "Only paid successful bookings can be refunded",
+          status.BAD_REQUEST,
+        );
+      }
+
+      if (booking.payment.refundStatus === RefundStatus.COMPLETED) {
+        return tx.reservation.findUnique({
+          where: { id: bookingId },
+          include: {
+            room: true,
+            payment: true,
+          },
+        });
+      }
+
+      if (booking.payment.refundStatus !== RefundStatus.PENDING) {
+        throw new AppError(
+          "Refund is not pending manual handling",
+          status.BAD_REQUEST,
+        );
+      }
+
+      await tx.payment.update({
+        where: { id: booking.payment.id },
+        data: {
+          refundStatus: RefundStatus.COMPLETED,
+          refundAmount: refundAmount ?? booking.payment.amount,
+        },
+      });
+
+      return tx.reservation.findUnique({
+        where: { id: bookingId },
+        include: {
+          room: true,
+          payment: true,
+        },
+      });
     });
   },
 
