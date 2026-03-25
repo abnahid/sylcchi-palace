@@ -18,6 +18,12 @@ type UpdateUserPayload = {
   image?: string;
 };
 
+type UpdateMyProfilePayload = {
+  name?: string;
+  phone?: string;
+  image?: string;
+};
+
 export const UserService = {
   listUsers: async (filters: ListUsersFilters) => {
     const skip = (filters.page - 1) * filters.limit;
@@ -111,6 +117,33 @@ export const UserService = {
   },
 
   updateUser: async (userId: string, payload: UpdateUserPayload) => {
+    const existing = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      throw new AppError("User not found", status.NOT_FOUND);
+    }
+
+    return prisma.user.update({
+      where: { id: userId },
+      data: payload,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        emailVerified: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  },
+
+  updateMyProfile: async (userId: string, payload: UpdateMyProfilePayload) => {
     const existing = await prisma.user.findUnique({
       where: { id: userId },
       select: { id: true },

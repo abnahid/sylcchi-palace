@@ -115,6 +115,60 @@ function parseQueryBoolean(value: unknown): boolean | undefined {
 }
 
 export const UserController = {
+  getMyProfile: async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      throw new AppError("Authentication required", status.UNAUTHORIZED);
+    }
+
+    const result = await UserService.getUserById(req.user.id);
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Profile retrieved successfully",
+      data: result,
+    });
+  },
+
+  updateMyProfile: async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      throw new AppError("Authentication required", status.UNAUTHORIZED);
+    }
+
+    const body = asBodyObject(req.body);
+
+    if (body.role !== undefined) {
+      throw new AppError(
+        "You are not allowed to update role",
+        status.FORBIDDEN,
+      );
+    }
+
+    const payload = {
+      name: getOptionalString(body, "name"),
+      phone: getOptionalString(body, "phone"),
+      image: getOptionalString(body, "image"),
+    };
+
+    const hasAnyField = Object.values(payload).some(
+      (value) => value !== undefined,
+    );
+
+    if (!hasAnyField) {
+      throw new AppError(
+        "At least one field is required to update profile",
+        status.BAD_REQUEST,
+      );
+    }
+
+    const result = await UserService.updateMyProfile(req.user.id, payload);
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: result,
+    });
+  },
+
   listUsers: async (req: Request, res: Response) => {
     const roleRaw =
       typeof req.query.role === "string" ? req.query.role.trim() : undefined;
