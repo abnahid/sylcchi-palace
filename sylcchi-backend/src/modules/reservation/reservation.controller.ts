@@ -30,6 +30,23 @@ function getRequestPayload(req: Request): Record<string, unknown> {
   );
 }
 
+function getRedirectFlag(req: Request, body: Record<string, unknown>): boolean {
+  const queryValue =
+    typeof req.query.redirect === "string"
+      ? req.query.redirect.toLowerCase()
+      : undefined;
+
+  const bodyValue =
+    typeof body.redirect === "string"
+      ? body.redirect.toLowerCase()
+      : typeof body.redirect === "boolean"
+        ? String(body.redirect)
+        : undefined;
+
+  const normalized = bodyValue ?? queryValue;
+  return normalized === "true" || normalized === "1";
+}
+
 function getRequiredString(obj: Record<string, unknown>, key: string): string {
   const value = obj[key];
 
@@ -224,6 +241,7 @@ export const ReservationController = {
   payBooking: async (req: Request, res: Response) => {
     const body = getRequestPayload(req);
     const bookingId = getRequiredString(body, "bookingId");
+    const shouldRedirect = getRedirectFlag(req, body);
 
     const actionRaw = getOptionalString(body, "action")?.toLowerCase();
     let action: "initiate" | "confirm" | "callback" | undefined;
@@ -267,12 +285,22 @@ export const ReservationController = {
         bookingId,
         paymentMethod: getOptionalPayMethod(body),
         action,
-        paymentIntentId: getOptionalString(body, "paymentIntentId"),
         gatewayStatus,
         transactionId: getOptionalString(body, "transactionId"),
       },
       getAccessContext(req, body),
     );
+
+    const paymentData = result.payment as Record<string, unknown> | undefined;
+    const checkoutUrl =
+      paymentData && typeof paymentData.checkoutUrl === "string"
+        ? paymentData.checkoutUrl
+        : undefined;
+
+    if (shouldRedirect && checkoutUrl) {
+      res.redirect(status.SEE_OTHER, checkoutUrl);
+      return;
+    }
 
     res.status(status.OK).json({
       success: true,

@@ -11,6 +11,7 @@ type StripeEvent = {
   data: {
     object: {
       id?: string;
+      payment_intent?: string;
       status?: string;
       metadata?: {
         bookingId?: string;
@@ -96,19 +97,26 @@ export const WebhookService = {
       const paymentIntentId = event.data.object.id;
       const bookingId = event.data.object.metadata?.bookingId;
 
-      if (!paymentIntentId || !bookingId) {
+      if (!paymentIntentId) {
         return;
       }
 
       await prisma.$transaction(async (tx) => {
-        const payment = await tx.payment.findFirst({
+        const paymentByIntent = await tx.payment.findFirst({
           where: {
             transactionId: paymentIntentId,
           },
-          include: {
-            reservation: true,
-          },
         });
+
+        const paymentByBooking = bookingId
+          ? await tx.payment.findFirst({
+              where: {
+                reservationId: bookingId,
+              },
+            })
+          : null;
+
+        const payment = paymentByIntent ?? paymentByBooking;
 
         if (!payment) {
           return;
@@ -141,15 +149,23 @@ export const WebhookService = {
 
     if (event.type === "payment_intent.payment_failed") {
       const paymentIntentId = event.data.object.id;
+      const bookingId = event.data.object.metadata?.bookingId;
 
-      if (!paymentIntentId) {
+      if (!paymentIntentId && !bookingId) {
         return;
       }
 
       await prisma.payment.updateMany({
-        where: {
-          transactionId: paymentIntentId,
-        },
+        where: paymentIntentId
+          ? {
+              OR: [
+                { transactionId: paymentIntentId },
+                ...(bookingId ? [{ reservationId: bookingId }] : []),
+              ],
+            }
+          : {
+              reservationId: bookingId,
+            },
         data: {
           status: PaymentStatus.FAILED,
         },

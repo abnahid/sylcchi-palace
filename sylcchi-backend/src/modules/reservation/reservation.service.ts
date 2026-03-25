@@ -30,7 +30,6 @@ type PayBookingPayload = {
   bookingId: string;
   paymentMethod?: "stripe" | "sslcommerz";
   action?: "initiate" | "confirm" | "callback";
-  paymentIntentId?: string;
   gatewayStatus?: "success" | "failed" | "cancel";
   transactionId?: string;
 };
@@ -183,24 +182,43 @@ function ensureBookingAccess(
   }
 }
 
-async function createStripePaymentIntent(
+async function createStripeCheckoutSession(
   totalPrice: number,
   bookingId: string,
 ): Promise<{
-  paymentIntentId: string;
-  clientSecret: string;
+  checkoutSessionId: string;
+  checkoutUrl: string;
 }> {
   if (!envVars.STRIPE_SECRET_KEY) {
     throw new AppError("Stripe is not configured", status.BAD_REQUEST);
   }
 
+  const successBaseUrl =
+    envVars.STRIPE_CHECKOUT_SUCCESS_URL ??
+    `${envVars.FRONTEND_URL}/payment/success`;
+  const cancelBaseUrl =
+    envVars.STRIPE_CHECKOUT_CANCEL_URL ?? `${envVars.FRONTEND_URL}/payment`;
+
+  const successUrl = `${successBaseUrl}?bookingId=${bookingId}&session_id={CHECKOUT_SESSION_ID}`;
+  const cancelUrl = `${cancelBaseUrl}?bookingId=${bookingId}`;
+
   const body = new URLSearchParams({
-    amount: String(toStripeAmount(totalPrice)),
-    currency: envVars.STRIPE_CURRENCY,
+    mode: "payment",
+    "payment_method_types[0]": "card",
+    "line_items[0][price_data][currency]": envVars.STRIPE_CURRENCY,
+    "line_items[0][price_data][product_data][name]": "Room booking",
+    "line_items[0][price_data][unit_amount]": String(
+      toStripeAmount(totalPrice),
+    ),
+    "line_items[0][quantity]": "1",
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+    client_reference_id: bookingId,
     "metadata[bookingId]": bookingId,
+    "payment_intent_data[metadata][bookingId]": bookingId,
   });
 
-  const response = await fetch("https://api.stripe.com/v1/payment_intents", {
+  const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${envVars.STRIPE_SECRET_KEY}`,
@@ -212,67 +230,23 @@ async function createStripePaymentIntent(
   if (!response.ok) {
     const errorBody = await response.text();
     throw new AppError(
-      `Failed to create Stripe payment intent: ${errorBody}`,
+      `Failed to create Stripe checkout session: ${errorBody}`,
       status.BAD_GATEWAY,
     );
   }
 
   const result = (await response.json()) as {
     id?: string;
-    client_secret?: string;
+    url?: string;
   };
 
-  if (!result.id || !result.client_secret) {
+  if (!result.id || !result.url) {
     throw new AppError("Invalid Stripe response", status.BAD_GATEWAY);
   }
 
   return {
-    paymentIntentId: result.id,
-    clientSecret: result.client_secret,
-  };
-}
-
-async function verifyStripePaymentIntent(paymentIntentId: string): Promise<{
-  succeeded: boolean;
-  transactionId: string;
-}> {
-  if (!envVars.STRIPE_SECRET_KEY) {
-    throw new AppError("Stripe is not configured", status.BAD_REQUEST);
-  }
-
-  const response = await fetch(
-    `https://api.stripe.com/v1/payment_intents/${paymentIntentId}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${envVars.STRIPE_SECRET_KEY}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new AppError(
-      `Failed to verify Stripe payment intent: ${errorBody}`,
-      status.BAD_GATEWAY,
-    );
-  }
-
-  const result = (await response.json()) as {
-    id?: string;
-    status?: string;
-  };
-
-  if (!result.id || !result.status) {
-    throw new AppError(
-      "Invalid Stripe verification response",
-      status.BAD_GATEWAY,
-    );
-  }
-
-  return {
-    transactionId: result.id,
-    succeeded: result.status === "succeeded",
+    checkoutSessionId: result.id,
+    checkoutUrl: result.url,
   };
 }
 
@@ -571,7 +545,7 @@ export const ReservationService = {
           const action = payload.action ?? "initiate";
 
           if (action === "initiate") {
-            const intent = await createStripePaymentIntent(
+            const checkout = await createStripeCheckoutSession(
               Number(booking.totalPrice),
               booking.id,
             );
@@ -584,7 +558,7 @@ export const ReservationService = {
                     currency: envVars.STRIPE_CURRENCY.toUpperCase(),
                     paymentMethod: PaymentMethod.STRIPE,
                     status: PaymentStatus.PENDING,
-                    transactionId: intent.paymentIntentId,
+                    transactionId: checkout.checkoutSessionId,
                   },
                 })
               : await tx.payment.create({
@@ -594,7 +568,7 @@ export const ReservationService = {
                     currency: envVars.STRIPE_CURRENCY.toUpperCase(),
                     paymentMethod: PaymentMethod.STRIPE,
                     status: PaymentStatus.PENDING,
-                    transactionId: intent.paymentIntentId,
+                    transactionId: checkout.checkoutSessionId,
                   },
                 });
 
@@ -606,84 +580,17 @@ export const ReservationService = {
               payment: {
                 status: "requires_payment",
                 gateway: "stripe",
-                clientSecret: intent.clientSecret,
-                paymentIntentId: intent.paymentIntentId,
+                checkoutUrl: checkout.checkoutUrl,
+                checkoutSessionId: checkout.checkoutSessionId,
                 paymentRecord,
               },
             };
           }
 
-          if (
-            !payload.paymentIntentId ||
-            payload.paymentIntentId.trim() === ""
-          ) {
-            throw new AppError(
-              "paymentIntentId is required for Stripe confirmation",
-              status.BAD_REQUEST,
-            );
-          }
-
-          const verification = await verifyStripePaymentIntent(
-            payload.paymentIntentId.trim(),
+          throw new AppError(
+            "Stripe checkout confirmation is handled by webhook; use action=initiate to get checkoutUrl",
+            status.BAD_REQUEST,
           );
-
-          if (!verification.succeeded) {
-            const existingPayment = await tx.payment.findFirst({
-              where: { reservationId: booking.id },
-            });
-
-            if (existingPayment) {
-              await tx.payment.update({
-                where: { id: existingPayment.id },
-                data: {
-                  status: PaymentStatus.FAILED,
-                  paymentMethod: PaymentMethod.STRIPE,
-                },
-              });
-            }
-
-            throw new AppError(
-              "Stripe payment is not successful yet",
-              status.BAD_REQUEST,
-            );
-          }
-
-          const updatedBooking = await tx.reservation.update({
-            where: { id: booking.id },
-            data: {
-              paymentStatus: BookingPaymentStatus.PAID,
-              bookingStatus: BookingStatus.CONFIRMED,
-              expiresAt: null,
-            },
-            include: {
-              room: true,
-              payment: true,
-            },
-          });
-
-          const existingPayment = await tx.payment.findFirst({
-            where: { reservationId: booking.id },
-          });
-
-          if (existingPayment) {
-            await tx.payment.update({
-              where: { id: existingPayment.id },
-              data: {
-                status: PaymentStatus.SUCCESS,
-                paymentMethod: PaymentMethod.STRIPE,
-                transactionId: verification.transactionId,
-              },
-            });
-          }
-
-          return {
-            booking: updatedBooking,
-            payment: {
-              status: "paid",
-              gateway: "stripe",
-              transactionId: verification.transactionId,
-            },
-          };
         }
 
         const action = payload.action ?? "initiate";
