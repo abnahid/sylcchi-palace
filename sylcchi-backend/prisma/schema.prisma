@@ -9,12 +9,15 @@ datasource db {
   provider = "postgresql"
 }
 
-enum ReservationStatus {
-  HOLD
+enum BookingStatus {
+  PENDING
   CONFIRMED
   CANCELLED
-  EXPIRED
-  COMPLETED
+}
+
+enum BookingPaymentStatus {
+  PAID
+  UNPAID
 }
 
 enum PaymentStatus {
@@ -38,6 +41,7 @@ enum CheckinStatus {
 enum PaymentMethod {
   STRIPE
   SSLCOMMERZ
+  PAY_LATER
 }
 
 enum UserRole {
@@ -195,18 +199,26 @@ model Wishlist {
 // -----------------------------------------------------------------------------
 
 model Reservation {
-  id             String            @id @default(uuid()) @db.Uuid
-  userId         String            @map("user_id") @db.Uuid
-  roomId         String            @map("room_id") @db.Uuid
-  checkInDate    DateTime          @map("check_in_date") @db.Timestamp(6)
-  checkOutDate   DateTime          @map("check_out_date") @db.Timestamp(6)
-  status         ReservationStatus @default(HOLD)
-  numberOfGuests Int               @map("number_of_guests")
-  totalPrice     Decimal           @map("total_price") @db.Decimal(10, 2)
-  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt      DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
+  id            String               @id @default(uuid()) @db.Uuid
+  userId        String?              @map("user_id") @db.Uuid
+  roomId        String               @map("room_id") @db.Uuid
+  checkInDate   DateTime             @map("check_in_date") @db.Timestamp(6)
+  checkOutDate  DateTime             @map("check_out_date") @db.Timestamp(6)
+  guests        Int                  @map("number_of_guests")
+  guestDetails  Json                 @map("guest_details")
+  basePrice     Decimal              @map("base_price") @db.Decimal(10, 2)
+  nights        Int
+  subtotal      Decimal              @db.Decimal(10, 2)
+  vat           Decimal              @db.Decimal(10, 2)
+  totalPrice    Decimal              @map("total_price") @db.Decimal(10, 2)
+  paymentMethod PaymentMethod
+  paymentStatus BookingPaymentStatus @default(UNPAID) @map("payment_status")
+  bookingStatus BookingStatus        @default(PENDING) @map("booking_status")
+  expiresAt     DateTime?            @map("expires_at") @db.Timestamp(6)
+  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime             @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
   room      Room                  @relation(fields: [roomId], references: [id], onDelete: Cascade)
   documents ReservationDocument[]
   payment   Payment?
@@ -214,7 +226,9 @@ model Reservation {
 
   @@index([userId])
   @@index([roomId])
-  @@index([status])
+  @@index([bookingStatus])
+  @@index([paymentStatus])
+  @@index([expiresAt])
   @@map("reservations")
 }
 

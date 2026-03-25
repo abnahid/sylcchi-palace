@@ -29,6 +29,14 @@ type EnvVars = {
   CLOUDINARY_CLOUD_NAME?: string;
   CLOUDINARY_API_KEY?: string;
   CLOUDINARY_API_SECRET?: string;
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_PUBLIC_KEY?: string;
+  STRIPE_CURRENCY: string;
+  STRIPE_WEBHOOK_SECRET?: string;
+  SSLCOMMERZ_STORE_ID?: string;
+  SSLCOMMERZ_STORE_PASSWORD?: string;
+  SSLCOMMERZ_API_URL: string;
+  BOOKING_MAX_STAY_NIGHTS: number;
 };
 
 function getRequired(key: RequiredEnvKey): string {
@@ -54,6 +62,16 @@ function parsePort(value: string): number {
 
   if (!Number.isInteger(parsed) || parsed <= 0) {
     return 5000;
+  }
+
+  return parsed;
+}
+
+function parsePositiveInt(value: string, fallback: number): number {
+  const parsed = Number(value);
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    return fallback;
   }
 
   return parsed;
@@ -90,4 +108,16 @@ export const envVars: EnvVars = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+  STRIPE_CURRENCY: process.env.STRIPE_CURRENCY ?? "usd",
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+  SSLCOMMERZ_STORE_ID: process.env.SSLCOMMERZ_STORE_ID,
+  SSLCOMMERZ_STORE_PASSWORD: process.env.SSLCOMMERZ_STORE_PASSWORD,
+  SSLCOMMERZ_API_URL:
+    process.env.SSLCOMMERZ_API_URL ?? "https://sandbox.sslcommerz.com",
+  BOOKING_MAX_STAY_NIGHTS: parsePositiveInt(
+    process.env.BOOKING_MAX_STAY_NIGHTS ?? "11",
+    11,
+  ),
 };

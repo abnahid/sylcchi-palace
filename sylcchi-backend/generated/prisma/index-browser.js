@@ -219,9 +219,17 @@ exports.Prisma.ReservationScalarFieldEnum = {
   roomId: 'roomId',
   checkInDate: 'checkInDate',
   checkOutDate: 'checkOutDate',
-  status: 'status',
-  numberOfGuests: 'numberOfGuests',
+  guests: 'guests',
+  guestDetails: 'guestDetails',
+  basePrice: 'basePrice',
+  nights: 'nights',
+  subtotal: 'subtotal',
+  vat: 'vat',
   totalPrice: 'totalPrice',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  bookingStatus: 'bookingStatus',
+  expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -265,6 +273,10 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -274,29 +286,39 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.UserRole = exports.$Enums.UserRole = {
   CUSTOMER: 'CUSTOMER',
   MANAGER: 'MANAGER',
   ADMIN: 'ADMIN'
 };
 
-exports.ReservationStatus = exports.$Enums.ReservationStatus = {
-  HOLD: 'HOLD',
+exports.PaymentMethod = exports.$Enums.PaymentMethod = {
+  STRIPE: 'STRIPE',
+  SSLCOMMERZ: 'SSLCOMMERZ',
+  PAY_LATER: 'PAY_LATER'
+};
+
+exports.BookingPaymentStatus = exports.$Enums.BookingPaymentStatus = {
+  PAID: 'PAID',
+  UNPAID: 'UNPAID'
+};
+
+exports.BookingStatus = exports.$Enums.BookingStatus = {
+  PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
-  CANCELLED: 'CANCELLED',
-  EXPIRED: 'EXPIRED',
-  COMPLETED: 'COMPLETED'
+  CANCELLED: 'CANCELLED'
 };
 
 exports.CheckinStatus = exports.$Enums.CheckinStatus = {
   PENDING: 'PENDING',
   CHECKED_IN: 'CHECKED_IN',
   CHECKED_OUT: 'CHECKED_OUT'
-};
-
-exports.PaymentMethod = exports.$Enums.PaymentMethod = {
-  STRIPE: 'STRIPE',
-  SSLCOMMERZ: 'SSLCOMMERZ'
 };
 
 exports.PaymentStatus = exports.$Enums.PaymentStatus = {

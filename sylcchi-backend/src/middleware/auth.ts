@@ -61,6 +61,23 @@ export const requireAuth = async (
   throw new AppError("Authentication required", status.UNAUTHORIZED);
 };
 
+export const optionalAuth = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
+  const session = await auth.api.getSession({
+    headers: toWebHeaders(req),
+  });
+
+  if (session) {
+    req.user = session.user as Express.Request["user"];
+    req.session = session.session as Express.Request["session"];
+  }
+
+  next();
+};
+
 export const requireRole = (...roles: string[]) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     if (!req.user) {

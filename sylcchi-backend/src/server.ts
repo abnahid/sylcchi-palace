@@ -5,6 +5,7 @@ import { envVars } from "./config/env";
 import { authNodeHandler } from "./lib/auth";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
 import { notFound } from "./middleware/notFound";
+import { startReservationExpiryScheduler } from "./modules/reservation/reservation.scheduler";
 import { appRouter } from "./routes";
 
 const app = express();
@@ -17,6 +18,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
+// Stripe webhook requires raw body for signature verification
+app.use("/api/webhooks/stripe", express.raw({ type: "application/json" }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -40,5 +44,6 @@ app.use(notFound);
 const PORT = envVars.PORT;
 
 app.listen(PORT, () => {
+  startReservationExpiryScheduler();
   console.log(`Server running on port ${PORT}`);
 });
