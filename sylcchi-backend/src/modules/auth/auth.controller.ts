@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import jwt from "jsonwebtoken";
-import { envVars } from "../../config/env";
 import { AppError } from "../../errorHelpers/AppError";
 import { AuthService } from "./auth.service";
 
@@ -44,7 +42,13 @@ function forwardCookies(apiResponse: unknown, res: Response): void {
   ) {
     const responseHeaders = (apiResponse as { headers?: Headers }).headers;
     if (responseHeaders) {
-      const setCookies = responseHeaders.getSetCookie?.();
+      const setCookies = responseHeaders.getSetCookie?.() ?? [];
+      const singleSetCookie = responseHeaders.get("set-cookie");
+
+      if (setCookies.length === 0 && singleSetCookie) {
+        setCookies.push(singleSetCookie);
+      }
+
       if (setCookies) {
         for (const cookie of setCookies) {
           res.append("Set-Cookie", cookie);
@@ -68,10 +72,14 @@ export const AuthController = {
 
     forwardCookies(result, res);
 
+    const { headers: _headers, ...responseData } = result as typeof result & {
+      headers?: Headers;
+    };
+
     res.status(201).json({
       success: true,
       message: "Sign-up completed",
-      data: result,
+      data: responseData,
     });
   },
 
@@ -87,34 +95,19 @@ export const AuthController = {
 
     forwardCookies(result, res);
 
+    const { headers: _headers, ...responseData } = result as typeof result & {
+      headers?: Headers;
+    };
+
     res.status(200).json({
       success: true,
       message: "Sign-in completed",
-      data: result,
+      data: responseData,
     });
   },
 
   signOut: async (req: Request, res: Response) => {
-    let userId: string | undefined;
-    const authHeader = req.headers.authorization;
-
-    if (typeof authHeader === "string" && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.slice("Bearer ".length).trim();
-      try {
-        const decoded = jwt.verify(token, envVars.JWT_SECRET);
-        if (
-          decoded &&
-          typeof decoded !== "string" &&
-          typeof decoded.sub === "string"
-        ) {
-          userId = decoded.sub;
-        }
-      } catch {
-        userId = undefined;
-      }
-    }
-
-    const result = await AuthService.signOut(toWebHeaders(req), userId);
+    const result = await AuthService.signOut(toWebHeaders(req));
 
     forwardCookies(result, res);
 
@@ -167,23 +160,14 @@ export const AuthController = {
 
     forwardCookies(result, res);
 
+    const { headers: _headers, ...responseData } = result as typeof result & {
+      headers?: Headers;
+    };
+
     res.status(200).json({
       success: true,
       message: "Email verified successfully",
-      data: result,
-    });
-  },
-
-  refreshToken: async (req: Request, res: Response) => {
-    const body = asBodyObject(req.body);
-    const refreshToken = getRequiredString(body, "refreshToken");
-
-    const result = await AuthService.refreshToken(refreshToken);
-
-    res.status(200).json({
-      success: true,
-      message: "Token refreshed successfully",
-      data: result,
+      data: responseData,
     });
   },
 

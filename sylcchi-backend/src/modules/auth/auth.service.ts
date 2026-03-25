@@ -2,7 +2,6 @@ import status from "http-status";
 import { AppError } from "../../errorHelpers/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
-import { generateAuthTokens, verifyRefreshToken } from "../../utils/jwt";
 
 type AuthApi = typeof auth.api;
 
@@ -15,7 +14,6 @@ type AuthUser = {
   image: string | null;
   role: string;
   emailVerified: boolean;
-  tokenVersion: number;
 };
 
 async function getUserByEmail(email: string): Promise<AuthUser> {
@@ -28,7 +26,6 @@ async function getUserByEmail(email: string): Promise<AuthUser> {
       image: true,
       role: true,
       emailVerified: true,
-      tokenVersion: true,
     },
   });
 
@@ -43,14 +40,6 @@ async function getUserByEmail(email: string): Promise<AuthUser> {
 }
 
 function buildAuthResponse(user: AuthUser) {
-  const tokens = generateAuthTokens({
-    sub: user.id,
-    email: user.email,
-    role: user.role,
-    emailVerified: user.emailVerified,
-    tokenVersion: user.tokenVersion,
-  });
-
   return {
     user: {
       id: user.id,
@@ -60,7 +49,6 @@ function buildAuthResponse(user: AuthUser) {
       role: user.role,
       emailVerified: user.emailVerified,
     },
-    ...tokens,
   };
 }
 
@@ -69,9 +57,12 @@ export const AuthService = {
     payload: { name: string; email: string; password: string },
     headers: Headers,
   ) => {
-    await (auth.api as AuthApi).signUpEmail({
+    const signUpResult = await (auth.api as AuthApi).signUpEmail({
       body: payload,
       headers,
+      asResponse: false,
+      returnHeaders: true,
+      returnStatus: false,
     });
 
     await prisma.user.updateMany({
@@ -85,37 +76,58 @@ export const AuthService = {
     });
 
     const user = await getUserByEmail(payload.email);
-    return buildAuthResponse(user);
+    return {
+      ...buildAuthResponse(user),
+      headers:
+        signUpResult &&
+        typeof signUpResult === "object" &&
+        "headers" in signUpResult
+          ? (signUpResult as { headers?: Headers }).headers
+          : undefined,
+    };
   },
 
   signIn: async (
     payload: { email: string; password: string },
     headers: Headers,
   ) => {
-    await (auth.api as AuthApi).signInEmail({
+    const signInResult = await (auth.api as AuthApi).signInEmail({
       body: payload,
       headers,
+      asResponse: false,
+      returnHeaders: true,
+      returnStatus: false,
     });
 
     const user = await getUserByEmail(payload.email);
-    return buildAuthResponse(user);
+    return {
+      ...buildAuthResponse(user),
+      headers:
+        signInResult &&
+        typeof signInResult === "object" &&
+        "headers" in signInResult
+          ? (signInResult as { headers?: Headers }).headers
+          : undefined,
+    };
   },
 
-  signOut: async (headers: Headers, userId?: string) => {
-    await (auth.api as AuthApi).signOut({ headers });
+  signOut: async (headers: Headers) => {
+    const signOutResult = await (auth.api as AuthApi).signOut({
+      headers,
+      asResponse: false,
+      returnHeaders: true,
+      returnStatus: false,
+    });
 
-    if (userId) {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          tokenVersion: {
-            increment: 1,
-          },
-        },
-      });
-    }
-
-    return { success: true };
+    return {
+      success: true,
+      headers:
+        signOutResult &&
+        typeof signOutResult === "object" &&
+        "headers" in signOutResult
+          ? (signOutResult as { headers?: Headers }).headers
+          : undefined,
+    };
   },
 
   getSession: async (headers: Headers) => {
@@ -144,43 +156,24 @@ export const AuthService = {
     payload: { email: string; otp: string },
     headers: Headers,
   ) => {
-    await (auth.api as AuthApi).verifyEmailOTP({
+    const verifyResult = await (auth.api as AuthApi).verifyEmailOTP({
       body: payload,
       headers,
+      asResponse: false,
+      returnHeaders: true,
+      returnStatus: false,
     });
 
     const user = await getUserByEmail(payload.email);
-    return buildAuthResponse(user);
-  },
-
-  refreshToken: async (refreshToken: string) => {
-    const decoded = verifyRefreshToken(refreshToken);
-
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.sub },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        role: true,
-        emailVerified: true,
-        tokenVersion: true,
-      },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (user.tokenVersion !== decoded.tokenVersion) {
-      throw new Error("Refresh token revoked");
-    }
-
-    return buildAuthResponse({
-      ...user,
-      role: String(user.role),
-    });
+    return {
+      ...buildAuthResponse(user),
+      headers:
+        verifyResult &&
+        typeof verifyResult === "object" &&
+        "headers" in verifyResult
+          ? (verifyResult as { headers?: Headers }).headers
+          : undefined,
+    };
   },
 
   resetPassword: async (payload: {

@@ -6,7 +6,6 @@ export const authRouter = Router();
 authRouter.post("/sign-up", AuthController.signUp);
 authRouter.post("/sign-in", AuthController.signIn);
 authRouter.post("/sign-out", AuthController.signOut);
-authRouter.post("/refresh-token", AuthController.refreshToken);
 authRouter.get("/session", AuthController.getSession);
 
 authRouter.post(

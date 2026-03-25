@@ -26,6 +26,9 @@ type EnvVars = {
   SMTP_USER?: string;
   SMTP_PASS?: string;
   SMTP_FROM: string;
+  CLOUDINARY_CLOUD_NAME?: string;
+  CLOUDINARY_API_KEY?: string;
+  CLOUDINARY_API_SECRET?: string;
 };
 
 function getRequired(key: RequiredEnvKey): string {
@@ -84,4 +87,7 @@ export const envVars: EnvVars = {
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASS: process.env.SMTP_PASS,
   SMTP_FROM: process.env.SMTP_FROM ?? "no-reply@sylcchi.local",
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };

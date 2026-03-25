@@ -1,6 +1,74 @@
 import { v2 as cloudinary } from "cloudinary";
 import { envVars } from "./env";
 
+const cloudName = envVars.CLOUDINARY_CLOUD_NAME;
+const apiKey = envVars.CLOUDINARY_API_KEY;
+const apiSecret = envVars.CLOUDINARY_API_SECRET;
+
+if (cloudName && apiKey && apiSecret) {
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+  });
+}
+
+type UploadBufferOptions = {
+  folder?: string;
+  filename?: string;
+  resourceType?: "image" | "raw" | "auto";
+  optimizeImage?: boolean;
+};
+
+type UploadedCloudinaryFile = {
+  secureUrl: string;
+  publicId: string;
+};
+
+export const uploadBufferToCloudinary = async (
+  buffer: Buffer,
+  options: UploadBufferOptions = {},
+): Promise<UploadedCloudinaryFile> => {
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new Error(
+      "Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.",
+    );
+  }
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: options.resourceType ?? "image",
+        folder: options.folder,
+        use_filename: Boolean(options.filename),
+        unique_filename: true,
+        filename_override: options.filename,
+        transformation: options.optimizeImage
+          ? [
+              {
+                fetch_format: "auto",
+                quality: "auto:eco",
+              },
+            ]
+          : undefined,
+      },
+      (error, result) => {
+        if (error || !result?.secure_url || !result.public_id) {
+          reject(error ?? new Error("Cloudinary upload failed"));
+          return;
+        }
+
+        resolve({
+          secureUrl: result.secure_url,
+          publicId: result.public_id,
+        });
+      },
+    );
+
+    uploadStream.end(buffer);
+  });
+};
+
 function extractPublicId(filePath: string): string | null {
   if (!filePath) {
     return null;
