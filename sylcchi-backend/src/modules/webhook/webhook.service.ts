@@ -1,6 +1,6 @@
 import status from "http-status";
 import crypto from "node:crypto";
-import { PaymentStatus } from "../../../generated/prisma";
+import { BookingPaymentStatus, PaymentStatus } from "../../../generated/prisma";
 import { stripeConfig } from "../../config/stripe.config";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
@@ -134,13 +134,54 @@ export const WebhookService = {
           },
         });
 
+        const booking = await tx.reservation.findUnique({
+          where: { id: payment.reservationId },
+          select: {
+            id: true,
+            totalPrice: true,
+            paidAmount: true,
+          },
+        });
+
+        if (!booking) {
+          return;
+        }
+
+        const chargedAmount = Number(payment.amount);
+        const totalAmount = Number(booking.totalPrice);
+        const newPaidAmount = Number(
+          Math.min(
+            Number(booking.paidAmount) + chargedAmount,
+            totalAmount,
+          ).toFixed(2),
+        );
+        const newRemainingAmount = Number(
+          Math.max(totalAmount - newPaidAmount, 0).toFixed(2),
+        );
+
+        const reservationUpdateData: {
+          paidAmount: number;
+          remainingAmount: number;
+          paymentStatus: BookingPaymentStatus;
+          bookingStatus: "CONFIRMED";
+          expiresAt?: Date | null;
+        } = {
+          paidAmount: newPaidAmount,
+          remainingAmount: newRemainingAmount,
+          paymentStatus:
+            newRemainingAmount <= 0
+              ? BookingPaymentStatus.PAID
+              : BookingPaymentStatus.PARTIAL,
+          bookingStatus: "CONFIRMED",
+        };
+
+        if (newRemainingAmount <= 0) {
+          reservationUpdateData.expiresAt = null;
+        }
+
         await tx.reservation.update({
           where: { id: payment.reservationId },
-          data: {
-            paymentStatus: "PAID",
-            bookingStatus: "CONFIRMED",
-            expiresAt: null,
-          },
+          data: reservationUpdateData,
         });
       });
 
@@ -155,21 +196,29 @@ export const WebhookService = {
         return;
       }
 
-      await prisma.payment.updateMany({
-        where: paymentIntentId
-          ? {
-              OR: [
-                { transactionId: paymentIntentId },
-                ...(bookingId ? [{ reservationId: bookingId }] : []),
-              ],
-            }
-          : {
-              reservationId: bookingId,
-            },
-        data: {
-          status: PaymentStatus.FAILED,
-        },
-      });
+      if (paymentIntentId) {
+        await prisma.payment.updateMany({
+          where: {
+            OR: [
+              { transactionId: paymentIntentId },
+              ...(bookingId ? [{ reservationId: bookingId }] : []),
+            ],
+          },
+          data: {
+            status: PaymentStatus.FAILED,
+          },
+        });
+      } else if (bookingId) {
+        await prisma.payment.updateMany({
+          where: {
+            reservationId: bookingId,
+          },
+          data: {
+            status: PaymentStatus.FAILED,
+          },
+        });
+      }
+
       return;
     }
   },

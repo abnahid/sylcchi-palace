@@ -78,6 +78,11 @@ export type Checkin = $Result.DefaultSelection<Prisma.$CheckinPayload>
  * 
  */
 export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
+/**
+ * Model CheckinOtp
+ * 
+ */
+export type CheckinOtp = $Result.DefaultSelection<Prisma.$CheckinOtpPayload>
 
 /**
  * Enums
@@ -93,8 +98,9 @@ export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
 
 
 export const BookingPaymentStatus: {
-  PAID: 'PAID',
-  UNPAID: 'UNPAID'
+  PENDING: 'PENDING',
+  PARTIAL: 'PARTIAL',
+  PAID: 'PAID'
 };
 
 export type BookingPaymentStatus = (typeof BookingPaymentStatus)[keyof typeof BookingPaymentStatus]
@@ -136,6 +142,14 @@ export const PaymentMethod: {
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 
 
+export const PaymentType: {
+  DEPOSIT: 'DEPOSIT',
+  FULL: 'FULL'
+};
+
+export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
+
+
 export const UserRole: {
   CUSTOMER: 'CUSTOMER',
   MANAGER: 'MANAGER',
@@ -169,6 +183,10 @@ export const CheckinStatus: typeof $Enums.CheckinStatus
 export type PaymentMethod = $Enums.PaymentMethod
 
 export const PaymentMethod: typeof $Enums.PaymentMethod
+
+export type PaymentType = $Enums.PaymentType
+
+export const PaymentType: typeof $Enums.PaymentType
 
 export type UserRole = $Enums.UserRole
 
@@ -424,6 +442,16 @@ export class PrismaClient<
     * ```
     */
   get payment(): Prisma.PaymentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.checkinOtp`: Exposes CRUD operations for the **CheckinOtp** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CheckinOtps
+    * const checkinOtps = await prisma.checkinOtp.findMany()
+    * ```
+    */
+  get checkinOtp(): Prisma.CheckinOtpDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -870,7 +898,8 @@ export namespace Prisma {
     Reservation: 'Reservation',
     ReservationDocument: 'ReservationDocument',
     Checkin: 'Checkin',
-    Payment: 'Payment'
+    Payment: 'Payment',
+    CheckinOtp: 'CheckinOtp'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -886,7 +915,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "roomType" | "room" | "roomImage" | "review" | "wishlist" | "reservation" | "reservationDocument" | "checkin" | "payment"
+      modelProps: "user" | "session" | "account" | "verification" | "roomType" | "room" | "roomImage" | "review" | "wishlist" | "reservation" | "reservationDocument" | "checkin" | "payment" | "checkinOtp"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1852,6 +1881,80 @@ export namespace Prisma {
           }
         }
       }
+      CheckinOtp: {
+        payload: Prisma.$CheckinOtpPayload<ExtArgs>
+        fields: Prisma.CheckinOtpFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CheckinOtpFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CheckinOtpFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>
+          }
+          findFirst: {
+            args: Prisma.CheckinOtpFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CheckinOtpFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>
+          }
+          findMany: {
+            args: Prisma.CheckinOtpFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>[]
+          }
+          create: {
+            args: Prisma.CheckinOtpCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>
+          }
+          createMany: {
+            args: Prisma.CheckinOtpCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CheckinOtpCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>[]
+          }
+          delete: {
+            args: Prisma.CheckinOtpDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>
+          }
+          update: {
+            args: Prisma.CheckinOtpUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>
+          }
+          deleteMany: {
+            args: Prisma.CheckinOtpDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CheckinOtpUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CheckinOtpUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>[]
+          }
+          upsert: {
+            args: Prisma.CheckinOtpUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CheckinOtpPayload>
+          }
+          aggregate: {
+            args: Prisma.CheckinOtpAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCheckinOtp>
+          }
+          groupBy: {
+            args: Prisma.CheckinOtpGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CheckinOtpGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CheckinOtpCountArgs<ExtArgs>
+            result: $Utils.Optional<CheckinOtpCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1973,6 +2076,7 @@ export namespace Prisma {
     reservationDocument?: ReservationDocumentOmit
     checkin?: CheckinOmit
     payment?: PaymentOmit
+    checkinOtp?: CheckinOtpOmit
   }
 
   /* Types for Logging */
@@ -2219,10 +2323,12 @@ export namespace Prisma {
 
   export type ReservationCountOutputType = {
     documents: number
+    checkinOtps: number
   }
 
   export type ReservationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     documents?: boolean | ReservationCountOutputTypeCountDocumentsArgs
+    checkinOtps?: boolean | ReservationCountOutputTypeCountCheckinOtpsArgs
   }
 
   // Custom InputTypes
@@ -2241,6 +2347,13 @@ export namespace Prisma {
    */
   export type ReservationCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReservationDocumentWhereInput
+  }
+
+  /**
+   * ReservationCountOutputType without action
+   */
+  export type ReservationCountOutputTypeCountCheckinOtpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CheckinOtpWhereInput
   }
 
 
@@ -12436,6 +12549,10 @@ export namespace Prisma {
     subtotal: Decimal | null
     vat: Decimal | null
     totalPrice: Decimal | null
+    depositRate: Decimal | null
+    depositAmount: Decimal | null
+    paidAmount: Decimal | null
+    remainingAmount: Decimal | null
   }
 
   export type ReservationSumAggregateOutputType = {
@@ -12445,10 +12562,15 @@ export namespace Prisma {
     subtotal: Decimal | null
     vat: Decimal | null
     totalPrice: Decimal | null
+    depositRate: Decimal | null
+    depositAmount: Decimal | null
+    paidAmount: Decimal | null
+    remainingAmount: Decimal | null
   }
 
   export type ReservationMinAggregateOutputType = {
     id: string | null
+    bookingCode: string | null
     userId: string | null
     roomId: string | null
     checkInDate: Date | null
@@ -12459,6 +12581,10 @@ export namespace Prisma {
     subtotal: Decimal | null
     vat: Decimal | null
     totalPrice: Decimal | null
+    depositRate: Decimal | null
+    depositAmount: Decimal | null
+    paidAmount: Decimal | null
+    remainingAmount: Decimal | null
     paymentMethod: $Enums.PaymentMethod | null
     paymentStatus: $Enums.BookingPaymentStatus | null
     bookingStatus: $Enums.BookingStatus | null
@@ -12469,6 +12595,7 @@ export namespace Prisma {
 
   export type ReservationMaxAggregateOutputType = {
     id: string | null
+    bookingCode: string | null
     userId: string | null
     roomId: string | null
     checkInDate: Date | null
@@ -12479,6 +12606,10 @@ export namespace Prisma {
     subtotal: Decimal | null
     vat: Decimal | null
     totalPrice: Decimal | null
+    depositRate: Decimal | null
+    depositAmount: Decimal | null
+    paidAmount: Decimal | null
+    remainingAmount: Decimal | null
     paymentMethod: $Enums.PaymentMethod | null
     paymentStatus: $Enums.BookingPaymentStatus | null
     bookingStatus: $Enums.BookingStatus | null
@@ -12489,6 +12620,7 @@ export namespace Prisma {
 
   export type ReservationCountAggregateOutputType = {
     id: number
+    bookingCode: number
     userId: number
     roomId: number
     checkInDate: number
@@ -12500,6 +12632,10 @@ export namespace Prisma {
     subtotal: number
     vat: number
     totalPrice: number
+    depositRate: number
+    depositAmount: number
+    paidAmount: number
+    remainingAmount: number
     paymentMethod: number
     paymentStatus: number
     bookingStatus: number
@@ -12517,6 +12653,10 @@ export namespace Prisma {
     subtotal?: true
     vat?: true
     totalPrice?: true
+    depositRate?: true
+    depositAmount?: true
+    paidAmount?: true
+    remainingAmount?: true
   }
 
   export type ReservationSumAggregateInputType = {
@@ -12526,10 +12666,15 @@ export namespace Prisma {
     subtotal?: true
     vat?: true
     totalPrice?: true
+    depositRate?: true
+    depositAmount?: true
+    paidAmount?: true
+    remainingAmount?: true
   }
 
   export type ReservationMinAggregateInputType = {
     id?: true
+    bookingCode?: true
     userId?: true
     roomId?: true
     checkInDate?: true
@@ -12540,6 +12685,10 @@ export namespace Prisma {
     subtotal?: true
     vat?: true
     totalPrice?: true
+    depositRate?: true
+    depositAmount?: true
+    paidAmount?: true
+    remainingAmount?: true
     paymentMethod?: true
     paymentStatus?: true
     bookingStatus?: true
@@ -12550,6 +12699,7 @@ export namespace Prisma {
 
   export type ReservationMaxAggregateInputType = {
     id?: true
+    bookingCode?: true
     userId?: true
     roomId?: true
     checkInDate?: true
@@ -12560,6 +12710,10 @@ export namespace Prisma {
     subtotal?: true
     vat?: true
     totalPrice?: true
+    depositRate?: true
+    depositAmount?: true
+    paidAmount?: true
+    remainingAmount?: true
     paymentMethod?: true
     paymentStatus?: true
     bookingStatus?: true
@@ -12570,6 +12724,7 @@ export namespace Prisma {
 
   export type ReservationCountAggregateInputType = {
     id?: true
+    bookingCode?: true
     userId?: true
     roomId?: true
     checkInDate?: true
@@ -12581,6 +12736,10 @@ export namespace Prisma {
     subtotal?: true
     vat?: true
     totalPrice?: true
+    depositRate?: true
+    depositAmount?: true
+    paidAmount?: true
+    remainingAmount?: true
     paymentMethod?: true
     paymentStatus?: true
     bookingStatus?: true
@@ -12678,6 +12837,7 @@ export namespace Prisma {
 
   export type ReservationGroupByOutputType = {
     id: string
+    bookingCode: string | null
     userId: string | null
     roomId: string
     checkInDate: Date
@@ -12689,6 +12849,10 @@ export namespace Prisma {
     subtotal: Decimal
     vat: Decimal
     totalPrice: Decimal
+    depositRate: Decimal
+    depositAmount: Decimal
+    paidAmount: Decimal
+    remainingAmount: Decimal
     paymentMethod: $Enums.PaymentMethod
     paymentStatus: $Enums.BookingPaymentStatus
     bookingStatus: $Enums.BookingStatus
@@ -12718,6 +12882,7 @@ export namespace Prisma {
 
   export type ReservationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    bookingCode?: boolean
     userId?: boolean
     roomId?: boolean
     checkInDate?: boolean
@@ -12729,6 +12894,10 @@ export namespace Prisma {
     subtotal?: boolean
     vat?: boolean
     totalPrice?: boolean
+    depositRate?: boolean
+    depositAmount?: boolean
+    paidAmount?: boolean
+    remainingAmount?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     bookingStatus?: boolean
@@ -12738,6 +12907,7 @@ export namespace Prisma {
     user?: boolean | Reservation$userArgs<ExtArgs>
     room?: boolean | RoomDefaultArgs<ExtArgs>
     documents?: boolean | Reservation$documentsArgs<ExtArgs>
+    checkinOtps?: boolean | Reservation$checkinOtpsArgs<ExtArgs>
     payment?: boolean | Reservation$paymentArgs<ExtArgs>
     checkin?: boolean | Reservation$checkinArgs<ExtArgs>
     _count?: boolean | ReservationCountOutputTypeDefaultArgs<ExtArgs>
@@ -12745,6 +12915,7 @@ export namespace Prisma {
 
   export type ReservationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    bookingCode?: boolean
     userId?: boolean
     roomId?: boolean
     checkInDate?: boolean
@@ -12756,6 +12927,10 @@ export namespace Prisma {
     subtotal?: boolean
     vat?: boolean
     totalPrice?: boolean
+    depositRate?: boolean
+    depositAmount?: boolean
+    paidAmount?: boolean
+    remainingAmount?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     bookingStatus?: boolean
@@ -12768,6 +12943,7 @@ export namespace Prisma {
 
   export type ReservationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    bookingCode?: boolean
     userId?: boolean
     roomId?: boolean
     checkInDate?: boolean
@@ -12779,6 +12955,10 @@ export namespace Prisma {
     subtotal?: boolean
     vat?: boolean
     totalPrice?: boolean
+    depositRate?: boolean
+    depositAmount?: boolean
+    paidAmount?: boolean
+    remainingAmount?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     bookingStatus?: boolean
@@ -12791,6 +12971,7 @@ export namespace Prisma {
 
   export type ReservationSelectScalar = {
     id?: boolean
+    bookingCode?: boolean
     userId?: boolean
     roomId?: boolean
     checkInDate?: boolean
@@ -12802,6 +12983,10 @@ export namespace Prisma {
     subtotal?: boolean
     vat?: boolean
     totalPrice?: boolean
+    depositRate?: boolean
+    depositAmount?: boolean
+    paidAmount?: boolean
+    remainingAmount?: boolean
     paymentMethod?: boolean
     paymentStatus?: boolean
     bookingStatus?: boolean
@@ -12810,11 +12995,12 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ReservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "roomId" | "checkInDate" | "checkOutDate" | "guests" | "guestDetails" | "basePrice" | "nights" | "subtotal" | "vat" | "totalPrice" | "paymentMethod" | "paymentStatus" | "bookingStatus" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["reservation"]>
+  export type ReservationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingCode" | "userId" | "roomId" | "checkInDate" | "checkOutDate" | "guests" | "guestDetails" | "basePrice" | "nights" | "subtotal" | "vat" | "totalPrice" | "depositRate" | "depositAmount" | "paidAmount" | "remainingAmount" | "paymentMethod" | "paymentStatus" | "bookingStatus" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["reservation"]>
   export type ReservationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Reservation$userArgs<ExtArgs>
     room?: boolean | RoomDefaultArgs<ExtArgs>
     documents?: boolean | Reservation$documentsArgs<ExtArgs>
+    checkinOtps?: boolean | Reservation$checkinOtpsArgs<ExtArgs>
     payment?: boolean | Reservation$paymentArgs<ExtArgs>
     checkin?: boolean | Reservation$checkinArgs<ExtArgs>
     _count?: boolean | ReservationCountOutputTypeDefaultArgs<ExtArgs>
@@ -12834,11 +13020,13 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs> | null
       room: Prisma.$RoomPayload<ExtArgs>
       documents: Prisma.$ReservationDocumentPayload<ExtArgs>[]
+      checkinOtps: Prisma.$CheckinOtpPayload<ExtArgs>[]
       payment: Prisma.$PaymentPayload<ExtArgs> | null
       checkin: Prisma.$CheckinPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      bookingCode: string | null
       userId: string | null
       roomId: string
       checkInDate: Date
@@ -12850,6 +13038,10 @@ export namespace Prisma {
       subtotal: Prisma.Decimal
       vat: Prisma.Decimal
       totalPrice: Prisma.Decimal
+      depositRate: Prisma.Decimal
+      depositAmount: Prisma.Decimal
+      paidAmount: Prisma.Decimal
+      remainingAmount: Prisma.Decimal
       paymentMethod: $Enums.PaymentMethod
       paymentStatus: $Enums.BookingPaymentStatus
       bookingStatus: $Enums.BookingStatus
@@ -13253,6 +13445,7 @@ export namespace Prisma {
     user<T extends Reservation$userArgs<ExtArgs> = {}>(args?: Subset<T, Reservation$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     room<T extends RoomDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoomDefaultArgs<ExtArgs>>): Prisma__RoomClient<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     documents<T extends Reservation$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Reservation$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReservationDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    checkinOtps<T extends Reservation$checkinOtpsArgs<ExtArgs> = {}>(args?: Subset<T, Reservation$checkinOtpsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payment<T extends Reservation$paymentArgs<ExtArgs> = {}>(args?: Subset<T, Reservation$paymentArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     checkin<T extends Reservation$checkinArgs<ExtArgs> = {}>(args?: Subset<T, Reservation$checkinArgs<ExtArgs>>): Prisma__CheckinClient<$Result.GetResult<Prisma.$CheckinPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -13285,6 +13478,7 @@ export namespace Prisma {
    */
   interface ReservationFieldRefs {
     readonly id: FieldRef<"Reservation", 'String'>
+    readonly bookingCode: FieldRef<"Reservation", 'String'>
     readonly userId: FieldRef<"Reservation", 'String'>
     readonly roomId: FieldRef<"Reservation", 'String'>
     readonly checkInDate: FieldRef<"Reservation", 'DateTime'>
@@ -13296,6 +13490,10 @@ export namespace Prisma {
     readonly subtotal: FieldRef<"Reservation", 'Decimal'>
     readonly vat: FieldRef<"Reservation", 'Decimal'>
     readonly totalPrice: FieldRef<"Reservation", 'Decimal'>
+    readonly depositRate: FieldRef<"Reservation", 'Decimal'>
+    readonly depositAmount: FieldRef<"Reservation", 'Decimal'>
+    readonly paidAmount: FieldRef<"Reservation", 'Decimal'>
+    readonly remainingAmount: FieldRef<"Reservation", 'Decimal'>
     readonly paymentMethod: FieldRef<"Reservation", 'PaymentMethod'>
     readonly paymentStatus: FieldRef<"Reservation", 'BookingPaymentStatus'>
     readonly bookingStatus: FieldRef<"Reservation", 'BookingStatus'>
@@ -13743,6 +13941,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReservationDocumentScalarFieldEnum | ReservationDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Reservation.checkinOtps
+   */
+  export type Reservation$checkinOtpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    where?: CheckinOtpWhereInput
+    orderBy?: CheckinOtpOrderByWithRelationInput | CheckinOtpOrderByWithRelationInput[]
+    cursor?: CheckinOtpWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CheckinOtpScalarFieldEnum | CheckinOtpScalarFieldEnum[]
   }
 
   /**
@@ -16016,6 +16238,7 @@ export namespace Prisma {
     amount: Decimal | null
     currency: string | null
     paymentMethod: $Enums.PaymentMethod | null
+    paymentType: $Enums.PaymentType | null
     status: $Enums.PaymentStatus | null
     refundStatus: $Enums.RefundStatus | null
     refundAmount: Decimal | null
@@ -16030,6 +16253,7 @@ export namespace Prisma {
     amount: Decimal | null
     currency: string | null
     paymentMethod: $Enums.PaymentMethod | null
+    paymentType: $Enums.PaymentType | null
     status: $Enums.PaymentStatus | null
     refundStatus: $Enums.RefundStatus | null
     refundAmount: Decimal | null
@@ -16044,6 +16268,7 @@ export namespace Prisma {
     amount: number
     currency: number
     paymentMethod: number
+    paymentType: number
     status: number
     refundStatus: number
     refundAmount: number
@@ -16070,6 +16295,7 @@ export namespace Prisma {
     amount?: true
     currency?: true
     paymentMethod?: true
+    paymentType?: true
     status?: true
     refundStatus?: true
     refundAmount?: true
@@ -16084,6 +16310,7 @@ export namespace Prisma {
     amount?: true
     currency?: true
     paymentMethod?: true
+    paymentType?: true
     status?: true
     refundStatus?: true
     refundAmount?: true
@@ -16098,6 +16325,7 @@ export namespace Prisma {
     amount?: true
     currency?: true
     paymentMethod?: true
+    paymentType?: true
     status?: true
     refundStatus?: true
     refundAmount?: true
@@ -16199,6 +16427,7 @@ export namespace Prisma {
     amount: Decimal
     currency: string
     paymentMethod: $Enums.PaymentMethod
+    paymentType: $Enums.PaymentType
     status: $Enums.PaymentStatus
     refundStatus: $Enums.RefundStatus
     refundAmount: Decimal | null
@@ -16232,6 +16461,7 @@ export namespace Prisma {
     amount?: boolean
     currency?: boolean
     paymentMethod?: boolean
+    paymentType?: boolean
     status?: boolean
     refundStatus?: boolean
     refundAmount?: boolean
@@ -16247,6 +16477,7 @@ export namespace Prisma {
     amount?: boolean
     currency?: boolean
     paymentMethod?: boolean
+    paymentType?: boolean
     status?: boolean
     refundStatus?: boolean
     refundAmount?: boolean
@@ -16262,6 +16493,7 @@ export namespace Prisma {
     amount?: boolean
     currency?: boolean
     paymentMethod?: boolean
+    paymentType?: boolean
     status?: boolean
     refundStatus?: boolean
     refundAmount?: boolean
@@ -16277,6 +16509,7 @@ export namespace Prisma {
     amount?: boolean
     currency?: boolean
     paymentMethod?: boolean
+    paymentType?: boolean
     status?: boolean
     refundStatus?: boolean
     refundAmount?: boolean
@@ -16285,7 +16518,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reservationId" | "amount" | "currency" | "paymentMethod" | "status" | "refundStatus" | "refundAmount" | "transactionId" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reservationId" | "amount" | "currency" | "paymentMethod" | "paymentType" | "status" | "refundStatus" | "refundAmount" | "transactionId" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reservation?: boolean | ReservationDefaultArgs<ExtArgs>
   }
@@ -16307,6 +16540,7 @@ export namespace Prisma {
       amount: Prisma.Decimal
       currency: string
       paymentMethod: $Enums.PaymentMethod
+      paymentType: $Enums.PaymentType
       status: $Enums.PaymentStatus
       refundStatus: $Enums.RefundStatus
       refundAmount: Prisma.Decimal | null
@@ -16742,6 +16976,7 @@ export namespace Prisma {
     readonly amount: FieldRef<"Payment", 'Decimal'>
     readonly currency: FieldRef<"Payment", 'String'>
     readonly paymentMethod: FieldRef<"Payment", 'PaymentMethod'>
+    readonly paymentType: FieldRef<"Payment", 'PaymentType'>
     readonly status: FieldRef<"Payment", 'PaymentStatus'>
     readonly refundStatus: FieldRef<"Payment", 'RefundStatus'>
     readonly refundAmount: FieldRef<"Payment", 'Decimal'>
@@ -17168,6 +17403,1155 @@ export namespace Prisma {
 
 
   /**
+   * Model CheckinOtp
+   */
+
+  export type AggregateCheckinOtp = {
+    _count: CheckinOtpCountAggregateOutputType | null
+    _avg: CheckinOtpAvgAggregateOutputType | null
+    _sum: CheckinOtpSumAggregateOutputType | null
+    _min: CheckinOtpMinAggregateOutputType | null
+    _max: CheckinOtpMaxAggregateOutputType | null
+  }
+
+  export type CheckinOtpAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type CheckinOtpSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type CheckinOtpMinAggregateOutputType = {
+    id: string | null
+    reservationId: string | null
+    channel: string | null
+    target: string | null
+    otpHash: string | null
+    attempts: number | null
+    expiresAt: Date | null
+    verifiedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type CheckinOtpMaxAggregateOutputType = {
+    id: string | null
+    reservationId: string | null
+    channel: string | null
+    target: string | null
+    otpHash: string | null
+    attempts: number | null
+    expiresAt: Date | null
+    verifiedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type CheckinOtpCountAggregateOutputType = {
+    id: number
+    reservationId: number
+    channel: number
+    target: number
+    otpHash: number
+    attempts: number
+    expiresAt: number
+    verifiedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CheckinOtpAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type CheckinOtpSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type CheckinOtpMinAggregateInputType = {
+    id?: true
+    reservationId?: true
+    channel?: true
+    target?: true
+    otpHash?: true
+    attempts?: true
+    expiresAt?: true
+    verifiedAt?: true
+    createdAt?: true
+  }
+
+  export type CheckinOtpMaxAggregateInputType = {
+    id?: true
+    reservationId?: true
+    channel?: true
+    target?: true
+    otpHash?: true
+    attempts?: true
+    expiresAt?: true
+    verifiedAt?: true
+    createdAt?: true
+  }
+
+  export type CheckinOtpCountAggregateInputType = {
+    id?: true
+    reservationId?: true
+    channel?: true
+    target?: true
+    otpHash?: true
+    attempts?: true
+    expiresAt?: true
+    verifiedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CheckinOtpAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CheckinOtp to aggregate.
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CheckinOtps to fetch.
+     */
+    orderBy?: CheckinOtpOrderByWithRelationInput | CheckinOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CheckinOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CheckinOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CheckinOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CheckinOtps
+    **/
+    _count?: true | CheckinOtpCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CheckinOtpAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CheckinOtpSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CheckinOtpMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CheckinOtpMaxAggregateInputType
+  }
+
+  export type GetCheckinOtpAggregateType<T extends CheckinOtpAggregateArgs> = {
+        [P in keyof T & keyof AggregateCheckinOtp]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCheckinOtp[P]>
+      : GetScalarType<T[P], AggregateCheckinOtp[P]>
+  }
+
+
+
+
+  export type CheckinOtpGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CheckinOtpWhereInput
+    orderBy?: CheckinOtpOrderByWithAggregationInput | CheckinOtpOrderByWithAggregationInput[]
+    by: CheckinOtpScalarFieldEnum[] | CheckinOtpScalarFieldEnum
+    having?: CheckinOtpScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CheckinOtpCountAggregateInputType | true
+    _avg?: CheckinOtpAvgAggregateInputType
+    _sum?: CheckinOtpSumAggregateInputType
+    _min?: CheckinOtpMinAggregateInputType
+    _max?: CheckinOtpMaxAggregateInputType
+  }
+
+  export type CheckinOtpGroupByOutputType = {
+    id: string
+    reservationId: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts: number
+    expiresAt: Date
+    verifiedAt: Date | null
+    createdAt: Date
+    _count: CheckinOtpCountAggregateOutputType | null
+    _avg: CheckinOtpAvgAggregateOutputType | null
+    _sum: CheckinOtpSumAggregateOutputType | null
+    _min: CheckinOtpMinAggregateOutputType | null
+    _max: CheckinOtpMaxAggregateOutputType | null
+  }
+
+  type GetCheckinOtpGroupByPayload<T extends CheckinOtpGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CheckinOtpGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CheckinOtpGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CheckinOtpGroupByOutputType[P]>
+            : GetScalarType<T[P], CheckinOtpGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CheckinOtpSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reservationId?: boolean
+    channel?: boolean
+    target?: boolean
+    otpHash?: boolean
+    attempts?: boolean
+    expiresAt?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    reservation?: boolean | ReservationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["checkinOtp"]>
+
+  export type CheckinOtpSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reservationId?: boolean
+    channel?: boolean
+    target?: boolean
+    otpHash?: boolean
+    attempts?: boolean
+    expiresAt?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    reservation?: boolean | ReservationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["checkinOtp"]>
+
+  export type CheckinOtpSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reservationId?: boolean
+    channel?: boolean
+    target?: boolean
+    otpHash?: boolean
+    attempts?: boolean
+    expiresAt?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+    reservation?: boolean | ReservationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["checkinOtp"]>
+
+  export type CheckinOtpSelectScalar = {
+    id?: boolean
+    reservationId?: boolean
+    channel?: boolean
+    target?: boolean
+    otpHash?: boolean
+    attempts?: boolean
+    expiresAt?: boolean
+    verifiedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type CheckinOtpOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reservationId" | "channel" | "target" | "otpHash" | "attempts" | "expiresAt" | "verifiedAt" | "createdAt", ExtArgs["result"]["checkinOtp"]>
+  export type CheckinOtpInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reservation?: boolean | ReservationDefaultArgs<ExtArgs>
+  }
+  export type CheckinOtpIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reservation?: boolean | ReservationDefaultArgs<ExtArgs>
+  }
+  export type CheckinOtpIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reservation?: boolean | ReservationDefaultArgs<ExtArgs>
+  }
+
+  export type $CheckinOtpPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CheckinOtp"
+    objects: {
+      reservation: Prisma.$ReservationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reservationId: string
+      channel: string
+      target: string
+      otpHash: string
+      attempts: number
+      expiresAt: Date
+      verifiedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["checkinOtp"]>
+    composites: {}
+  }
+
+  type CheckinOtpGetPayload<S extends boolean | null | undefined | CheckinOtpDefaultArgs> = $Result.GetResult<Prisma.$CheckinOtpPayload, S>
+
+  type CheckinOtpCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CheckinOtpFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CheckinOtpCountAggregateInputType | true
+    }
+
+  export interface CheckinOtpDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CheckinOtp'], meta: { name: 'CheckinOtp' } }
+    /**
+     * Find zero or one CheckinOtp that matches the filter.
+     * @param {CheckinOtpFindUniqueArgs} args - Arguments to find a CheckinOtp
+     * @example
+     * // Get one CheckinOtp
+     * const checkinOtp = await prisma.checkinOtp.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CheckinOtpFindUniqueArgs>(args: SelectSubset<T, CheckinOtpFindUniqueArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CheckinOtp that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CheckinOtpFindUniqueOrThrowArgs} args - Arguments to find a CheckinOtp
+     * @example
+     * // Get one CheckinOtp
+     * const checkinOtp = await prisma.checkinOtp.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CheckinOtpFindUniqueOrThrowArgs>(args: SelectSubset<T, CheckinOtpFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CheckinOtp that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpFindFirstArgs} args - Arguments to find a CheckinOtp
+     * @example
+     * // Get one CheckinOtp
+     * const checkinOtp = await prisma.checkinOtp.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CheckinOtpFindFirstArgs>(args?: SelectSubset<T, CheckinOtpFindFirstArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CheckinOtp that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpFindFirstOrThrowArgs} args - Arguments to find a CheckinOtp
+     * @example
+     * // Get one CheckinOtp
+     * const checkinOtp = await prisma.checkinOtp.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CheckinOtpFindFirstOrThrowArgs>(args?: SelectSubset<T, CheckinOtpFindFirstOrThrowArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CheckinOtps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CheckinOtps
+     * const checkinOtps = await prisma.checkinOtp.findMany()
+     * 
+     * // Get first 10 CheckinOtps
+     * const checkinOtps = await prisma.checkinOtp.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const checkinOtpWithIdOnly = await prisma.checkinOtp.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CheckinOtpFindManyArgs>(args?: SelectSubset<T, CheckinOtpFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CheckinOtp.
+     * @param {CheckinOtpCreateArgs} args - Arguments to create a CheckinOtp.
+     * @example
+     * // Create one CheckinOtp
+     * const CheckinOtp = await prisma.checkinOtp.create({
+     *   data: {
+     *     // ... data to create a CheckinOtp
+     *   }
+     * })
+     * 
+     */
+    create<T extends CheckinOtpCreateArgs>(args: SelectSubset<T, CheckinOtpCreateArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CheckinOtps.
+     * @param {CheckinOtpCreateManyArgs} args - Arguments to create many CheckinOtps.
+     * @example
+     * // Create many CheckinOtps
+     * const checkinOtp = await prisma.checkinOtp.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CheckinOtpCreateManyArgs>(args?: SelectSubset<T, CheckinOtpCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CheckinOtps and returns the data saved in the database.
+     * @param {CheckinOtpCreateManyAndReturnArgs} args - Arguments to create many CheckinOtps.
+     * @example
+     * // Create many CheckinOtps
+     * const checkinOtp = await prisma.checkinOtp.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CheckinOtps and only return the `id`
+     * const checkinOtpWithIdOnly = await prisma.checkinOtp.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CheckinOtpCreateManyAndReturnArgs>(args?: SelectSubset<T, CheckinOtpCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CheckinOtp.
+     * @param {CheckinOtpDeleteArgs} args - Arguments to delete one CheckinOtp.
+     * @example
+     * // Delete one CheckinOtp
+     * const CheckinOtp = await prisma.checkinOtp.delete({
+     *   where: {
+     *     // ... filter to delete one CheckinOtp
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CheckinOtpDeleteArgs>(args: SelectSubset<T, CheckinOtpDeleteArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CheckinOtp.
+     * @param {CheckinOtpUpdateArgs} args - Arguments to update one CheckinOtp.
+     * @example
+     * // Update one CheckinOtp
+     * const checkinOtp = await prisma.checkinOtp.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CheckinOtpUpdateArgs>(args: SelectSubset<T, CheckinOtpUpdateArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CheckinOtps.
+     * @param {CheckinOtpDeleteManyArgs} args - Arguments to filter CheckinOtps to delete.
+     * @example
+     * // Delete a few CheckinOtps
+     * const { count } = await prisma.checkinOtp.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CheckinOtpDeleteManyArgs>(args?: SelectSubset<T, CheckinOtpDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CheckinOtps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CheckinOtps
+     * const checkinOtp = await prisma.checkinOtp.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CheckinOtpUpdateManyArgs>(args: SelectSubset<T, CheckinOtpUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CheckinOtps and returns the data updated in the database.
+     * @param {CheckinOtpUpdateManyAndReturnArgs} args - Arguments to update many CheckinOtps.
+     * @example
+     * // Update many CheckinOtps
+     * const checkinOtp = await prisma.checkinOtp.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CheckinOtps and only return the `id`
+     * const checkinOtpWithIdOnly = await prisma.checkinOtp.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CheckinOtpUpdateManyAndReturnArgs>(args: SelectSubset<T, CheckinOtpUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CheckinOtp.
+     * @param {CheckinOtpUpsertArgs} args - Arguments to update or create a CheckinOtp.
+     * @example
+     * // Update or create a CheckinOtp
+     * const checkinOtp = await prisma.checkinOtp.upsert({
+     *   create: {
+     *     // ... data to create a CheckinOtp
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CheckinOtp we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CheckinOtpUpsertArgs>(args: SelectSubset<T, CheckinOtpUpsertArgs<ExtArgs>>): Prisma__CheckinOtpClient<$Result.GetResult<Prisma.$CheckinOtpPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CheckinOtps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpCountArgs} args - Arguments to filter CheckinOtps to count.
+     * @example
+     * // Count the number of CheckinOtps
+     * const count = await prisma.checkinOtp.count({
+     *   where: {
+     *     // ... the filter for the CheckinOtps we want to count
+     *   }
+     * })
+    **/
+    count<T extends CheckinOtpCountArgs>(
+      args?: Subset<T, CheckinOtpCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CheckinOtpCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CheckinOtp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CheckinOtpAggregateArgs>(args: Subset<T, CheckinOtpAggregateArgs>): Prisma.PrismaPromise<GetCheckinOtpAggregateType<T>>
+
+    /**
+     * Group by CheckinOtp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CheckinOtpGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CheckinOtpGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CheckinOtpGroupByArgs['orderBy'] }
+        : { orderBy?: CheckinOtpGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CheckinOtpGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCheckinOtpGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CheckinOtp model
+   */
+  readonly fields: CheckinOtpFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CheckinOtp.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CheckinOtpClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    reservation<T extends ReservationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReservationDefaultArgs<ExtArgs>>): Prisma__ReservationClient<$Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CheckinOtp model
+   */
+  interface CheckinOtpFieldRefs {
+    readonly id: FieldRef<"CheckinOtp", 'String'>
+    readonly reservationId: FieldRef<"CheckinOtp", 'String'>
+    readonly channel: FieldRef<"CheckinOtp", 'String'>
+    readonly target: FieldRef<"CheckinOtp", 'String'>
+    readonly otpHash: FieldRef<"CheckinOtp", 'String'>
+    readonly attempts: FieldRef<"CheckinOtp", 'Int'>
+    readonly expiresAt: FieldRef<"CheckinOtp", 'DateTime'>
+    readonly verifiedAt: FieldRef<"CheckinOtp", 'DateTime'>
+    readonly createdAt: FieldRef<"CheckinOtp", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CheckinOtp findUnique
+   */
+  export type CheckinOtpFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which CheckinOtp to fetch.
+     */
+    where: CheckinOtpWhereUniqueInput
+  }
+
+  /**
+   * CheckinOtp findUniqueOrThrow
+   */
+  export type CheckinOtpFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which CheckinOtp to fetch.
+     */
+    where: CheckinOtpWhereUniqueInput
+  }
+
+  /**
+   * CheckinOtp findFirst
+   */
+  export type CheckinOtpFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which CheckinOtp to fetch.
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CheckinOtps to fetch.
+     */
+    orderBy?: CheckinOtpOrderByWithRelationInput | CheckinOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CheckinOtps.
+     */
+    cursor?: CheckinOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CheckinOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CheckinOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CheckinOtps.
+     */
+    distinct?: CheckinOtpScalarFieldEnum | CheckinOtpScalarFieldEnum[]
+  }
+
+  /**
+   * CheckinOtp findFirstOrThrow
+   */
+  export type CheckinOtpFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which CheckinOtp to fetch.
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CheckinOtps to fetch.
+     */
+    orderBy?: CheckinOtpOrderByWithRelationInput | CheckinOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CheckinOtps.
+     */
+    cursor?: CheckinOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CheckinOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CheckinOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CheckinOtps.
+     */
+    distinct?: CheckinOtpScalarFieldEnum | CheckinOtpScalarFieldEnum[]
+  }
+
+  /**
+   * CheckinOtp findMany
+   */
+  export type CheckinOtpFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which CheckinOtps to fetch.
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CheckinOtps to fetch.
+     */
+    orderBy?: CheckinOtpOrderByWithRelationInput | CheckinOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CheckinOtps.
+     */
+    cursor?: CheckinOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CheckinOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CheckinOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CheckinOtps.
+     */
+    distinct?: CheckinOtpScalarFieldEnum | CheckinOtpScalarFieldEnum[]
+  }
+
+  /**
+   * CheckinOtp create
+   */
+  export type CheckinOtpCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CheckinOtp.
+     */
+    data: XOR<CheckinOtpCreateInput, CheckinOtpUncheckedCreateInput>
+  }
+
+  /**
+   * CheckinOtp createMany
+   */
+  export type CheckinOtpCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CheckinOtps.
+     */
+    data: CheckinOtpCreateManyInput | CheckinOtpCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CheckinOtp createManyAndReturn
+   */
+  export type CheckinOtpCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * The data used to create many CheckinOtps.
+     */
+    data: CheckinOtpCreateManyInput | CheckinOtpCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CheckinOtp update
+   */
+  export type CheckinOtpUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CheckinOtp.
+     */
+    data: XOR<CheckinOtpUpdateInput, CheckinOtpUncheckedUpdateInput>
+    /**
+     * Choose, which CheckinOtp to update.
+     */
+    where: CheckinOtpWhereUniqueInput
+  }
+
+  /**
+   * CheckinOtp updateMany
+   */
+  export type CheckinOtpUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CheckinOtps.
+     */
+    data: XOR<CheckinOtpUpdateManyMutationInput, CheckinOtpUncheckedUpdateManyInput>
+    /**
+     * Filter which CheckinOtps to update
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * Limit how many CheckinOtps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CheckinOtp updateManyAndReturn
+   */
+  export type CheckinOtpUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * The data used to update CheckinOtps.
+     */
+    data: XOR<CheckinOtpUpdateManyMutationInput, CheckinOtpUncheckedUpdateManyInput>
+    /**
+     * Filter which CheckinOtps to update
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * Limit how many CheckinOtps to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CheckinOtp upsert
+   */
+  export type CheckinOtpUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CheckinOtp to update in case it exists.
+     */
+    where: CheckinOtpWhereUniqueInput
+    /**
+     * In case the CheckinOtp found by the `where` argument doesn't exist, create a new CheckinOtp with this data.
+     */
+    create: XOR<CheckinOtpCreateInput, CheckinOtpUncheckedCreateInput>
+    /**
+     * In case the CheckinOtp was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CheckinOtpUpdateInput, CheckinOtpUncheckedUpdateInput>
+  }
+
+  /**
+   * CheckinOtp delete
+   */
+  export type CheckinOtpDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+    /**
+     * Filter which CheckinOtp to delete.
+     */
+    where: CheckinOtpWhereUniqueInput
+  }
+
+  /**
+   * CheckinOtp deleteMany
+   */
+  export type CheckinOtpDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CheckinOtps to delete
+     */
+    where?: CheckinOtpWhereInput
+    /**
+     * Limit how many CheckinOtps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CheckinOtp without action
+   */
+  export type CheckinOtpDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CheckinOtp
+     */
+    select?: CheckinOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CheckinOtp
+     */
+    omit?: CheckinOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CheckinOtpInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17303,6 +18687,7 @@ export namespace Prisma {
 
   export const ReservationScalarFieldEnum: {
     id: 'id',
+    bookingCode: 'bookingCode',
     userId: 'userId',
     roomId: 'roomId',
     checkInDate: 'checkInDate',
@@ -17314,6 +18699,10 @@ export namespace Prisma {
     subtotal: 'subtotal',
     vat: 'vat',
     totalPrice: 'totalPrice',
+    depositRate: 'depositRate',
+    depositAmount: 'depositAmount',
+    paidAmount: 'paidAmount',
+    remainingAmount: 'remainingAmount',
     paymentMethod: 'paymentMethod',
     paymentStatus: 'paymentStatus',
     bookingStatus: 'bookingStatus',
@@ -17357,6 +18746,7 @@ export namespace Prisma {
     amount: 'amount',
     currency: 'currency',
     paymentMethod: 'paymentMethod',
+    paymentType: 'paymentType',
     status: 'status',
     refundStatus: 'refundStatus',
     refundAmount: 'refundAmount',
@@ -17366,6 +18756,21 @@ export namespace Prisma {
   };
 
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+  export const CheckinOtpScalarFieldEnum: {
+    id: 'id',
+    reservationId: 'reservationId',
+    channel: 'channel',
+    target: 'target',
+    otpHash: 'otpHash',
+    attempts: 'attempts',
+    expiresAt: 'expiresAt',
+    verifiedAt: 'verifiedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type CheckinOtpScalarFieldEnum = (typeof CheckinOtpScalarFieldEnum)[keyof typeof CheckinOtpScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -17557,6 +18962,20 @@ export namespace Prisma {
    * Reference to a field of type 'CheckinStatus[]'
    */
   export type ListEnumCheckinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CheckinStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentType'
+   */
+  export type EnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentType[]'
+   */
+  export type ListEnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType[]'>
     
 
 
@@ -18249,6 +19668,7 @@ export namespace Prisma {
     OR?: ReservationWhereInput[]
     NOT?: ReservationWhereInput | ReservationWhereInput[]
     id?: UuidFilter<"Reservation"> | string
+    bookingCode?: StringNullableFilter<"Reservation"> | string | null
     userId?: UuidNullableFilter<"Reservation"> | string | null
     roomId?: UuidFilter<"Reservation"> | string
     checkInDate?: DateTimeFilter<"Reservation"> | Date | string
@@ -18260,6 +19680,10 @@ export namespace Prisma {
     subtotal?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     vat?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFilter<"Reservation"> | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFilter<"Reservation"> | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFilter<"Reservation"> | $Enums.BookingStatus
@@ -18269,12 +19693,14 @@ export namespace Prisma {
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
     documents?: ReservationDocumentListRelationFilter
+    checkinOtps?: CheckinOtpListRelationFilter
     payment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
     checkin?: XOR<CheckinNullableScalarRelationFilter, CheckinWhereInput> | null
   }
 
   export type ReservationOrderByWithRelationInput = {
     id?: SortOrder
+    bookingCode?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
     roomId?: SortOrder
     checkInDate?: SortOrder
@@ -18286,6 +19712,10 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     bookingStatus?: SortOrder
@@ -18295,12 +19725,14 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     room?: RoomOrderByWithRelationInput
     documents?: ReservationDocumentOrderByRelationAggregateInput
+    checkinOtps?: CheckinOtpOrderByRelationAggregateInput
     payment?: PaymentOrderByWithRelationInput
     checkin?: CheckinOrderByWithRelationInput
   }
 
   export type ReservationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    bookingCode?: string
     AND?: ReservationWhereInput | ReservationWhereInput[]
     OR?: ReservationWhereInput[]
     NOT?: ReservationWhereInput | ReservationWhereInput[]
@@ -18315,6 +19747,10 @@ export namespace Prisma {
     subtotal?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     vat?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFilter<"Reservation"> | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFilter<"Reservation"> | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFilter<"Reservation"> | $Enums.BookingStatus
@@ -18324,12 +19760,14 @@ export namespace Prisma {
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
     documents?: ReservationDocumentListRelationFilter
+    checkinOtps?: CheckinOtpListRelationFilter
     payment?: XOR<PaymentNullableScalarRelationFilter, PaymentWhereInput> | null
     checkin?: XOR<CheckinNullableScalarRelationFilter, CheckinWhereInput> | null
-  }, "id">
+  }, "id" | "bookingCode">
 
   export type ReservationOrderByWithAggregationInput = {
     id?: SortOrder
+    bookingCode?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
     roomId?: SortOrder
     checkInDate?: SortOrder
@@ -18341,6 +19779,10 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     bookingStatus?: SortOrder
@@ -18359,6 +19801,7 @@ export namespace Prisma {
     OR?: ReservationScalarWhereWithAggregatesInput[]
     NOT?: ReservationScalarWhereWithAggregatesInput | ReservationScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Reservation"> | string
+    bookingCode?: StringNullableWithAggregatesFilter<"Reservation"> | string | null
     userId?: UuidNullableWithAggregatesFilter<"Reservation"> | string | null
     roomId?: UuidWithAggregatesFilter<"Reservation"> | string
     checkInDate?: DateTimeWithAggregatesFilter<"Reservation"> | Date | string
@@ -18370,6 +19813,10 @@ export namespace Prisma {
     subtotal?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     vat?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalWithAggregatesFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"Reservation"> | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusWithAggregatesFilter<"Reservation"> | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusWithAggregatesFilter<"Reservation"> | $Enums.BookingStatus
@@ -18520,6 +19967,7 @@ export namespace Prisma {
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
     paymentMethod?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFilter<"Payment"> | $Enums.PaymentType
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFilter<"Payment"> | $Enums.RefundStatus
     refundAmount?: DecimalNullableFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
@@ -18535,6 +19983,7 @@ export namespace Prisma {
     amount?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
+    paymentType?: SortOrder
     status?: SortOrder
     refundStatus?: SortOrder
     refundAmount?: SortOrderInput | SortOrder
@@ -18554,6 +20003,7 @@ export namespace Prisma {
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringFilter<"Payment"> | string
     paymentMethod?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFilter<"Payment"> | $Enums.PaymentType
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFilter<"Payment"> | $Enums.RefundStatus
     refundAmount?: DecimalNullableFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
@@ -18568,6 +20018,7 @@ export namespace Prisma {
     amount?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
+    paymentType?: SortOrder
     status?: SortOrder
     refundStatus?: SortOrder
     refundAmount?: SortOrderInput | SortOrder
@@ -18590,12 +20041,90 @@ export namespace Prisma {
     amount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
     currency?: StringWithAggregatesFilter<"Payment"> | string
     paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"Payment"> | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeWithAggregatesFilter<"Payment"> | $Enums.PaymentType
     status?: EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusWithAggregatesFilter<"Payment"> | $Enums.RefundStatus
     refundAmount?: DecimalNullableWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string | null
     transactionId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+  }
+
+  export type CheckinOtpWhereInput = {
+    AND?: CheckinOtpWhereInput | CheckinOtpWhereInput[]
+    OR?: CheckinOtpWhereInput[]
+    NOT?: CheckinOtpWhereInput | CheckinOtpWhereInput[]
+    id?: UuidFilter<"CheckinOtp"> | string
+    reservationId?: UuidFilter<"CheckinOtp"> | string
+    channel?: StringFilter<"CheckinOtp"> | string
+    target?: StringFilter<"CheckinOtp"> | string
+    otpHash?: StringFilter<"CheckinOtp"> | string
+    attempts?: IntFilter<"CheckinOtp"> | number
+    expiresAt?: DateTimeFilter<"CheckinOtp"> | Date | string
+    verifiedAt?: DateTimeNullableFilter<"CheckinOtp"> | Date | string | null
+    createdAt?: DateTimeFilter<"CheckinOtp"> | Date | string
+    reservation?: XOR<ReservationScalarRelationFilter, ReservationWhereInput>
+  }
+
+  export type CheckinOtpOrderByWithRelationInput = {
+    id?: SortOrder
+    reservationId?: SortOrder
+    channel?: SortOrder
+    target?: SortOrder
+    otpHash?: SortOrder
+    attempts?: SortOrder
+    expiresAt?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    reservation?: ReservationOrderByWithRelationInput
+  }
+
+  export type CheckinOtpWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CheckinOtpWhereInput | CheckinOtpWhereInput[]
+    OR?: CheckinOtpWhereInput[]
+    NOT?: CheckinOtpWhereInput | CheckinOtpWhereInput[]
+    reservationId?: UuidFilter<"CheckinOtp"> | string
+    channel?: StringFilter<"CheckinOtp"> | string
+    target?: StringFilter<"CheckinOtp"> | string
+    otpHash?: StringFilter<"CheckinOtp"> | string
+    attempts?: IntFilter<"CheckinOtp"> | number
+    expiresAt?: DateTimeFilter<"CheckinOtp"> | Date | string
+    verifiedAt?: DateTimeNullableFilter<"CheckinOtp"> | Date | string | null
+    createdAt?: DateTimeFilter<"CheckinOtp"> | Date | string
+    reservation?: XOR<ReservationScalarRelationFilter, ReservationWhereInput>
+  }, "id">
+
+  export type CheckinOtpOrderByWithAggregationInput = {
+    id?: SortOrder
+    reservationId?: SortOrder
+    channel?: SortOrder
+    target?: SortOrder
+    otpHash?: SortOrder
+    attempts?: SortOrder
+    expiresAt?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CheckinOtpCountOrderByAggregateInput
+    _avg?: CheckinOtpAvgOrderByAggregateInput
+    _max?: CheckinOtpMaxOrderByAggregateInput
+    _min?: CheckinOtpMinOrderByAggregateInput
+    _sum?: CheckinOtpSumOrderByAggregateInput
+  }
+
+  export type CheckinOtpScalarWhereWithAggregatesInput = {
+    AND?: CheckinOtpScalarWhereWithAggregatesInput | CheckinOtpScalarWhereWithAggregatesInput[]
+    OR?: CheckinOtpScalarWhereWithAggregatesInput[]
+    NOT?: CheckinOtpScalarWhereWithAggregatesInput | CheckinOtpScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"CheckinOtp"> | string
+    reservationId?: UuidWithAggregatesFilter<"CheckinOtp"> | string
+    channel?: StringWithAggregatesFilter<"CheckinOtp"> | string
+    target?: StringWithAggregatesFilter<"CheckinOtp"> | string
+    otpHash?: StringWithAggregatesFilter<"CheckinOtp"> | string
+    attempts?: IntWithAggregatesFilter<"CheckinOtp"> | number
+    expiresAt?: DateTimeWithAggregatesFilter<"CheckinOtp"> | Date | string
+    verifiedAt?: DateTimeNullableWithAggregatesFilter<"CheckinOtp"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CheckinOtp"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -19287,6 +20816,7 @@ export namespace Prisma {
 
   export type ReservationCreateInput = {
     id?: string
+    bookingCode?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
     guests: number
@@ -19296,6 +20826,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -19305,12 +20839,14 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutReservationsInput
     room: RoomCreateNestedOneWithoutReservationsInput
     documents?: ReservationDocumentCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpCreateNestedManyWithoutReservationInput
     payment?: PaymentCreateNestedOneWithoutReservationInput
     checkin?: CheckinCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUncheckedCreateInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     roomId: string
     checkInDate: Date | string
@@ -19322,6 +20858,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -19329,12 +20869,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     documents?: ReservationDocumentUncheckedCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpUncheckedCreateNestedManyWithoutReservationInput
     payment?: PaymentUncheckedCreateNestedOneWithoutReservationInput
     checkin?: CheckinUncheckedCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -19344,6 +20886,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -19353,12 +20899,14 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutReservationsNestedInput
     room?: RoomUpdateOneRequiredWithoutReservationsNestedInput
     documents?: ReservationDocumentUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUpdateManyWithoutReservationNestedInput
     payment?: PaymentUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19370,6 +20918,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -19377,12 +20929,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documents?: ReservationDocumentUncheckedUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput
     payment?: PaymentUncheckedUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUncheckedUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationCreateManyInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     roomId: string
     checkInDate: Date | string
@@ -19394,6 +20948,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -19404,6 +20962,7 @@ export namespace Prisma {
 
   export type ReservationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -19413,6 +20972,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -19423,6 +20986,7 @@ export namespace Prisma {
 
   export type ReservationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19434,6 +20998,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -19584,6 +21152,7 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
+    paymentType?: $Enums.PaymentType
     status?: $Enums.PaymentStatus
     refundStatus?: $Enums.RefundStatus
     refundAmount?: Decimal | DecimalJsLike | number | string | null
@@ -19599,6 +21168,7 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
+    paymentType?: $Enums.PaymentType
     status?: $Enums.PaymentStatus
     refundStatus?: $Enums.RefundStatus
     refundAmount?: Decimal | DecimalJsLike | number | string | null
@@ -19612,6 +21182,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
     refundAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -19627,6 +21198,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
     refundAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -19641,6 +21213,7 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
+    paymentType?: $Enums.PaymentType
     status?: $Enums.PaymentStatus
     refundStatus?: $Enums.RefundStatus
     refundAmount?: Decimal | DecimalJsLike | number | string | null
@@ -19654,6 +21227,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
     refundAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -19668,12 +21242,96 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
     refundAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CheckinOtpCreateInput = {
+    id?: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts?: number
+    expiresAt: Date | string
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+    reservation: ReservationCreateNestedOneWithoutCheckinOtpsInput
+  }
+
+  export type CheckinOtpUncheckedCreateInput = {
+    id?: string
+    reservationId: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts?: number
+    expiresAt: Date | string
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CheckinOtpUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reservation?: ReservationUpdateOneRequiredWithoutCheckinOtpsNestedInput
+  }
+
+  export type CheckinOtpUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reservationId?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CheckinOtpCreateManyInput = {
+    id?: string
+    reservationId: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts?: number
+    expiresAt: Date | string
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CheckinOtpUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CheckinOtpUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reservationId?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -20394,6 +22052,12 @@ export namespace Prisma {
     none?: ReservationDocumentWhereInput
   }
 
+  export type CheckinOtpListRelationFilter = {
+    every?: CheckinOtpWhereInput
+    some?: CheckinOtpWhereInput
+    none?: CheckinOtpWhereInput
+  }
+
   export type PaymentNullableScalarRelationFilter = {
     is?: PaymentWhereInput | null
     isNot?: PaymentWhereInput | null
@@ -20408,8 +22072,13 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type CheckinOtpOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ReservationCountOrderByAggregateInput = {
     id?: SortOrder
+    bookingCode?: SortOrder
     userId?: SortOrder
     roomId?: SortOrder
     checkInDate?: SortOrder
@@ -20421,6 +22090,10 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     bookingStatus?: SortOrder
@@ -20436,10 +22109,15 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
   }
 
   export type ReservationMaxOrderByAggregateInput = {
     id?: SortOrder
+    bookingCode?: SortOrder
     userId?: SortOrder
     roomId?: SortOrder
     checkInDate?: SortOrder
@@ -20450,6 +22128,10 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     bookingStatus?: SortOrder
@@ -20460,6 +22142,7 @@ export namespace Prisma {
 
   export type ReservationMinOrderByAggregateInput = {
     id?: SortOrder
+    bookingCode?: SortOrder
     userId?: SortOrder
     roomId?: SortOrder
     checkInDate?: SortOrder
@@ -20470,6 +22153,10 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     bookingStatus?: SortOrder
@@ -20485,6 +22172,10 @@ export namespace Prisma {
     subtotal?: SortOrder
     vat?: SortOrder
     totalPrice?: SortOrder
+    depositRate?: SortOrder
+    depositAmount?: SortOrder
+    paidAmount?: SortOrder
+    remainingAmount?: SortOrder
   }
 
   export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -20640,6 +22331,13 @@ export namespace Prisma {
     _max?: NestedEnumCheckinStatusFilter<$PrismaModel>
   }
 
+  export type EnumPaymentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentTypeFilter<$PrismaModel> | $Enums.PaymentType
+  }
+
   export type EnumPaymentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
@@ -20671,6 +22369,7 @@ export namespace Prisma {
     amount?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
+    paymentType?: SortOrder
     status?: SortOrder
     refundStatus?: SortOrder
     refundAmount?: SortOrder
@@ -20690,6 +22389,7 @@ export namespace Prisma {
     amount?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
+    paymentType?: SortOrder
     status?: SortOrder
     refundStatus?: SortOrder
     refundAmount?: SortOrder
@@ -20704,6 +22404,7 @@ export namespace Prisma {
     amount?: SortOrder
     currency?: SortOrder
     paymentMethod?: SortOrder
+    paymentType?: SortOrder
     status?: SortOrder
     refundStatus?: SortOrder
     refundAmount?: SortOrder
@@ -20715,6 +22416,16 @@ export namespace Prisma {
   export type PaymentSumOrderByAggregateInput = {
     amount?: SortOrder
     refundAmount?: SortOrder
+  }
+
+  export type EnumPaymentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentTypeWithAggregatesFilter<$PrismaModel> | $Enums.PaymentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentTypeFilter<$PrismaModel>
+    _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
   }
 
   export type EnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -20751,6 +22462,50 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type CheckinOtpCountOrderByAggregateInput = {
+    id?: SortOrder
+    reservationId?: SortOrder
+    channel?: SortOrder
+    target?: SortOrder
+    otpHash?: SortOrder
+    attempts?: SortOrder
+    expiresAt?: SortOrder
+    verifiedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CheckinOtpAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type CheckinOtpMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reservationId?: SortOrder
+    channel?: SortOrder
+    target?: SortOrder
+    otpHash?: SortOrder
+    attempts?: SortOrder
+    expiresAt?: SortOrder
+    verifiedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CheckinOtpMinOrderByAggregateInput = {
+    id?: SortOrder
+    reservationId?: SortOrder
+    channel?: SortOrder
+    target?: SortOrder
+    otpHash?: SortOrder
+    attempts?: SortOrder
+    expiresAt?: SortOrder
+    verifiedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CheckinOtpSumOrderByAggregateInput = {
+    attempts?: SortOrder
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -21404,6 +23159,13 @@ export namespace Prisma {
     connect?: ReservationDocumentWhereUniqueInput | ReservationDocumentWhereUniqueInput[]
   }
 
+  export type CheckinOtpCreateNestedManyWithoutReservationInput = {
+    create?: XOR<CheckinOtpCreateWithoutReservationInput, CheckinOtpUncheckedCreateWithoutReservationInput> | CheckinOtpCreateWithoutReservationInput[] | CheckinOtpUncheckedCreateWithoutReservationInput[]
+    connectOrCreate?: CheckinOtpCreateOrConnectWithoutReservationInput | CheckinOtpCreateOrConnectWithoutReservationInput[]
+    createMany?: CheckinOtpCreateManyReservationInputEnvelope
+    connect?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+  }
+
   export type PaymentCreateNestedOneWithoutReservationInput = {
     create?: XOR<PaymentCreateWithoutReservationInput, PaymentUncheckedCreateWithoutReservationInput>
     connectOrCreate?: PaymentCreateOrConnectWithoutReservationInput
@@ -21421,6 +23183,13 @@ export namespace Prisma {
     connectOrCreate?: ReservationDocumentCreateOrConnectWithoutReservationInput | ReservationDocumentCreateOrConnectWithoutReservationInput[]
     createMany?: ReservationDocumentCreateManyReservationInputEnvelope
     connect?: ReservationDocumentWhereUniqueInput | ReservationDocumentWhereUniqueInput[]
+  }
+
+  export type CheckinOtpUncheckedCreateNestedManyWithoutReservationInput = {
+    create?: XOR<CheckinOtpCreateWithoutReservationInput, CheckinOtpUncheckedCreateWithoutReservationInput> | CheckinOtpCreateWithoutReservationInput[] | CheckinOtpUncheckedCreateWithoutReservationInput[]
+    connectOrCreate?: CheckinOtpCreateOrConnectWithoutReservationInput | CheckinOtpCreateOrConnectWithoutReservationInput[]
+    createMany?: CheckinOtpCreateManyReservationInputEnvelope
+    connect?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
   }
 
   export type PaymentUncheckedCreateNestedOneWithoutReservationInput = {
@@ -21479,6 +23248,20 @@ export namespace Prisma {
     deleteMany?: ReservationDocumentScalarWhereInput | ReservationDocumentScalarWhereInput[]
   }
 
+  export type CheckinOtpUpdateManyWithoutReservationNestedInput = {
+    create?: XOR<CheckinOtpCreateWithoutReservationInput, CheckinOtpUncheckedCreateWithoutReservationInput> | CheckinOtpCreateWithoutReservationInput[] | CheckinOtpUncheckedCreateWithoutReservationInput[]
+    connectOrCreate?: CheckinOtpCreateOrConnectWithoutReservationInput | CheckinOtpCreateOrConnectWithoutReservationInput[]
+    upsert?: CheckinOtpUpsertWithWhereUniqueWithoutReservationInput | CheckinOtpUpsertWithWhereUniqueWithoutReservationInput[]
+    createMany?: CheckinOtpCreateManyReservationInputEnvelope
+    set?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    disconnect?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    delete?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    connect?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    update?: CheckinOtpUpdateWithWhereUniqueWithoutReservationInput | CheckinOtpUpdateWithWhereUniqueWithoutReservationInput[]
+    updateMany?: CheckinOtpUpdateManyWithWhereWithoutReservationInput | CheckinOtpUpdateManyWithWhereWithoutReservationInput[]
+    deleteMany?: CheckinOtpScalarWhereInput | CheckinOtpScalarWhereInput[]
+  }
+
   export type PaymentUpdateOneWithoutReservationNestedInput = {
     create?: XOR<PaymentCreateWithoutReservationInput, PaymentUncheckedCreateWithoutReservationInput>
     connectOrCreate?: PaymentCreateOrConnectWithoutReservationInput
@@ -21511,6 +23294,20 @@ export namespace Prisma {
     update?: ReservationDocumentUpdateWithWhereUniqueWithoutReservationInput | ReservationDocumentUpdateWithWhereUniqueWithoutReservationInput[]
     updateMany?: ReservationDocumentUpdateManyWithWhereWithoutReservationInput | ReservationDocumentUpdateManyWithWhereWithoutReservationInput[]
     deleteMany?: ReservationDocumentScalarWhereInput | ReservationDocumentScalarWhereInput[]
+  }
+
+  export type CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput = {
+    create?: XOR<CheckinOtpCreateWithoutReservationInput, CheckinOtpUncheckedCreateWithoutReservationInput> | CheckinOtpCreateWithoutReservationInput[] | CheckinOtpUncheckedCreateWithoutReservationInput[]
+    connectOrCreate?: CheckinOtpCreateOrConnectWithoutReservationInput | CheckinOtpCreateOrConnectWithoutReservationInput[]
+    upsert?: CheckinOtpUpsertWithWhereUniqueWithoutReservationInput | CheckinOtpUpsertWithWhereUniqueWithoutReservationInput[]
+    createMany?: CheckinOtpCreateManyReservationInputEnvelope
+    set?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    disconnect?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    delete?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    connect?: CheckinOtpWhereUniqueInput | CheckinOtpWhereUniqueInput[]
+    update?: CheckinOtpUpdateWithWhereUniqueWithoutReservationInput | CheckinOtpUpdateWithWhereUniqueWithoutReservationInput[]
+    updateMany?: CheckinOtpUpdateManyWithWhereWithoutReservationInput | CheckinOtpUpdateManyWithWhereWithoutReservationInput[]
+    deleteMany?: CheckinOtpScalarWhereInput | CheckinOtpScalarWhereInput[]
   }
 
   export type PaymentUncheckedUpdateOneWithoutReservationNestedInput = {
@@ -21585,6 +23382,10 @@ export namespace Prisma {
     connect?: ReservationWhereUniqueInput
   }
 
+  export type EnumPaymentTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentType
+  }
+
   export type EnumPaymentStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentStatus
   }
@@ -21607,6 +23408,20 @@ export namespace Prisma {
     upsert?: ReservationUpsertWithoutPaymentInput
     connect?: ReservationWhereUniqueInput
     update?: XOR<XOR<ReservationUpdateToOneWithWhereWithoutPaymentInput, ReservationUpdateWithoutPaymentInput>, ReservationUncheckedUpdateWithoutPaymentInput>
+  }
+
+  export type ReservationCreateNestedOneWithoutCheckinOtpsInput = {
+    create?: XOR<ReservationCreateWithoutCheckinOtpsInput, ReservationUncheckedCreateWithoutCheckinOtpsInput>
+    connectOrCreate?: ReservationCreateOrConnectWithoutCheckinOtpsInput
+    connect?: ReservationWhereUniqueInput
+  }
+
+  export type ReservationUpdateOneRequiredWithoutCheckinOtpsNestedInput = {
+    create?: XOR<ReservationCreateWithoutCheckinOtpsInput, ReservationUncheckedCreateWithoutCheckinOtpsInput>
+    connectOrCreate?: ReservationCreateOrConnectWithoutCheckinOtpsInput
+    upsert?: ReservationUpsertWithoutCheckinOtpsInput
+    connect?: ReservationWhereUniqueInput
+    update?: XOR<XOR<ReservationUpdateToOneWithWhereWithoutCheckinOtpsInput, ReservationUpdateWithoutCheckinOtpsInput>, ReservationUncheckedUpdateWithoutCheckinOtpsInput>
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
@@ -21968,6 +23783,13 @@ export namespace Prisma {
     _max?: NestedEnumCheckinStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumPaymentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentTypeFilter<$PrismaModel> | $Enums.PaymentType
+  }
+
   export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
@@ -21991,6 +23813,16 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumPaymentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentTypeWithAggregatesFilter<$PrismaModel> | $Enums.PaymentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentTypeFilter<$PrismaModel>
+    _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -22151,6 +23983,7 @@ export namespace Prisma {
 
   export type ReservationCreateWithoutUserInput = {
     id?: string
+    bookingCode?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
     guests: number
@@ -22160,6 +23993,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -22168,12 +24005,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     room: RoomCreateNestedOneWithoutReservationsInput
     documents?: ReservationDocumentCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpCreateNestedManyWithoutReservationInput
     payment?: PaymentCreateNestedOneWithoutReservationInput
     checkin?: CheckinCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUncheckedCreateWithoutUserInput = {
     id?: string
+    bookingCode?: string | null
     roomId: string
     checkInDate: Date | string
     checkOutDate: Date | string
@@ -22184,6 +24023,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -22191,6 +24034,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     documents?: ReservationDocumentUncheckedCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpUncheckedCreateNestedManyWithoutReservationInput
     payment?: PaymentUncheckedCreateNestedOneWithoutReservationInput
     checkin?: CheckinUncheckedCreateNestedOneWithoutReservationInput
   }
@@ -22346,6 +24190,7 @@ export namespace Prisma {
     OR?: ReservationScalarWhereInput[]
     NOT?: ReservationScalarWhereInput | ReservationScalarWhereInput[]
     id?: UuidFilter<"Reservation"> | string
+    bookingCode?: StringNullableFilter<"Reservation"> | string | null
     userId?: UuidNullableFilter<"Reservation"> | string | null
     roomId?: UuidFilter<"Reservation"> | string
     checkInDate?: DateTimeFilter<"Reservation"> | Date | string
@@ -22357,6 +24202,10 @@ export namespace Prisma {
     subtotal?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     vat?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFilter<"Reservation"> | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFilter<"Reservation"> | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFilter<"Reservation"> | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFilter<"Reservation"> | $Enums.BookingStatus
@@ -22654,6 +24503,7 @@ export namespace Prisma {
 
   export type ReservationCreateWithoutRoomInput = {
     id?: string
+    bookingCode?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
     guests: number
@@ -22663,6 +24513,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -22671,12 +24525,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutReservationsInput
     documents?: ReservationDocumentCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpCreateNestedManyWithoutReservationInput
     payment?: PaymentCreateNestedOneWithoutReservationInput
     checkin?: CheckinCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUncheckedCreateWithoutRoomInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
@@ -22687,6 +24543,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -22694,6 +24554,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     documents?: ReservationDocumentUncheckedCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpUncheckedCreateNestedManyWithoutReservationInput
     payment?: PaymentUncheckedCreateNestedOneWithoutReservationInput
     checkin?: CheckinUncheckedCreateNestedOneWithoutReservationInput
   }
@@ -23466,11 +25327,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CheckinOtpCreateWithoutReservationInput = {
+    id?: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts?: number
+    expiresAt: Date | string
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CheckinOtpUncheckedCreateWithoutReservationInput = {
+    id?: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts?: number
+    expiresAt: Date | string
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CheckinOtpCreateOrConnectWithoutReservationInput = {
+    where: CheckinOtpWhereUniqueInput
+    create: XOR<CheckinOtpCreateWithoutReservationInput, CheckinOtpUncheckedCreateWithoutReservationInput>
+  }
+
+  export type CheckinOtpCreateManyReservationInputEnvelope = {
+    data: CheckinOtpCreateManyReservationInput | CheckinOtpCreateManyReservationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PaymentCreateWithoutReservationInput = {
     id?: string
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
+    paymentType?: $Enums.PaymentType
     status?: $Enums.PaymentStatus
     refundStatus?: $Enums.RefundStatus
     refundAmount?: Decimal | DecimalJsLike | number | string | null
@@ -23484,6 +25378,7 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     currency?: string
     paymentMethod: $Enums.PaymentMethod
+    paymentType?: $Enums.PaymentType
     status?: $Enums.PaymentStatus
     refundStatus?: $Enums.RefundStatus
     refundAmount?: Decimal | DecimalJsLike | number | string | null
@@ -23645,6 +25540,37 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ReservationDocument"> | Date | string
   }
 
+  export type CheckinOtpUpsertWithWhereUniqueWithoutReservationInput = {
+    where: CheckinOtpWhereUniqueInput
+    update: XOR<CheckinOtpUpdateWithoutReservationInput, CheckinOtpUncheckedUpdateWithoutReservationInput>
+    create: XOR<CheckinOtpCreateWithoutReservationInput, CheckinOtpUncheckedCreateWithoutReservationInput>
+  }
+
+  export type CheckinOtpUpdateWithWhereUniqueWithoutReservationInput = {
+    where: CheckinOtpWhereUniqueInput
+    data: XOR<CheckinOtpUpdateWithoutReservationInput, CheckinOtpUncheckedUpdateWithoutReservationInput>
+  }
+
+  export type CheckinOtpUpdateManyWithWhereWithoutReservationInput = {
+    where: CheckinOtpScalarWhereInput
+    data: XOR<CheckinOtpUpdateManyMutationInput, CheckinOtpUncheckedUpdateManyWithoutReservationInput>
+  }
+
+  export type CheckinOtpScalarWhereInput = {
+    AND?: CheckinOtpScalarWhereInput | CheckinOtpScalarWhereInput[]
+    OR?: CheckinOtpScalarWhereInput[]
+    NOT?: CheckinOtpScalarWhereInput | CheckinOtpScalarWhereInput[]
+    id?: UuidFilter<"CheckinOtp"> | string
+    reservationId?: UuidFilter<"CheckinOtp"> | string
+    channel?: StringFilter<"CheckinOtp"> | string
+    target?: StringFilter<"CheckinOtp"> | string
+    otpHash?: StringFilter<"CheckinOtp"> | string
+    attempts?: IntFilter<"CheckinOtp"> | number
+    expiresAt?: DateTimeFilter<"CheckinOtp"> | Date | string
+    verifiedAt?: DateTimeNullableFilter<"CheckinOtp"> | Date | string | null
+    createdAt?: DateTimeFilter<"CheckinOtp"> | Date | string
+  }
+
   export type PaymentUpsertWithoutReservationInput = {
     update: XOR<PaymentUpdateWithoutReservationInput, PaymentUncheckedUpdateWithoutReservationInput>
     create: XOR<PaymentCreateWithoutReservationInput, PaymentUncheckedCreateWithoutReservationInput>
@@ -23661,6 +25587,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
     refundAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -23674,6 +25601,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     refundStatus?: EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
     refundAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -23717,6 +25645,7 @@ export namespace Prisma {
 
   export type ReservationCreateWithoutDocumentsInput = {
     id?: string
+    bookingCode?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
     guests: number
@@ -23726,6 +25655,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -23734,12 +25667,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutReservationsInput
     room: RoomCreateNestedOneWithoutReservationsInput
+    checkinOtps?: CheckinOtpCreateNestedManyWithoutReservationInput
     payment?: PaymentCreateNestedOneWithoutReservationInput
     checkin?: CheckinCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUncheckedCreateWithoutDocumentsInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     roomId: string
     checkInDate: Date | string
@@ -23751,12 +25686,17 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    checkinOtps?: CheckinOtpUncheckedCreateNestedManyWithoutReservationInput
     payment?: PaymentUncheckedCreateNestedOneWithoutReservationInput
     checkin?: CheckinUncheckedCreateNestedOneWithoutReservationInput
   }
@@ -23779,6 +25719,7 @@ export namespace Prisma {
 
   export type ReservationUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -23788,6 +25729,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -23796,12 +25741,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutReservationsNestedInput
     room?: RoomUpdateOneRequiredWithoutReservationsNestedInput
+    checkinOtps?: CheckinOtpUpdateManyWithoutReservationNestedInput
     payment?: PaymentUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23813,18 +25760,24 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkinOtps?: CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput
     payment?: PaymentUncheckedUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUncheckedUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationCreateWithoutCheckinInput = {
     id?: string
+    bookingCode?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
     guests: number
@@ -23834,6 +25787,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -23843,11 +25800,13 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutReservationsInput
     room: RoomCreateNestedOneWithoutReservationsInput
     documents?: ReservationDocumentCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpCreateNestedManyWithoutReservationInput
     payment?: PaymentCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUncheckedCreateWithoutCheckinInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     roomId: string
     checkInDate: Date | string
@@ -23859,6 +25818,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -23866,6 +25829,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     documents?: ReservationDocumentUncheckedCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpUncheckedCreateNestedManyWithoutReservationInput
     payment?: PaymentUncheckedCreateNestedOneWithoutReservationInput
   }
 
@@ -23930,6 +25894,7 @@ export namespace Prisma {
 
   export type ReservationUpdateWithoutCheckinInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -23939,6 +25904,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -23948,11 +25917,13 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutReservationsNestedInput
     room?: RoomUpdateOneRequiredWithoutReservationsNestedInput
     documents?: ReservationDocumentUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUpdateManyWithoutReservationNestedInput
     payment?: PaymentUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateWithoutCheckinInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23964,6 +25935,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -23971,6 +25946,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documents?: ReservationDocumentUncheckedUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput
     payment?: PaymentUncheckedUpdateOneWithoutReservationNestedInput
   }
 
@@ -24025,6 +26001,7 @@ export namespace Prisma {
 
   export type ReservationCreateWithoutPaymentInput = {
     id?: string
+    bookingCode?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
     guests: number
@@ -24034,6 +26011,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -24043,11 +26024,13 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutReservationsInput
     room: RoomCreateNestedOneWithoutReservationsInput
     documents?: ReservationDocumentCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpCreateNestedManyWithoutReservationInput
     checkin?: CheckinCreateNestedOneWithoutReservationInput
   }
 
   export type ReservationUncheckedCreateWithoutPaymentInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     roomId: string
     checkInDate: Date | string
@@ -24059,6 +26042,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -24066,6 +26053,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     documents?: ReservationDocumentUncheckedCreateNestedManyWithoutReservationInput
+    checkinOtps?: CheckinOtpUncheckedCreateNestedManyWithoutReservationInput
     checkin?: CheckinUncheckedCreateNestedOneWithoutReservationInput
   }
 
@@ -24087,6 +26075,7 @@ export namespace Prisma {
 
   export type ReservationUpdateWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -24096,6 +26085,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24105,11 +26098,13 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutReservationsNestedInput
     room?: RoomUpdateOneRequiredWithoutReservationsNestedInput
     documents?: ReservationDocumentUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUpdateManyWithoutReservationNestedInput
     checkin?: CheckinUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24121,6 +26116,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24128,6 +26127,139 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documents?: ReservationDocumentUncheckedUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput
+    checkin?: CheckinUncheckedUpdateOneWithoutReservationNestedInput
+  }
+
+  export type ReservationCreateWithoutCheckinOtpsInput = {
+    id?: string
+    bookingCode?: string | null
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    guests: number
+    guestDetails: JsonNullValueInput | InputJsonValue
+    basePrice: Decimal | DecimalJsLike | number | string
+    nights: number
+    subtotal: Decimal | DecimalJsLike | number | string
+    vat: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.BookingPaymentStatus
+    bookingStatus?: $Enums.BookingStatus
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutReservationsInput
+    room: RoomCreateNestedOneWithoutReservationsInput
+    documents?: ReservationDocumentCreateNestedManyWithoutReservationInput
+    payment?: PaymentCreateNestedOneWithoutReservationInput
+    checkin?: CheckinCreateNestedOneWithoutReservationInput
+  }
+
+  export type ReservationUncheckedCreateWithoutCheckinOtpsInput = {
+    id?: string
+    bookingCode?: string | null
+    userId?: string | null
+    roomId: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    guests: number
+    guestDetails: JsonNullValueInput | InputJsonValue
+    basePrice: Decimal | DecimalJsLike | number | string
+    nights: number
+    subtotal: Decimal | DecimalJsLike | number | string
+    vat: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.BookingPaymentStatus
+    bookingStatus?: $Enums.BookingStatus
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: ReservationDocumentUncheckedCreateNestedManyWithoutReservationInput
+    payment?: PaymentUncheckedCreateNestedOneWithoutReservationInput
+    checkin?: CheckinUncheckedCreateNestedOneWithoutReservationInput
+  }
+
+  export type ReservationCreateOrConnectWithoutCheckinOtpsInput = {
+    where: ReservationWhereUniqueInput
+    create: XOR<ReservationCreateWithoutCheckinOtpsInput, ReservationUncheckedCreateWithoutCheckinOtpsInput>
+  }
+
+  export type ReservationUpsertWithoutCheckinOtpsInput = {
+    update: XOR<ReservationUpdateWithoutCheckinOtpsInput, ReservationUncheckedUpdateWithoutCheckinOtpsInput>
+    create: XOR<ReservationCreateWithoutCheckinOtpsInput, ReservationUncheckedCreateWithoutCheckinOtpsInput>
+    where?: ReservationWhereInput
+  }
+
+  export type ReservationUpdateToOneWithWhereWithoutCheckinOtpsInput = {
+    where?: ReservationWhereInput
+    data: XOR<ReservationUpdateWithoutCheckinOtpsInput, ReservationUncheckedUpdateWithoutCheckinOtpsInput>
+  }
+
+  export type ReservationUpdateWithoutCheckinOtpsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    guests?: IntFieldUpdateOperationsInput | number
+    guestDetails?: JsonNullValueInput | InputJsonValue
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    nights?: IntFieldUpdateOperationsInput | number
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutReservationsNestedInput
+    room?: RoomUpdateOneRequiredWithoutReservationsNestedInput
+    documents?: ReservationDocumentUpdateManyWithoutReservationNestedInput
+    payment?: PaymentUpdateOneWithoutReservationNestedInput
+    checkin?: CheckinUpdateOneWithoutReservationNestedInput
+  }
+
+  export type ReservationUncheckedUpdateWithoutCheckinOtpsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomId?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    guests?: IntFieldUpdateOperationsInput | number
+    guestDetails?: JsonNullValueInput | InputJsonValue
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    nights?: IntFieldUpdateOperationsInput | number
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: ReservationDocumentUncheckedUpdateManyWithoutReservationNestedInput
+    payment?: PaymentUncheckedUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUncheckedUpdateOneWithoutReservationNestedInput
   }
 
@@ -24173,6 +26305,7 @@ export namespace Prisma {
 
   export type ReservationCreateManyUserInput = {
     id?: string
+    bookingCode?: string | null
     roomId: string
     checkInDate: Date | string
     checkOutDate: Date | string
@@ -24183,6 +26316,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -24313,6 +26450,7 @@ export namespace Prisma {
 
   export type ReservationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -24322,6 +26460,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24330,12 +26472,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     room?: RoomUpdateOneRequiredWithoutReservationsNestedInput
     documents?: ReservationDocumentUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUpdateManyWithoutReservationNestedInput
     payment?: PaymentUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24346,6 +26490,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24353,12 +26501,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documents?: ReservationDocumentUncheckedUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput
     payment?: PaymentUncheckedUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUncheckedUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     roomId?: StringFieldUpdateOperationsInput | string
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24369,6 +26519,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24451,6 +26605,7 @@ export namespace Prisma {
 
   export type ReservationCreateManyRoomInput = {
     id?: string
+    bookingCode?: string | null
     userId?: string | null
     checkInDate: Date | string
     checkOutDate: Date | string
@@ -24461,6 +26616,10 @@ export namespace Prisma {
     subtotal: Decimal | DecimalJsLike | number | string
     vat: Decimal | DecimalJsLike | number | string
     totalPrice: Decimal | DecimalJsLike | number | string
+    depositRate?: Decimal | DecimalJsLike | number | string
+    depositAmount?: Decimal | DecimalJsLike | number | string
+    paidAmount?: Decimal | DecimalJsLike | number | string
+    remainingAmount?: Decimal | DecimalJsLike | number | string
     paymentMethod: $Enums.PaymentMethod
     paymentStatus?: $Enums.BookingPaymentStatus
     bookingStatus?: $Enums.BookingStatus
@@ -24515,6 +26674,7 @@ export namespace Prisma {
 
   export type ReservationUpdateWithoutRoomInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
     guests?: IntFieldUpdateOperationsInput | number
@@ -24524,6 +26684,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24532,12 +26696,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutReservationsNestedInput
     documents?: ReservationDocumentUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUpdateManyWithoutReservationNestedInput
     payment?: PaymentUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateWithoutRoomInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24548,6 +26714,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24555,12 +26725,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     documents?: ReservationDocumentUncheckedUpdateManyWithoutReservationNestedInput
+    checkinOtps?: CheckinOtpUncheckedUpdateManyWithoutReservationNestedInput
     payment?: PaymentUncheckedUpdateOneWithoutReservationNestedInput
     checkin?: CheckinUncheckedUpdateOneWithoutReservationNestedInput
   }
 
   export type ReservationUncheckedUpdateManyWithoutRoomInput = {
     id?: StringFieldUpdateOperationsInput | string
+    bookingCode?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
     checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24571,6 +26743,10 @@ export namespace Prisma {
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     vat?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paidAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: EnumBookingPaymentStatusFieldUpdateOperationsInput | $Enums.BookingPaymentStatus
     bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
@@ -24664,6 +26840,17 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type CheckinOtpCreateManyReservationInput = {
+    id?: string
+    channel: string
+    target: string
+    otpHash: string
+    attempts?: number
+    expiresAt: Date | string
+    verifiedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type ReservationDocumentUpdateWithoutReservationInput = {
     id?: StringFieldUpdateOperationsInput | string
     documentType?: StringFieldUpdateOperationsInput | string
@@ -24682,6 +26869,39 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     documentType?: StringFieldUpdateOperationsInput | string
     documentUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CheckinOtpUpdateWithoutReservationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CheckinOtpUncheckedUpdateWithoutReservationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CheckinOtpUncheckedUpdateManyWithoutReservationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    channel?: StringFieldUpdateOperationsInput | string
+    target?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

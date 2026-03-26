@@ -17,6 +17,13 @@ const DOCUMENT_MIME_TYPES = new Set([
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ]);
 
+const CHECKIN_DOCUMENT_MIME_TYPES = new Set([
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
+
 type UploadPreset = {
   maxFiles: number;
   maxFileSizeMb: number;
@@ -88,4 +95,11 @@ export const mixedUpload = createUpload({
   maxFileSizeMb: 10,
   allowedMimeTypes: new Set([...IMAGE_MIME_TYPES, ...DOCUMENT_MIME_TYPES]),
   label: "image/document",
+});
+
+export const checkinDocumentUpload = createUpload({
+  maxFiles: 2,
+  maxFileSizeMb: 5,
+  allowedMimeTypes: CHECKIN_DOCUMENT_MIME_TYPES,
+  label: "PDF or image",
 });

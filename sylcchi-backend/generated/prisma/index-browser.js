@@ -215,6 +215,7 @@ exports.Prisma.WishlistScalarFieldEnum = {
 
 exports.Prisma.ReservationScalarFieldEnum = {
   id: 'id',
+  bookingCode: 'bookingCode',
   userId: 'userId',
   roomId: 'roomId',
   checkInDate: 'checkInDate',
@@ -226,6 +227,10 @@ exports.Prisma.ReservationScalarFieldEnum = {
   subtotal: 'subtotal',
   vat: 'vat',
   totalPrice: 'totalPrice',
+  depositRate: 'depositRate',
+  depositAmount: 'depositAmount',
+  paidAmount: 'paidAmount',
+  remainingAmount: 'remainingAmount',
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
   bookingStatus: 'bookingStatus',
@@ -260,12 +265,25 @@ exports.Prisma.PaymentScalarFieldEnum = {
   amount: 'amount',
   currency: 'currency',
   paymentMethod: 'paymentMethod',
+  paymentType: 'paymentType',
   status: 'status',
   refundStatus: 'refundStatus',
   refundAmount: 'refundAmount',
   transactionId: 'transactionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CheckinOtpScalarFieldEnum = {
+  id: 'id',
+  reservationId: 'reservationId',
+  channel: 'channel',
+  target: 'target',
+  otpHash: 'otpHash',
+  attempts: 'attempts',
+  expiresAt: 'expiresAt',
+  verifiedAt: 'verifiedAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -305,8 +323,9 @@ exports.PaymentMethod = exports.$Enums.PaymentMethod = {
 };
 
 exports.BookingPaymentStatus = exports.$Enums.BookingPaymentStatus = {
-  PAID: 'PAID',
-  UNPAID: 'UNPAID'
+  PENDING: 'PENDING',
+  PARTIAL: 'PARTIAL',
+  PAID: 'PAID'
 };
 
 exports.BookingStatus = exports.$Enums.BookingStatus = {
@@ -319,6 +338,11 @@ exports.CheckinStatus = exports.$Enums.CheckinStatus = {
   PENDING: 'PENDING',
   CHECKED_IN: 'CHECKED_IN',
   CHECKED_OUT: 'CHECKED_OUT'
+};
+
+exports.PaymentType = exports.$Enums.PaymentType = {
+  DEPOSIT: 'DEPOSIT',
+  FULL: 'FULL'
 };
 
 exports.PaymentStatus = exports.$Enums.PaymentStatus = {
@@ -346,7 +370,8 @@ exports.Prisma.ModelName = {
   Reservation: 'Reservation',
   ReservationDocument: 'ReservationDocument',
   Checkin: 'Checkin',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  CheckinOtp: 'CheckinOtp'
 };
 
 /**

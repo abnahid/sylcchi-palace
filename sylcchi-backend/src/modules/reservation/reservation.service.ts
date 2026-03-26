@@ -4,6 +4,7 @@ import {
   BookingStatus,
   PaymentMethod,
   PaymentStatus,
+  PaymentType,
   Prisma,
   RefundStatus,
 } from "../../../generated/prisma";
@@ -67,10 +68,6 @@ function addHours(date: Date, hours: number): Date {
   return new Date(date.getTime() + hours * 60 * 60 * 1000);
 }
 
-function addMinutes(date: Date, minutes: number): Date {
-  return new Date(date.getTime() + minutes * 60 * 1000);
-}
-
 function startOfToday(): Date {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -93,6 +90,63 @@ function nightsBetween(checkInDate: Date, checkOutDate: Date): number {
 
 function round2(value: number): number {
   return Number(value.toFixed(2));
+}
+
+function daysBetween(start: Date, end: Date): number {
+  const startOnly = normalizeDateOnly(start);
+  const endOnly = normalizeDateOnly(end);
+  const diffMs = endOnly.getTime() - startOnly.getTime();
+  return Math.floor(diffMs / (24 * 60 * 60 * 1000));
+}
+
+function getDepositRate(daysBeforeCheckIn: number): number {
+  if (daysBeforeCheckIn > 15) {
+    return 0.25;
+  }
+
+  if (daysBeforeCheckIn >= 7) {
+    return 0.5;
+  }
+
+  return 1;
+}
+
+function getCancellationRefundRate(daysBeforeCheckIn: number): number {
+  if (daysBeforeCheckIn >= 7) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function buildBookingCode(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  const random = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `SP-${y}${m}${d}-${random}`;
+}
+
+async function createUniqueBookingCode(
+  tx: Prisma.TransactionClient,
+): Promise<string> {
+  for (let i = 0; i < 10; i += 1) {
+    const bookingCode = buildBookingCode();
+    const exists = await tx.reservation.findUnique({
+      where: { bookingCode },
+      select: { id: true },
+    });
+
+    if (!exists) {
+      return bookingCode;
+    }
+  }
+
+  throw new AppError(
+    "Failed to generate unique booking code",
+    status.INTERNAL_SERVER_ERROR,
+  );
 }
 
 function toStripeAmount(totalPrice: number): number {
@@ -124,20 +178,45 @@ async function cancelExpiredBookingsTx(
 ): Promise<number> {
   const now = new Date();
 
-  const result = await tx.reservation.updateMany({
-    where: {
-      bookingStatus: BookingStatus.PENDING,
-      paymentStatus: BookingPaymentStatus.UNPAID,
-      expiresAt: {
-        lt: now,
+  try {
+    const result = await tx.reservation.updateMany({
+      where: {
+        bookingStatus: BookingStatus.PENDING,
+        paymentStatus: {
+          in: [BookingPaymentStatus.PENDING, BookingPaymentStatus.PARTIAL],
+        },
+        expiresAt: {
+          lt: now,
+        },
       },
-    },
-    data: {
-      bookingStatus: BookingStatus.CANCELLED,
-    },
-  });
+      data: {
+        bookingStatus: BookingStatus.CANCELLED,
+      },
+    });
 
-  return result.count;
+    return result.count;
+  } catch (error) {
+    const code = (error as { code?: string })?.code;
+
+    if (code !== "P2007") {
+      throw error;
+    }
+
+    console.error(
+      "[ReservationService] BookingPaymentStatus enum mismatch detected. Falling back to text-safe expiry cleanup.",
+      error,
+    );
+
+    const updatedCount = await tx.$executeRaw<number>(Prisma.sql`
+      UPDATE "reservations"
+      SET "booking_status" = 'CANCELLED'
+      WHERE "booking_status" = 'PENDING'
+        AND "payment_status"::text <> 'PAID'
+        AND "expires_at" < ${now}
+    `);
+
+    return updatedCount;
+  }
 }
 
 function ensureBookingAccess(
@@ -184,7 +263,7 @@ function ensureBookingAccess(
 }
 
 async function createStripeCheckoutSession(
-  totalPrice: number,
+  amount: number,
   bookingId: string,
 ): Promise<{
   checkoutSessionId: string;
@@ -208,9 +287,7 @@ async function createStripeCheckoutSession(
     "payment_method_types[0]": "card",
     "line_items[0][price_data][currency]": envVars.STRIPE_CURRENCY,
     "line_items[0][price_data][product_data][name]": "Room booking",
-    "line_items[0][price_data][unit_amount]": String(
-      toStripeAmount(totalPrice),
-    ),
+    "line_items[0][price_data][unit_amount]": String(toStripeAmount(amount)),
     "line_items[0][quantity]": "1",
     success_url: successUrl,
     cancel_url: cancelUrl,
@@ -253,7 +330,7 @@ async function createStripeCheckoutSession(
 
 async function createSslCommerzSession(payload: {
   bookingId: string;
-  totalPrice: number;
+  amount: number;
   customer: GuestDetail;
 }): Promise<{
   redirectUrl: string;
@@ -268,7 +345,7 @@ async function createSslCommerzSession(payload: {
   const body = new URLSearchParams({
     store_id: envVars.SSLCOMMERZ_STORE_ID,
     store_passwd: envVars.SSLCOMMERZ_STORE_PASSWORD,
-    total_amount: String(payload.totalPrice),
+    total_amount: String(payload.amount),
     currency: "BDT",
     tran_id: transactionId,
     success_url: `${envVars.BETTER_AUTH_URL}/api/v1/bookings/pay`,
@@ -424,15 +501,19 @@ export const ReservationService = {
         const vat = round2(subtotal * 0.05);
         const totalPrice = round2(subtotal + vat);
 
+        const daysBeforeCheckIn = daysBetween(today, payload.checkInDate);
+        const depositRate = getDepositRate(daysBeforeCheckIn);
+        const depositAmount = round2(totalPrice * depositRate);
+
+        const bookingCode = await createUniqueBookingCode(tx);
+
         const now = new Date();
         const paymentMethod = toPaymentMethod(payload.paymentMethod);
-        const expiresAt =
-          paymentMethod === PaymentMethod.PAY_LATER
-            ? addHours(now, 2)
-            : addMinutes(now, 15);
+        const expiresAt = addHours(now, 5);
 
         const booking = await tx.reservation.create({
           data: {
+            bookingCode,
             roomId: payload.roomId,
             userId: payload.userId,
             checkInDate: payload.checkInDate,
@@ -444,16 +525,22 @@ export const ReservationService = {
             subtotal,
             vat,
             totalPrice,
+            depositRate,
+            depositAmount,
+            paidAmount: 0,
+            remainingAmount: totalPrice,
             paymentMethod,
-            paymentStatus: BookingPaymentStatus.UNPAID,
+            paymentStatus: BookingPaymentStatus.PENDING,
             bookingStatus: BookingStatus.PENDING,
             expiresAt,
             payment: {
               create: {
-                amount: totalPrice,
+                amount: depositAmount,
                 currency:
                   paymentMethod === PaymentMethod.SSLCOMMERZ ? "BDT" : "USD",
                 paymentMethod,
+                paymentType:
+                  depositRate >= 1 ? PaymentType.FULL : PaymentType.DEPOSIT,
                 status: PaymentStatus.PENDING,
               },
             },
@@ -480,8 +567,10 @@ export const ReservationService = {
       async (tx) => {
         await cancelExpiredBookingsTx(tx);
 
-        const booking = await tx.reservation.findUnique({
-          where: { id: payload.bookingId },
+        const booking = await tx.reservation.findFirst({
+          where: {
+            OR: [{ id: payload.bookingId }, { bookingCode: payload.bookingId }],
+          },
           include: {
             payment: true,
           },
@@ -538,16 +627,38 @@ export const ReservationService = {
           where: { id: booking.id },
           data: {
             paymentMethod: selectedMethod,
-            expiresAt: addMinutes(new Date(), 15),
+            expiresAt: addHours(new Date(), 5),
           },
         });
+
+        const paidAmount = Number(booking.paidAmount);
+        const totalPrice = Number(booking.totalPrice);
+        const remainingAmount = round2(Math.max(totalPrice - paidAmount, 0));
+        const isFirstCharge = paidAmount <= 0;
+        const amountToCharge = isFirstCharge
+          ? Number(booking.depositAmount)
+          : remainingAmount;
+
+        if (amountToCharge <= 0) {
+          return {
+            booking,
+            payment: {
+              status: "already_paid",
+            },
+          };
+        }
+
+        const paymentType =
+          isFirstCharge && Number(booking.depositRate) < 1
+            ? PaymentType.DEPOSIT
+            : PaymentType.FULL;
 
         if (selectedMethod === PaymentMethod.STRIPE) {
           const action = payload.action ?? "initiate";
 
           if (action === "initiate") {
             const checkout = await createStripeCheckoutSession(
-              Number(booking.totalPrice),
+              amountToCharge,
               booking.id,
             );
 
@@ -555,9 +666,10 @@ export const ReservationService = {
               ? await tx.payment.update({
                   where: { reservationId: booking.id },
                   data: {
-                    amount: booking.totalPrice,
+                    amount: amountToCharge,
                     currency: envVars.STRIPE_CURRENCY.toUpperCase(),
                     paymentMethod: PaymentMethod.STRIPE,
+                    paymentType,
                     status: PaymentStatus.PENDING,
                     transactionId: checkout.checkoutSessionId,
                   },
@@ -565,9 +677,10 @@ export const ReservationService = {
               : await tx.payment.create({
                   data: {
                     reservationId: booking.id,
-                    amount: booking.totalPrice,
+                    amount: amountToCharge,
                     currency: envVars.STRIPE_CURRENCY.toUpperCase(),
                     paymentMethod: PaymentMethod.STRIPE,
+                    paymentType,
                     status: PaymentStatus.PENDING,
                     transactionId: checkout.checkoutSessionId,
                   },
@@ -609,7 +722,7 @@ export const ReservationService = {
 
           const sslSession = await createSslCommerzSession({
             bookingId: booking.id,
-            totalPrice: Number(booking.totalPrice),
+            amount: amountToCharge,
             customer: firstGuest,
           });
 
@@ -621,8 +734,10 @@ export const ReservationService = {
             await tx.payment.update({
               where: { id: existingPayment.id },
               data: {
+                amount: amountToCharge,
                 status: PaymentStatus.PENDING,
                 paymentMethod: PaymentMethod.SSLCOMMERZ,
+                paymentType,
                 transactionId: sslSession.transactionId,
               },
             });
@@ -650,12 +765,31 @@ export const ReservationService = {
         }
 
         if (payload.gatewayStatus === "success") {
+          const currentPayment = await tx.payment.findFirst({
+            where: { reservationId: booking.id },
+          });
+
+          const chargedAmount = currentPayment
+            ? Number(currentPayment.amount)
+            : 0;
+          const total = Number(booking.totalPrice);
+          const newPaidAmount = round2(
+            Math.min(Number(booking.paidAmount) + chargedAmount, total),
+          );
+          const newRemainingAmount = round2(Math.max(total - newPaidAmount, 0));
+
           const updatedBooking = await tx.reservation.update({
             where: { id: booking.id },
             data: {
-              paymentStatus: BookingPaymentStatus.PAID,
+              paidAmount: newPaidAmount,
+              remainingAmount: newRemainingAmount,
+              paymentStatus:
+                newRemainingAmount <= 0
+                  ? BookingPaymentStatus.PAID
+                  : BookingPaymentStatus.PARTIAL,
               bookingStatus: BookingStatus.CONFIRMED,
-              expiresAt: null,
+              expiresAt:
+                newRemainingAmount <= 0 ? null : addHours(new Date(), 5),
             },
             include: {
               room: true,
@@ -726,8 +860,10 @@ export const ReservationService = {
   getBookingById: async (bookingId: string, access: BookingAccessContext) => {
     await ReservationService.cancelExpiredBookings();
 
-    const booking = await prisma.reservation.findUnique({
-      where: { id: bookingId },
+    const booking = await prisma.reservation.findFirst({
+      where: {
+        OR: [{ id: bookingId }, { bookingCode: bookingId }],
+      },
       include: {
         room: true,
         payment: true,
@@ -749,8 +885,10 @@ export const ReservationService = {
   ) => {
     await ReservationService.cancelExpiredBookings();
 
-    const booking = await prisma.reservation.findUnique({
-      where: { id: bookingId },
+    const booking = await prisma.reservation.findFirst({
+      where: {
+        OR: [{ id: bookingId }, { bookingCode: bookingId }],
+      },
       select: {
         id: true,
         userId: true,
@@ -772,27 +910,53 @@ export const ReservationService = {
 
     return prisma.$transaction(async (tx) => {
       await tx.reservation.update({
-        where: { id: bookingId },
+        where: { id: booking.id },
         data: {
           bookingStatus: BookingStatus.CANCELLED,
         },
       });
 
-      // Temporary policy: paid booking cancellations require manual refund handling.
-      if (booking.paymentStatus === BookingPaymentStatus.PAID) {
+      if (
+        booking.paymentStatus === BookingPaymentStatus.PAID ||
+        booking.paymentStatus === BookingPaymentStatus.PARTIAL
+      ) {
+        const fullBooking = await tx.reservation.findUnique({
+          where: { id: booking.id },
+          select: {
+            checkInDate: true,
+            totalPrice: true,
+            paidAmount: true,
+          },
+        });
+
+        if (!fullBooking) {
+          throw new AppError("Booking not found", status.NOT_FOUND);
+        }
+
+        const today = startOfToday();
+        const daysBefore = daysBetween(today, fullBooking.checkInDate);
+        const refundRate = getCancellationRefundRate(daysBefore);
+        const refundAmount = round2(
+          Number(fullBooking.paidAmount) * refundRate,
+        );
+
         await tx.payment.updateMany({
           where: {
-            reservationId: bookingId,
-            refundStatus: RefundStatus.NONE,
+            reservationId: booking.id,
+            refundStatus: {
+              in: [RefundStatus.NONE, RefundStatus.PENDING],
+            },
           },
           data: {
-            refundStatus: RefundStatus.PENDING,
+            refundStatus:
+              refundAmount > 0 ? RefundStatus.PENDING : RefundStatus.COMPLETED,
+            refundAmount,
           },
         });
       }
 
       return tx.reservation.findUnique({
-        where: { id: bookingId },
+        where: { id: booking.id },
         include: {
           room: true,
           payment: true,

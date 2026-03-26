@@ -16,8 +16,9 @@ enum BookingStatus {
 }
 
 enum BookingPaymentStatus {
+  PENDING
+  PARTIAL
   PAID
-  UNPAID
 }
 
 enum PaymentStatus {
@@ -42,6 +43,11 @@ enum PaymentMethod {
   STRIPE
   SSLCOMMERZ
   PAY_LATER
+}
+
+enum PaymentType {
+  DEPOSIT
+  FULL
 }
 
 enum UserRole {
@@ -201,30 +207,36 @@ model Wishlist {
 // -----------------------------------------------------------------------------
 
 model Reservation {
-  id            String               @id @default(uuid()) @db.Uuid
-  userId        String?              @map("user_id") @db.Uuid
-  roomId        String               @map("room_id") @db.Uuid
-  checkInDate   DateTime             @map("check_in_date") @db.Timestamp(6)
-  checkOutDate  DateTime             @map("check_out_date") @db.Timestamp(6)
-  guests        Int                  @map("number_of_guests")
-  guestDetails  Json                 @map("guest_details")
-  basePrice     Decimal              @map("base_price") @db.Decimal(10, 2)
-  nights        Int
-  subtotal      Decimal              @db.Decimal(10, 2)
-  vat           Decimal              @db.Decimal(10, 2)
-  totalPrice    Decimal              @map("total_price") @db.Decimal(10, 2)
-  paymentMethod PaymentMethod
-  paymentStatus BookingPaymentStatus @default(UNPAID) @map("payment_status")
-  bookingStatus BookingStatus        @default(PENDING) @map("booking_status")
-  expiresAt     DateTime?            @map("expires_at") @db.Timestamp(6)
-  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime             @updatedAt @map("updated_at") @db.Timestamp(6)
+  id              String               @id @default(uuid()) @db.Uuid
+  bookingCode     String?              @unique @map("booking_code")
+  userId          String?              @map("user_id") @db.Uuid
+  roomId          String               @map("room_id") @db.Uuid
+  checkInDate     DateTime             @map("check_in_date") @db.Timestamp(6)
+  checkOutDate    DateTime             @map("check_out_date") @db.Timestamp(6)
+  guests          Int                  @map("number_of_guests")
+  guestDetails    Json                 @map("guest_details")
+  basePrice       Decimal              @map("base_price") @db.Decimal(10, 2)
+  nights          Int
+  subtotal        Decimal              @db.Decimal(10, 2)
+  vat             Decimal              @db.Decimal(10, 2)
+  totalPrice      Decimal              @map("total_price") @db.Decimal(10, 2)
+  depositRate     Decimal              @default(1) @map("deposit_rate") @db.Decimal(5, 2)
+  depositAmount   Decimal              @default(0) @map("deposit_amount") @db.Decimal(10, 2)
+  paidAmount      Decimal              @default(0) @map("paid_amount") @db.Decimal(10, 2)
+  remainingAmount Decimal              @default(0) @map("remaining_amount") @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod
+  paymentStatus   BookingPaymentStatus @default(PENDING) @map("payment_status")
+  bookingStatus   BookingStatus        @default(PENDING) @map("booking_status")
+  expiresAt       DateTime?            @map("expires_at") @db.Timestamp(6)
+  createdAt       DateTime             @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime             @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  user      User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
-  room      Room                  @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  documents ReservationDocument[]
-  payment   Payment?
-  checkin   Checkin?
+  user        User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  room        Room                  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  documents   ReservationDocument[]
+  checkinOtps CheckinOtp[]
+  payment     Payment?
+  checkin     Checkin?
 
   @@index([userId])
   @@index([roomId])
@@ -263,16 +275,13 @@ model Checkin {
   @@map("checkins")
 }
 
-// -----------------------------------------------------------------------------
-// Source: prisma/schema/payment.prisma
-// -----------------------------------------------------------------------------
-
 model Payment {
   id            String        @id @default(uuid()) @db.Uuid
   reservationId String        @unique @map("reservation_id") @db.Uuid
   amount        Decimal       @db.Decimal(10, 2)
   currency      String        @default("USD")
   paymentMethod PaymentMethod
+  paymentType   PaymentType   @default(DEPOSIT) @map("payment_type")
   status        PaymentStatus @default(PENDING)
   refundStatus  RefundStatus  @default(NONE) @map("refund_status")
   refundAmount  Decimal?      @map("refund_amount") @db.Decimal(10, 2)
@@ -283,4 +292,22 @@ model Payment {
   reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   @@map("payments")
+}
+
+model CheckinOtp {
+  id            String    @id @default(uuid()) @db.Uuid
+  reservationId String    @map("reservation_id") @db.Uuid
+  channel       String
+  target        String
+  otpHash       String    @map("otp_hash")
+  attempts      Int       @default(0)
+  expiresAt     DateTime  @map("expires_at") @db.Timestamp(6)
+  verifiedAt    DateTime? @map("verified_at") @db.Timestamp(6)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId, target])
+  @@index([expiresAt])
+  @@map("checkin_otps")
 }
