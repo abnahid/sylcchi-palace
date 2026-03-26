@@ -1,10 +1,9 @@
-export function HomeClient() {
-  const [count, setCount] = useState(0);
+"use client";
 
+export function HomeClient() {
   return (
     <div>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
+      <h1>Home page</h1>
     </div>
   );
 }

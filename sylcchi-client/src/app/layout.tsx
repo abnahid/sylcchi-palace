@@ -1,3 +1,5 @@
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { mulish, openSans } from "@/font/fonts";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/providers/query-provider";
@@ -17,8 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn(mulish.variable, openSans.variable)}>
-      <body className="min-h-full flex flex-col">
+      <body className="bg-background text-foreground font-open-sans">
+        <Navbar />
         <QueryProvider>{children}</QueryProvider>
+        <Footer />
       </body>
     </html>
   );
