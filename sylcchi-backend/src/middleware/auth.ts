@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import status from "http-status";
 import { AppError } from "../errorHelpers/AppError";
-import { auth } from "../lib/auth";
+import { getAuth } from "../lib/auth";
 
 declare global {
   namespace Express {
@@ -46,6 +46,7 @@ export const requireAuth = async (
   _res: Response,
   next: NextFunction,
 ) => {
+  const auth = await getAuth();
   const session = await auth.api.getSession({
     headers: toWebHeaders(req),
   });
@@ -66,6 +67,7 @@ export const optionalAuth = async (
   _res: Response,
   next: NextFunction,
 ) => {
+  const auth = await getAuth();
   const session = await auth.api.getSession({
     headers: toWebHeaders(req),
   });

@@ -1,7 +1,3 @@
-import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { toNodeHandler } from "better-auth/node";
-import { bearer, emailOTP } from "better-auth/plugins";
 import { envVars } from "../config/env";
 import { sendEmail } from "../utils/email";
 import { prisma } from "./prisma";
@@ -22,114 +18,158 @@ const googleProvider =
       }
     : undefined;
 
-export const auth = betterAuth({
-  baseURL,
-  secret: envVars.BETTER_AUTH_SECRET,
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
-  },
-  socialProviders: googleProvider,
-  emailVerification: {
-    sendOnSignUp: false,
-    sendOnSignIn: false,
-    autoSignInAfterVerification: true,
-  },
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: true,
-        defaultValue: "CUSTOMER",
-      },
-    },
-  },
-  plugins: [
-    bearer(),
-    emailOTP({
-      overrideDefaultEmailVerification: true,
-      async sendVerificationOTP({ email, otp, type }) {
-        const user = await prisma.user.findUnique({ where: { email } });
-        const name = user?.name ?? "there";
+type BetterAuthInstance = {
+  api: Record<string, unknown>;
+};
 
-        if (type === "email-verification") {
-          await sendEmail({
-            to: email,
-            subject: "Verify your email – Sylcchi Palace",
-            html: `<p>Hello ${name},</p><p>Your email verification code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
-          });
-          return;
-        }
+type AuthNodeHandler = (req: unknown, res: unknown) => Promise<unknown>;
 
-        if (type === "sign-in") {
-          await sendEmail({
-            to: email,
-            subject: "Sign-in OTP – Sylcchi Palace",
-            html: `<p>Hello ${name},</p><p>Your sign-in code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
-          });
-          return;
-        }
+let authPromise: Promise<BetterAuthInstance> | null = null;
+let authNodeHandlerPromise: Promise<AuthNodeHandler> | null = null;
 
-        if (type === "forget-password") {
-          await sendEmail({
-            to: email,
-            subject: "Password reset OTP – Sylcchi Palace",
-            html: `<p>Hello ${name},</p><p>Your password reset code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
-          });
-        }
-      },
-      expiresIn: 2 * 60,
-      otpLength: 6,
+async function createAuth(): Promise<BetterAuthInstance> {
+  const [{ betterAuth }, { prismaAdapter }, { bearer, emailOTP }] =
+    await Promise.all([
+      import("better-auth"),
+      import("better-auth/adapters/prisma"),
+      import("better-auth/plugins"),
+    ]);
+
+  return betterAuth({
+    baseURL,
+    secret: envVars.BETTER_AUTH_SECRET,
+    database: prismaAdapter(prisma, {
+      provider: "postgresql",
     }),
-  ],
-  session: {
-    expiresIn: oneDayInSeconds,
-    updateAge: oneDayInSeconds,
-    cookieCache: {
+    emailAndPassword: {
       enabled: true,
-      maxAge: oneDayInSeconds,
+      requireEmailVerification: false,
     },
-  },
-  trustedOrigins: [baseURL, envVars.FRONTEND_URL],
-  advanced: {
-    database: {
-      generateId: "uuid",
+    socialProviders: googleProvider,
+    emailVerification: {
+      sendOnSignUp: false,
+      sendOnSignIn: false,
+      autoSignInAfterVerification: true,
     },
-    useSecureCookies: envVars.NODE_ENV === "production",
-    cookies:
-      envVars.NODE_ENV === "production"
-        ? {
-            state: {
-              attributes: {
-                sameSite: "none",
-                secure: true,
-                httpOnly: true,
-                path: "/",
-              },
-            },
-            sessionToken: {
-              attributes: {
-                sameSite: "none",
-                secure: true,
-                httpOnly: true,
-                path: "/",
-              },
-            },
-          }
-        : {
-            sessionToken: {
-              attributes: {
-                sameSite: "lax",
-                secure: false,
-                httpOnly: true,
-                path: "/",
-              },
-            },
-          },
-  },
-});
+    user: {
+      additionalFields: {
+        role: {
+          type: "string",
+          required: true,
+          defaultValue: "CUSTOMER",
+        },
+      },
+    },
+    plugins: [
+      bearer(),
+      emailOTP({
+        overrideDefaultEmailVerification: true,
+        async sendVerificationOTP({ email, otp, type }) {
+          const user = await prisma.user.findUnique({ where: { email } });
+          const name = user?.name ?? "there";
 
-export const authNodeHandler = toNodeHandler(auth);
+          if (type === "email-verification") {
+            await sendEmail({
+              to: email,
+              subject: "Verify your email – Sylcchi Palace",
+              html: `<p>Hello ${name},</p><p>Your email verification code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
+            });
+            return;
+          }
+
+          if (type === "sign-in") {
+            await sendEmail({
+              to: email,
+              subject: "Sign-in OTP – Sylcchi Palace",
+              html: `<p>Hello ${name},</p><p>Your sign-in code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
+            });
+            return;
+          }
+
+          if (type === "forget-password") {
+            await sendEmail({
+              to: email,
+              subject: "Password reset OTP – Sylcchi Palace",
+              html: `<p>Hello ${name},</p><p>Your password reset code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
+            });
+          }
+        },
+        expiresIn: 2 * 60,
+        otpLength: 6,
+      }),
+    ],
+    session: {
+      expiresIn: oneDayInSeconds,
+      updateAge: oneDayInSeconds,
+      cookieCache: {
+        enabled: true,
+        maxAge: oneDayInSeconds,
+      },
+    },
+    trustedOrigins: [baseURL, envVars.FRONTEND_URL],
+    advanced: {
+      database: {
+        generateId: "uuid",
+      },
+      useSecureCookies: envVars.NODE_ENV === "production",
+      cookies:
+        envVars.NODE_ENV === "production"
+          ? {
+              state: {
+                attributes: {
+                  sameSite: "none",
+                  secure: true,
+                  httpOnly: true,
+                  path: "/",
+                },
+              },
+              sessionToken: {
+                attributes: {
+                  sameSite: "none",
+                  secure: true,
+                  httpOnly: true,
+                  path: "/",
+                },
+              },
+            }
+          : {
+              sessionToken: {
+                attributes: {
+                  sameSite: "lax",
+                  secure: false,
+                  httpOnly: true,
+                  path: "/",
+                },
+              },
+            },
+    },
+  }) as BetterAuthInstance;
+}
+
+export async function getAuth(): Promise<BetterAuthInstance> {
+  if (!authPromise) {
+    authPromise = createAuth();
+  }
+
+  return authPromise;
+}
+
+async function getAuthNodeHandler(): Promise<AuthNodeHandler> {
+  if (!authNodeHandlerPromise) {
+    authNodeHandlerPromise = (async () => {
+      const [{ toNodeHandler }, auth] = await Promise.all([
+        import("better-auth/node"),
+        getAuth(),
+      ]);
+
+      return toNodeHandler(auth) as AuthNodeHandler;
+    })();
+  }
+
+  return authNodeHandlerPromise;
+}
+
+export async function authNodeHandler(req: unknown, res: unknown) {
+  const handler = await getAuthNodeHandler();
+  return handler(req, res);
+}
