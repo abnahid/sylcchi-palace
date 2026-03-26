@@ -1,9 +1,13 @@
 "use client";
 
+import HeroSection from "@/components/home/heroSection";
+import HostelRooms from "@/components/home/hostelRooms";
+
 export function HomeClient() {
   return (
-    <div>
-      <h1>Home page</h1>
-    </div>
+    <main>
+      <HeroSection />
+      <HostelRooms />
+    </main>
   );
 }
