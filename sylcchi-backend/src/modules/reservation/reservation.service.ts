@@ -1,4 +1,5 @@
 import status from "http-status";
+import SSLCommerzPayment from "sslcommerz-lts";
 import {
   BookingPaymentStatus,
   BookingStatus,
@@ -340,17 +341,25 @@ async function createSslCommerzSession(payload: {
     throw new AppError("SSLCommerz is not configured", status.BAD_REQUEST);
   }
 
+  const isLive =
+    envVars.SSLCOMMERZ_API_URL.toLowerCase().includes("securepay") ||
+    envVars.SSLCOMMERZ_API_URL.toLowerCase().includes("secure");
+
+  const sslcz = new SSLCommerzPayment(
+    envVars.SSLCOMMERZ_STORE_ID,
+    envVars.SSLCOMMERZ_STORE_PASSWORD,
+    isLive,
+  );
+
   const transactionId = `booking-${payload.bookingId}-${Date.now()}`;
 
-  const body = new URLSearchParams({
-    store_id: envVars.SSLCOMMERZ_STORE_ID,
-    store_passwd: envVars.SSLCOMMERZ_STORE_PASSWORD,
+  const sessionPayload = {
     total_amount: String(payload.amount),
     currency: "BDT",
     tran_id: transactionId,
-    success_url: `${envVars.BETTER_AUTH_URL}/api/v1/bookings/pay`,
-    fail_url: `${envVars.BETTER_AUTH_URL}/api/v1/bookings/pay`,
-    cancel_url: `${envVars.BETTER_AUTH_URL}/api/v1/bookings/pay`,
+    success_url: `${envVars.BETTER_AUTH_URL}/api/webhooks/sslcommerz/success`,
+    fail_url: `${envVars.BETTER_AUTH_URL}/api/webhooks/sslcommerz/fail`,
+    cancel_url: `${envVars.BETTER_AUTH_URL}/api/webhooks/sslcommerz/cancel`,
     product_name: "Room booking",
     product_category: "Hotel",
     product_profile: "general",
@@ -360,34 +369,19 @@ async function createSslCommerzSession(payload: {
     shipping_method: "NO",
     num_of_item: "1",
     value_a: payload.bookingId,
-  });
+  };
 
-  const response = await fetch(
-    `${envVars.SSLCOMMERZ_API_URL}/gwprocess/v4/api.php`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: body.toString(),
-    },
-  );
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new AppError(
-      `Failed to create SSLCommerz session: ${errorBody}`,
-      status.BAD_GATEWAY,
-    );
-  }
-
-  const result = (await response.json()) as {
+  const result = (await sslcz.init(sessionPayload)) as {
     status?: string;
     GatewayPageURL?: string;
+    failedreason?: string;
   };
 
   if (result.status !== "SUCCESS" || !result.GatewayPageURL) {
-    throw new AppError("Invalid SSLCommerz response", status.BAD_GATEWAY);
+    throw new AppError(
+      `Failed to create SSLCommerz session${result.failedreason ? `: ${result.failedreason}` : ""}`,
+      status.BAD_GATEWAY,
+    );
   }
 
   return {

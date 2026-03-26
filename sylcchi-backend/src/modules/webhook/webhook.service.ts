@@ -1,6 +1,13 @@
 import status from "http-status";
 import crypto from "node:crypto";
-import { BookingPaymentStatus, PaymentStatus } from "../../../generated/prisma";
+import SSLCommerzPayment from "sslcommerz-lts";
+import {
+  BookingPaymentStatus,
+  BookingStatus,
+  PaymentMethod,
+  PaymentStatus,
+} from "../../../generated/prisma";
+import { envVars } from "../../config/env";
 import { stripeConfig } from "../../config/stripe.config";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
@@ -19,6 +26,45 @@ type StripeEvent = {
     };
   };
 };
+
+type SslGatewayStatus = "success" | "failed" | "cancel";
+
+function getString(
+  payload: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = payload[key];
+  return typeof value === "string" && value.trim() !== ""
+    ? value.trim()
+    : undefined;
+}
+
+function round2(value: number): number {
+  return Number(value.toFixed(2));
+}
+
+function isSslLiveMode(): boolean {
+  const apiUrl = envVars.SSLCOMMERZ_API_URL.toLowerCase();
+  return apiUrl.includes("securepay") || apiUrl.includes("secure");
+}
+
+function buildFrontendRedirect(
+  gatewayStatus: SslGatewayStatus,
+  bookingId?: string,
+): string {
+  const statusPath =
+    gatewayStatus === "success"
+      ? "success"
+      : gatewayStatus === "cancel"
+        ? "cancel"
+        : "failed";
+
+  if (bookingId) {
+    return `${envVars.FRONTEND_URL}/payment/${statusPath}?bookingId=${encodeURIComponent(bookingId)}`;
+  }
+
+  return `${envVars.FRONTEND_URL}/payment/${statusPath}`;
+}
 
 function safeCompareHex(a: string, b: string): boolean {
   const aBuffer = Buffer.from(a, "hex");
@@ -221,5 +267,157 @@ export const WebhookService = {
 
       return;
     }
+
+    return;
+  },
+
+  processSslCommerzWebhook: async (
+    payload: Record<string, unknown>,
+    gatewayStatus: SslGatewayStatus,
+  ) => {
+    const bookingId =
+      getString(payload, "value_a") ?? getString(payload, "bookingId");
+    const transactionId = getString(payload, "tran_id");
+
+    if (!bookingId) {
+      throw new AppError("Missing booking reference", status.BAD_REQUEST);
+    }
+
+    if (gatewayStatus === "success") {
+      const valId = getString(payload, "val_id");
+
+      if (!valId) {
+        throw new AppError("Missing SSLCommerz val_id", status.BAD_REQUEST);
+      }
+
+      if (!envVars.SSLCOMMERZ_STORE_ID || !envVars.SSLCOMMERZ_STORE_PASSWORD) {
+        throw new AppError("SSLCommerz is not configured", status.BAD_REQUEST);
+      }
+
+      const sslcz = new SSLCommerzPayment(
+        envVars.SSLCOMMERZ_STORE_ID,
+        envVars.SSLCOMMERZ_STORE_PASSWORD,
+        isSslLiveMode(),
+      );
+
+      const validation = await sslcz.validate({ val_id: valId });
+      const validationStatus =
+        typeof validation.status === "string"
+          ? validation.status.toUpperCase()
+          : "";
+      const validatedTranId =
+        typeof validation.tran_id === "string" ? validation.tran_id : undefined;
+
+      if (validationStatus !== "VALID" && validationStatus !== "VALIDATED") {
+        throw new AppError(
+          "Invalid SSLCommerz validation status",
+          status.UNAUTHORIZED,
+        );
+      }
+
+      if (
+        transactionId &&
+        validatedTranId &&
+        transactionId !== validatedTranId
+      ) {
+        throw new AppError(
+          "SSLCommerz transaction mismatch",
+          status.UNAUTHORIZED,
+        );
+      }
+
+      await prisma.$transaction(async (tx) => {
+        const booking = await tx.reservation.findFirst({
+          where: {
+            OR: [{ id: bookingId }, { bookingCode: bookingId }],
+          },
+          include: {
+            payment: true,
+          },
+        });
+
+        if (!booking || !booking.payment) {
+          throw new AppError("Booking payment not found", status.NOT_FOUND);
+        }
+
+        if (booking.payment.status !== PaymentStatus.SUCCESS) {
+          await tx.payment.update({
+            where: { id: booking.payment.id },
+            data: {
+              status: PaymentStatus.SUCCESS,
+              paymentMethod: PaymentMethod.SSLCOMMERZ,
+              transactionId: transactionId ?? validatedTranId ?? undefined,
+            },
+          });
+        }
+
+        const chargedAmount = Number(booking.payment.amount);
+        const total = Number(booking.totalPrice);
+        const newPaidAmount = round2(
+          Math.min(Number(booking.paidAmount) + chargedAmount, total),
+        );
+        const newRemainingAmount = round2(Math.max(total - newPaidAmount, 0));
+
+        await tx.reservation.update({
+          where: { id: booking.id },
+          data: {
+            paidAmount: newPaidAmount,
+            remainingAmount: newRemainingAmount,
+            paymentMethod: PaymentMethod.SSLCOMMERZ,
+            paymentStatus:
+              newRemainingAmount <= 0
+                ? BookingPaymentStatus.PAID
+                : BookingPaymentStatus.PARTIAL,
+            bookingStatus: BookingStatus.CONFIRMED,
+            expiresAt: newRemainingAmount <= 0 ? null : booking.expiresAt,
+          },
+        });
+      });
+
+      return {
+        bookingId,
+        redirectUrl: buildFrontendRedirect("success", bookingId),
+      };
+    }
+
+    await prisma.$transaction(async (tx) => {
+      const booking = await tx.reservation.findFirst({
+        where: {
+          OR: [{ id: bookingId }, { bookingCode: bookingId }],
+        },
+        include: {
+          payment: true,
+        },
+      });
+
+      if (!booking) {
+        return;
+      }
+
+      if (booking.payment) {
+        await tx.payment.update({
+          where: { id: booking.payment.id },
+          data: {
+            status: PaymentStatus.FAILED,
+            paymentMethod: PaymentMethod.SSLCOMMERZ,
+            transactionId: transactionId ?? undefined,
+          },
+        });
+      }
+
+      if (gatewayStatus === "cancel") {
+        await tx.reservation.update({
+          where: { id: booking.id },
+          data: {
+            bookingStatus: BookingStatus.CANCELLED,
+          },
+        });
+      }
+    });
+
+    return {
+      bookingId,
+      redirectUrl: buildFrontendRedirect(gatewayStatus, bookingId),
+    };
   },
 };
