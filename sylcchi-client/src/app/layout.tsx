@@ -1,5 +1,6 @@
 import { mulish, openSans } from "@/font/fonts";
 import { cn } from "@/lib/utils";
+import { QueryProvider } from "@/providers/query-provider";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -16,7 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn(mulish.variable, openSans.variable)}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
