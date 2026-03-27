@@ -41,7 +41,7 @@ export default function Footer() {
                   alt="Sylcchi Palace"
                   width={200}
                   height={40}
-                  style={{ height: "auto" }}
+                  style={{ width: "auto", height: "auto" }}
                   className=" brightness-0 invert"
                 />
               </Link>

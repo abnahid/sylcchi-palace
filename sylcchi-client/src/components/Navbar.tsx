@@ -14,7 +14,7 @@ const navLinks = [
   { label: "Rooms", href: "/rooms" },
   { label: "Gallery", href: "/gallery" },
   { label: "News", href: "/news" },
-  { label: "Contacts", href: "/contacts" },
+  { label: "Contacts", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -51,7 +51,9 @@ export default function Navbar() {
               alt="Sylcchi Palace"
               width={180}
               height={50}
-              style={{ height: "auto" }}
+              priority
+              loading="eager"
+              style={{ width: "auto", height: "auto" }}
               className={`transition-all duration-300 ${
                 isScrolled ? "scale-90" : "scale-100"
               }`}

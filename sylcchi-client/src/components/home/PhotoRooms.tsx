@@ -46,7 +46,7 @@ export default function PhotoRooms() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-2">
           {/* Left tall image */}
           {displayItems[0] && (
-            <div className="relative md:row-span-2 overflow-hidden rounded-lg min-h-[300px] md:min-h-0">
+            <div className="relative md:row-span-2 overflow-hidden rounded-lg min-h-75 md:min-h-0">
               <Image
                 src={displayItems[0].image}
                 alt={displayItems[0].title}
@@ -59,7 +59,7 @@ export default function PhotoRooms() {
 
           {/* Top middle image */}
           {displayItems[1] && (
-            <div className="relative overflow-hidden rounded-lg min-h-[200px]">
+            <div className="relative overflow-hidden rounded-lg min-h-50">
               <Image
                 src={displayItems[1].image}
                 alt={displayItems[1].title}
@@ -72,7 +72,7 @@ export default function PhotoRooms() {
 
           {/* Top right tall image */}
           {displayItems[2] && (
-            <div className="relative md:row-span-2 overflow-hidden rounded-lg min-h-[300px] md:min-h-0">
+            <div className="relative md:row-span-2 overflow-hidden rounded-lg min-h-75 md:min-h-0">
               <Image
                 src={displayItems[2].image}
                 alt={displayItems[2].title}
@@ -85,7 +85,7 @@ export default function PhotoRooms() {
 
           {/* Bottom middle image with "View all photos" button */}
           {displayItems[3] && (
-            <div className="relative overflow-hidden rounded-lg min-h-[200px]">
+            <div className="relative overflow-hidden rounded-lg min-h-50">
               <Image
                 src={displayItems[3].image}
                 alt={displayItems[3].title}

@@ -15,7 +15,7 @@ const Newspage = () => {
           </h2>
           <Link
             href="/news"
-            className="rounded-[8px] bg-[#ddeaf6] px-6 py-2 text-[15px] text-[#235784] transition-colors hover:bg-[#c5d9ee]"
+            className="rounded-md bg-secondary px-6 py-3 font-mulish font-bold text-primary  hover:bg-secondary/90  transition-colors "
           >
             View all news
           </Link>
@@ -25,7 +25,7 @@ const Newspage = () => {
           {homeNews.map((item) => (
             <Link href={`/news/${item.slug}`} key={item.id} className="block">
               <article className="overflow-hidden rounded-[12px] bg-white shadow-[0px_2px_30px_0px_rgba(47,76,88,0.06)] transition-shadow hover:shadow-md">
-                <div className="relative h-[200px]">
+                <div className="relative h-50">
                   <Image
                     src={item.coverImage}
                     alt={item.title}

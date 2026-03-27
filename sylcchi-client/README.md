@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sylcchi Palace Client
 
-## Getting Started
+Frontend web client for Sylcchi Palace, built with Next.js App Router.
 
-First, run the development server:
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- TanStack Query
+
+## Run Locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Important Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` Home page
+- `/about` About page
+- `/rooms` Rooms listing
+- `/gallery` Gallery page
+- `/news` News listing
+- `/news/[slug]` Single news detail
+- `/contact` Contact page
 
-## Learn More
+Note: The correct contact route is `/contact` (not `/contacts`).
 
-To learn more about Next.js, take a look at the following resources:
+## Data Sources (Editable)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Main fake/mock data is centralized so UI sections stay synced.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/data/rooms.ts`
+  - Home room cards
+  - Gallery room images
+- `src/data/news.ts`
+  - News list cards
+  - Sidebar recommended posts/tags/categories
+  - News detail pages by slug
 
-## Deploy on Vercel
+If you need to update text/images for rooms or news, edit these files first.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Maps
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Google Maps embed is used in:
+
+- `src/components/home/ContactSection.tsx`
+- `src/components/contact/ContactClient.tsx`
+
+Both use the same responsive iframe embed URL for consistency.
+
+## Branding Notes
+
+This project is customized for **Sylcchi Palace**.
+
+- Navigation and content use Sylcchi Palace naming.
+- Contact and accommodation sections contain hotel-specific copy.
+- Logo image uses eager loading in navbar for better LCP behavior.
+
+## Checks
+
+```bash
+npm run lint
+```
+
+Run lint after content or component updates.

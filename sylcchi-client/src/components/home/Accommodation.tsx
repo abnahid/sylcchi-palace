@@ -7,18 +7,19 @@ import { FaHotel, FaRegSmileBeam, FaUsers } from "react-icons/fa";
 const features = [
   {
     icon: FaHotel,
-    title: "Hostel territory",
-    description: "Consequat interdum varius sit amet ma ttis",
+    title: "Prime city location",
+    description: "Stay near Dargah Gate with easy access to Sylhet landmarks.",
   },
   {
     icon: FaUsers,
-    title: "Accommodates guests",
-    description: "Consequat interdum varius sit amet mattis",
+    title: "Comfort for every guest",
+    description:
+      "Premium room options for families, couples, and business stays.",
   },
   {
     icon: FaRegSmileBeam,
-    title: "Grateful guests",
-    description: "Consequat interdum varius sit amet mattis",
+    title: "Trusted hospitality",
+    description: "Warm service and thoughtful amenities for a memorable visit.",
   },
 ];
 
@@ -30,11 +31,11 @@ export default function Accommodation() {
           {/* Left side - Text content */}
           <div>
             <h2 className="mb-4 max-w-md font-mulish text-2xl font-extrabold leading-tight text-[#101b25] sm:text-3xl lg:text-4xl">
-              Find suitable budget accommodation
+              Discover refined comfort at Sylcchi Palace
             </h2>
             <p className="mb-8 max-w-md font-open-sans text-sm leading-relaxed text-gray-500 sm:text-base">
-              Condimentum id venenatis a condimentum vitae sapien pellentesque
-              habitant. At augue eget arcu dictum varius duis at consectetur
+              Enjoy elegant rooms, modern facilities, and personalized service
+              designed for both leisure and business travelers.
             </p>
 
             <div className="flex flex-col gap-6">
@@ -75,11 +76,11 @@ export default function Accommodation() {
               {/* Room price card - bottom left, overlapping */}
               <div className="absolute -left-8 bottom-12 z-10 w-56 rounded-xl bg-white p-4 shadow-lg sm:-left-20 sm:bottom-16 sm:w-64 sm:p-5">
                 <h4 className="mb-1 font-mulish text-sm font-bold text-[#101b25] sm:text-base">
-                  Family Room with Private Bathroom
+                  Deluxe King Suite
                 </h4>
                 <div className="mb-3 flex items-baseline gap-1">
                   <span className="font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl">
-                    $149
+                    $249
                   </span>
                   <span className="font-open-sans text-sm text-gray-500">
                     / 1 night
@@ -93,7 +94,7 @@ export default function Accommodation() {
               {/* Review card - top right, overlapping */}
               <div className="absolute -right-4 -top-4 z-10 w-52 rounded-xl bg-white p-4 shadow-lg sm:-right-20 sm:top-10 sm:w-60 sm:p-5">
                 <p className="mb-2 font-mulish text-sm font-bold leading-snug text-[#101b25] sm:text-base">
-                  This is the perfect hostel for a weekend getaway!
+                  Perfect stay in Sylhet with excellent rooms and service.
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
@@ -115,7 +116,7 @@ export default function Accommodation() {
                   </div>
                 </div>
                 <p className="mt-1 font-mulish text-xs font-semibold text-[#101b25] sm:text-sm">
-                  Esmond Ward
+                  Guest Review
                 </p>
               </div>
             </div>
