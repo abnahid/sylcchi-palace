@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { authRouter } from "../modules/auth/auth.route";
 import { checkinRouter } from "../modules/checkin/checkin.route";
-import { reviewRouter } from "../modules/review/review.route";
 import { reservationRouter } from "../modules/reservation/reservation.route";
+import { reviewRouter } from "../modules/review/review.route";
 import { roomRouter } from "../modules/room/room.route";
 import { roomImageRouter } from "../modules/roomImage/roomImage.route";
 import { userRouter } from "../modules/user/user.route";
 import { webhookRouter } from "../modules/webhook/webhook.route";
+import { wishlistRouter } from "../modules/wishlist/wishlist.route";
 
 export const appRouter = Router();
 
@@ -17,4 +18,5 @@ appRouter.use("/api/v1/rooms", roomRouter);
 appRouter.use("/api/v1/rooms", roomImageRouter);
 appRouter.use("/api/v1/rooms", reviewRouter);
 appRouter.use("/api/v1/users", userRouter);
+appRouter.use("/api/v1/wishlist", wishlistRouter);
 appRouter.use("/api/webhooks", webhookRouter);
