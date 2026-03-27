@@ -1,6 +1,5 @@
 "use client";
 
-import { useTestimonials } from "@/hooks/useTestimonials";
 import type { Testimonial } from "@/lib/schemas/testimonial";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Image from "next/image";
@@ -54,18 +53,11 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function Testimonial() {
-  const { data: testimonials } = useTestimonials();
   const [current, setCurrent] = useState(0);
+  const items = fallbackTestimonials;
 
-  const items =
-    testimonials && testimonials.length > 0
-      ? testimonials
-      : fallbackTestimonials;
-
-  const prev = () =>
-    setCurrent((c) => (c === 0 ? items.length - 1 : c - 1));
-  const next = () =>
-    setCurrent((c) => (c === items.length - 1 ? 0 : c + 1));
+  const prev = () => setCurrent((c) => (c === 0 ? items.length - 1 : c - 1));
+  const next = () => setCurrent((c) => (c === items.length - 1 ? 0 : c + 1));
 
   const active = items[current];
 
@@ -78,7 +70,7 @@ export default function Testimonial() {
             <div className="overflow-hidden rounded-xl">
               <Image
                 src="/assets/homa-hero.webp"
-                alt="Hostel"
+                alt="Sylcchi Palace"
                 width={600}
                 height={500}
                 className="h-87.5 w-full object-cover lg:h-112.5"

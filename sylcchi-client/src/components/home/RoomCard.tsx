@@ -1,5 +1,6 @@
-import { ArrowRight, BedDouble, UserRound } from "lucide-react";
+import { BedDouble, UserRound } from "lucide-react";
 import Image from "next/image";
+import { BsArrowRight } from "react-icons/bs";
 
 export type RoomCardData = {
   id: string;
@@ -49,7 +50,7 @@ export default function RoomCard({ room }: RoomCardProps) {
         </div>
 
         <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
-          See availability <ArrowRight size={14} />
+          See availability <BsArrowRight size={14} />
         </span>
       </div>
     </article>

@@ -51,6 +51,7 @@ export default function Navbar() {
               alt="Sylcchi Palace"
               width={180}
               height={50}
+              style={{ height: "auto" }}
               className={`transition-all duration-300 ${
                 isScrolled ? "scale-90" : "scale-100"
               }`}

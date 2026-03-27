@@ -7,9 +7,9 @@ import Image from "next/image";
 import { useState } from "react";
 
 const heroContent = {
-  title: "ClockInn - amazing hostel for the free spirited traveler",
+  title: "Sylcchi Palace - luxury comfort in the heart of Sylhet",
   description:
-    "Egestas pretium aenean pharetra magna ac. Et tortor consequat id porta nibh venenatis cras sed. Vel turpis nunc eget lorem dolor sed",
+    "Experience refined rooms, warm hospitality, and a premium stay designed for both leisure and business travelers.",
   image: "/assets/homa-hero.webp",
 };
 
@@ -32,7 +32,7 @@ export default function HeroSection() {
     <section className="bg-white pt-4 pb-8 sm:pt-6 sm:pb-16">
       <div className="mx-auto w-full max-w-370 px-3 sm:px-6">
         <div className="grid grid-cols-1 overflow-visible lg:grid-cols-2">
-          <div className="bg-[#edf1f5] pxw-0.750 sm:px-10 sm:py-12 lg:px-20 lg:py-16">
+          <div className="bg-[#edf1f5] px-4 py-8 sm:px-10 sm:py-12 lg:px-20 lg:py-16">
             <h1 className="max-w-130 font-mulish text-4xl font-extrabold leading-[1.08] text-[#0d1720] sm:text-5xl">
               {heroContent.title}
             </h1>
@@ -44,9 +44,9 @@ export default function HeroSection() {
               </p>
             </div>
 
-            <div className="relative z-10 mt-8 w-full max-w-162.5 bg-white ring-1 ring-black/5 rounded-md">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="relative border-b border-[#eff2f5] px-4 py-3 sm:border-r sm:border-b-0">
+            <div className="relative z-10 mt-8 w-full max-w-162.5 rounded-md bg-white ring-1 ring-black/5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                <div className="relative border-b border-[#eff2f5] px-4 py-3 md:border-r md:border-b-0">
                   <p className="font-mulish text-[12px] font-bold text-[#101b25]">
                     Check-in
                   </p>
@@ -93,7 +93,7 @@ export default function HeroSection() {
                   )}
                 </div>
 
-                <div className="relative border-b border-[#eff2f5] px-4 py-3 sm:border-r sm:border-b-0">
+                <div className="relative border-b border-[#eff2f5] px-4 py-3 md:border-r md:border-b-0">
                   <p className="font-mulish text-[12px] font-bold text-[#101b25]">
                     Check-out
                   </p>
@@ -131,7 +131,7 @@ export default function HeroSection() {
                   )}
                 </div>
 
-                <div className="border-b border-[#eff2f5] px-4 py-3 sm:border-r sm:border-b-0">
+                <div className="border-b border-[#eff2f5] px-4 py-3 md:border-r md:border-b-0 lg:border-r">
                   <p className="font-mulish text-[12px] font-bold text-[#101b25]">
                     Guests
                   </p>
@@ -145,7 +145,7 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                <button className="bg-primary px-6 py-4 text-left font-mulish text-[15px] font-semibold text-white transition-colors hover:bg-[#1f4f79] rounded-r-md">
+                <button className="col-span-1 rounded-b-md bg-primary px-4 py-4 text-center font-mulish text-[15px] font-semibold text-white transition-colors hover:bg-[#1f4f79] md:col-span-2 md:text-left lg:col-span-1 lg:rounded-b-none lg:rounded-r-md lg:px-6">
                   Search
                 </button>
               </div>
@@ -155,11 +155,11 @@ export default function HeroSection() {
           <div className="relative h-80 sm:h-107.5 lg:h-140">
             <Image
               src={heroContent.image}
-              alt="Hostel room"
+              alt="Sylcchi Palace room"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
-              //   priority
+              priority
             />
           </div>
         </div>

@@ -1,11 +1,6 @@
-import {
-  ArrowRight,
-  BriefcaseBusiness,
-  MapPin,
-  ParkingCircle,
-  Wifi,
-} from "lucide-react";
+import { BriefcaseBusiness, MapPin, ParkingCircle, Wifi } from "lucide-react";
 import Link from "next/link";
+import { BsArrowRight } from "react-icons/bs";
 
 const features = [
   { icon: Wifi, label: "Free available high speed WiFi" },
@@ -17,7 +12,7 @@ const features = [
 export default function PromuteVideo() {
   return (
     <section className="bg-background py-12 lg:py-16">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className=" p-8 sm:p-10">
             <h2 className="mb-4 font-mulish text-2xl sm:text-[40px] leading-tight font-extrabold text-foreground">
@@ -46,7 +41,7 @@ export default function PromuteVideo() {
               })}
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-7">
               <Link
                 href="/rooms"
                 className="rounded-md bg-primary px-6 py-3 font-mulish text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
@@ -56,14 +51,14 @@ export default function PromuteVideo() {
 
               <Link
                 href="/about"
-                className="inline-flex items-center gap-1 font-mulish text-sm font-bold text-primary transition-colors hover:underline"
+                className="inline-flex items-center gap-1 font-mulish font-bold text-primary transition-colors hover:underline"
               >
-                More about <ArrowRight size={14} />
+                More about <BsArrowRight size={14} />
               </Link>
             </div>
           </div>
 
-          <div className="relative h-[300px] overflow-hidden rounded-xl sm:h-[400px]">
+          <div className="relative h-75 overflow-hidden rounded-xl sm:h-100">
             <iframe
               className="h-full w-full"
               src="https://www.youtube.com/embed/cdKx1Zv3YKs"

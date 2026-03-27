@@ -41,6 +41,7 @@ export default function Footer() {
                   alt="Sylcchi Palace"
                   width={200}
                   height={40}
+                  style={{ height: "auto" }}
                   className=" brightness-0 invert"
                 />
               </Link>
@@ -121,7 +122,7 @@ export default function Footer() {
       </div>
 
       <div className="bg-slate-50">
-        <div className="max-w-7xl mx-auto flex lg:flex-row justify-between items-center px-4 py-6 text-center">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center px-4 py-6 text-center">
           <p className="text-sm text-slate-700 font-open-sans">
             © {new Date().getFullYear()} Sylcchi Palace. All rights reserved.
           </p>

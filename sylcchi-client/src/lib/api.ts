@@ -2,11 +2,6 @@ import axios, { AxiosError } from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-if (!API_BASE_URL) {
-  // eslint-disable-next-line no-console
-  console.warn("NEXT_PUBLIC_API_URL is not set. API calls may fail.");
-}
-
 export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15_000,

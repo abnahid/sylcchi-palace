@@ -1,24 +1,8 @@
 import RoomCard, { type RoomCardData } from "@/components/home/RoomCard";
+import { homeRoomCards } from "@/data/rooms";
 import Link from "next/link";
 
-const rooms: RoomCardData[] = [
-  {
-    id: "6-bed-shared",
-    name: "Bed in 6-Bed Room with Shared Bathroom",
-    image: "/assets/homa-hero.webp",
-    sleeps: 1,
-    bedLabel: "1 bunk bed",
-    price: 18,
-  },
-  {
-    id: "double-private",
-    name: "Double Room with Private Bathroom",
-    image: "/assets/homa-hero.webp",
-    sleeps: 2,
-    bedLabel: "2 twin beds",
-    price: 35,
-  },
-];
+const rooms: RoomCardData[] = homeRoomCards.slice(0, 2);
 
 // button rounded-md bg-secondary px-6 py-3 font-mulish font-bold text-primary transition-colors hover:bg-secondary/90
 
@@ -28,7 +12,7 @@ export default function HostelRooms() {
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-8 flex items-center justify-between gap-4">
           <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
-            Hostel rooms
+            Sylcchi Palace rooms
           </h2>
           <Link
             href="/rooms"
@@ -56,7 +40,7 @@ export default function HostelRooms() {
                 Stay Longer, Save More
               </h3>
               <p className="mb-7 max-w-70 font-open-sans text-base leading-relaxed text-primary-foreground/90 sm:text-lg">
-                It's simple: the longer you stay, the more you save!
+                It&apos;s simple: the longer you stay, the more you save!
               </p>
 
               <div className="border-l border-primary-foreground/80 pl-4">
