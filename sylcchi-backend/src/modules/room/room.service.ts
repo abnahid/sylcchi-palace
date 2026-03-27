@@ -10,6 +10,7 @@ type CreateRoomPayload = {
   rules?: string[];
   price: number;
   capacity: number;
+  bedType?: BedType;
   roomTypeId: string;
   isAvailable?: boolean;
 };
@@ -22,9 +23,51 @@ type UpdateRoomPayload = {
   rules?: string[];
   price?: number;
   capacity?: number;
+  bedType?: BedType;
   roomTypeId?: string;
   isAvailable?: boolean;
 };
+
+type BedType = "King" | "Queen" | "Twin" | "Bunk";
+
+function getBedTypeByCapacity(capacity: number): BedType {
+  if (capacity <= 1) {
+    return "Twin";
+  }
+
+  if (capacity === 2) {
+    return "King";
+  }
+
+  if (capacity === 3) {
+    return "Queen";
+  }
+
+  return "Bunk";
+}
+
+function withBedType<T extends { capacity: number; bedType: string | null }>(
+  room: T,
+): T & { bedType: BedType } {
+  const stored = room.bedType;
+
+  if (
+    stored === "King" ||
+    stored === "Queen" ||
+    stored === "Twin" ||
+    stored === "Bunk"
+  ) {
+    return {
+      ...room,
+      bedType: stored,
+    };
+  }
+
+  return {
+    ...room,
+    bedType: getBedTypeByCapacity(room.capacity),
+  };
+}
 
 function toSlug(value: string): string {
   const normalized = value
@@ -98,7 +141,7 @@ export const RoomService = {
     isAvailable?: boolean;
     roomTypeId?: string;
   }) => {
-    return prisma.room.findMany({
+    const rooms = await prisma.room.findMany({
       where: {
         ...(typeof filters.isAvailable === "boolean"
           ? { isAvailable: filters.isAvailable }
@@ -113,6 +156,8 @@ export const RoomService = {
         createdAt: "desc",
       },
     });
+
+    return rooms.map((room) => withBedType(room));
   },
 
   getSingleRoom: async (slug: string) => {
@@ -139,7 +184,7 @@ export const RoomService = {
       throw new AppError("Room not found", status.NOT_FOUND);
     }
 
-    return room;
+    return withBedType(room);
   },
 
   createRoom: async (payload: CreateRoomPayload) => {
@@ -155,7 +200,7 @@ export const RoomService = {
     const baseSlug = toSlug(payload.slug ?? payload.name);
     const uniqueSlug = await getUniqueRoomSlug(baseSlug);
 
-    return prisma.room.create({
+    const room = await prisma.room.create({
       data: {
         name: payload.name,
         slug: uniqueSlug,
@@ -164,6 +209,7 @@ export const RoomService = {
         rules: payload.rules ?? [],
         price: payload.price,
         capacity: payload.capacity,
+        bedType: payload.bedType ?? getBedTypeByCapacity(payload.capacity),
         roomTypeId: payload.roomTypeId,
         isAvailable: payload.isAvailable ?? true,
       },
@@ -172,6 +218,8 @@ export const RoomService = {
         images: true,
       },
     });
+
+    return withBedType(room);
   },
 
   updateRoom: async (roomId: string, payload: UpdateRoomPayload) => {
@@ -202,10 +250,17 @@ export const RoomService = {
         ? await getUniqueRoomSlug(toSlug(slug), roomId)
         : undefined;
 
-    return prisma.room.update({
+    const resolvedBedType =
+      updateData.bedType ??
+      (typeof updateData.capacity === "number"
+        ? getBedTypeByCapacity(updateData.capacity)
+        : undefined);
+
+    const room = await prisma.room.update({
       where: { id: roomId },
       data: {
         ...updateData,
+        ...(resolvedBedType ? { bedType: resolvedBedType } : {}),
         ...(uniqueSlug ? { slug: uniqueSlug } : {}),
       },
       include: {
@@ -213,6 +268,8 @@ export const RoomService = {
         images: true,
       },
     });
+
+    return withBedType(room);
   },
 
   deleteRoom: async (roomId: string) => {

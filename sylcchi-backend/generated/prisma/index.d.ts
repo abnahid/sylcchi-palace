@@ -7994,6 +7994,7 @@ export namespace Prisma {
     description: string | null
     price: Decimal | null
     capacity: number | null
+    bedType: string | null
     roomTypeId: string | null
     isAvailable: boolean | null
     createdAt: Date | null
@@ -8007,6 +8008,7 @@ export namespace Prisma {
     description: string | null
     price: Decimal | null
     capacity: number | null
+    bedType: string | null
     roomTypeId: string | null
     isAvailable: boolean | null
     createdAt: Date | null
@@ -8022,6 +8024,7 @@ export namespace Prisma {
     rules: number
     price: number
     capacity: number
+    bedType: number
     roomTypeId: number
     isAvailable: number
     createdAt: number
@@ -8047,6 +8050,7 @@ export namespace Prisma {
     description?: true
     price?: true
     capacity?: true
+    bedType?: true
     roomTypeId?: true
     isAvailable?: true
     createdAt?: true
@@ -8060,6 +8064,7 @@ export namespace Prisma {
     description?: true
     price?: true
     capacity?: true
+    bedType?: true
     roomTypeId?: true
     isAvailable?: true
     createdAt?: true
@@ -8075,6 +8080,7 @@ export namespace Prisma {
     rules?: true
     price?: true
     capacity?: true
+    bedType?: true
     roomTypeId?: true
     isAvailable?: true
     createdAt?: true
@@ -8177,6 +8183,7 @@ export namespace Prisma {
     rules: string[]
     price: Decimal
     capacity: number
+    bedType: string | null
     roomTypeId: string
     isAvailable: boolean
     createdAt: Date
@@ -8211,6 +8218,7 @@ export namespace Prisma {
     rules?: boolean
     price?: boolean
     capacity?: boolean
+    bedType?: boolean
     roomTypeId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
@@ -8233,6 +8241,7 @@ export namespace Prisma {
     rules?: boolean
     price?: boolean
     capacity?: boolean
+    bedType?: boolean
     roomTypeId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
@@ -8249,6 +8258,7 @@ export namespace Prisma {
     rules?: boolean
     price?: boolean
     capacity?: boolean
+    bedType?: boolean
     roomTypeId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
@@ -8265,13 +8275,14 @@ export namespace Prisma {
     rules?: boolean
     price?: boolean
     capacity?: boolean
+    bedType?: boolean
     roomTypeId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "facilities" | "rules" | "price" | "capacity" | "roomTypeId" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
+  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "facilities" | "rules" | "price" | "capacity" | "bedType" | "roomTypeId" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
     images?: boolean | Room$imagesArgs<ExtArgs>
@@ -8307,6 +8318,7 @@ export namespace Prisma {
       rules: string[]
       price: Prisma.Decimal
       capacity: number
+      bedType: string | null
       roomTypeId: string
       isAvailable: boolean
       createdAt: Date
@@ -8748,6 +8760,7 @@ export namespace Prisma {
     readonly rules: FieldRef<"Room", 'String[]'>
     readonly price: FieldRef<"Room", 'Decimal'>
     readonly capacity: FieldRef<"Room", 'Int'>
+    readonly bedType: FieldRef<"Room", 'String'>
     readonly roomTypeId: FieldRef<"Room", 'String'>
     readonly isAvailable: FieldRef<"Room", 'Boolean'>
     readonly createdAt: FieldRef<"Room", 'DateTime'>
@@ -10355,10 +10368,18 @@ export namespace Prisma {
 
   export type ReviewAvgAggregateOutputType = {
     rating: number | null
+    locationRating: number | null
+    comfortRating: number | null
+    serviceRating: number | null
+    pricingRating: number | null
   }
 
   export type ReviewSumAggregateOutputType = {
     rating: number | null
+    locationRating: number | null
+    comfortRating: number | null
+    serviceRating: number | null
+    pricingRating: number | null
   }
 
   export type ReviewMinAggregateOutputType = {
@@ -10366,6 +10387,10 @@ export namespace Prisma {
     userId: string | null
     roomId: string | null
     rating: number | null
+    locationRating: number | null
+    comfortRating: number | null
+    serviceRating: number | null
+    pricingRating: number | null
     comment: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10376,6 +10401,10 @@ export namespace Prisma {
     userId: string | null
     roomId: string | null
     rating: number | null
+    locationRating: number | null
+    comfortRating: number | null
+    serviceRating: number | null
+    pricingRating: number | null
     comment: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10386,6 +10415,10 @@ export namespace Prisma {
     userId: number
     roomId: number
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment: number
     createdAt: number
     updatedAt: number
@@ -10395,10 +10428,18 @@ export namespace Prisma {
 
   export type ReviewAvgAggregateInputType = {
     rating?: true
+    locationRating?: true
+    comfortRating?: true
+    serviceRating?: true
+    pricingRating?: true
   }
 
   export type ReviewSumAggregateInputType = {
     rating?: true
+    locationRating?: true
+    comfortRating?: true
+    serviceRating?: true
+    pricingRating?: true
   }
 
   export type ReviewMinAggregateInputType = {
@@ -10406,6 +10447,10 @@ export namespace Prisma {
     userId?: true
     roomId?: true
     rating?: true
+    locationRating?: true
+    comfortRating?: true
+    serviceRating?: true
+    pricingRating?: true
     comment?: true
     createdAt?: true
     updatedAt?: true
@@ -10416,6 +10461,10 @@ export namespace Prisma {
     userId?: true
     roomId?: true
     rating?: true
+    locationRating?: true
+    comfortRating?: true
+    serviceRating?: true
+    pricingRating?: true
     comment?: true
     createdAt?: true
     updatedAt?: true
@@ -10426,6 +10475,10 @@ export namespace Prisma {
     userId?: true
     roomId?: true
     rating?: true
+    locationRating?: true
+    comfortRating?: true
+    serviceRating?: true
+    pricingRating?: true
     comment?: true
     createdAt?: true
     updatedAt?: true
@@ -10523,6 +10576,10 @@ export namespace Prisma {
     userId: string
     roomId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment: string | null
     createdAt: Date
     updatedAt: Date
@@ -10552,6 +10609,10 @@ export namespace Prisma {
     userId?: boolean
     roomId?: boolean
     rating?: boolean
+    locationRating?: boolean
+    comfortRating?: boolean
+    serviceRating?: boolean
+    pricingRating?: boolean
     comment?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10564,6 +10625,10 @@ export namespace Prisma {
     userId?: boolean
     roomId?: boolean
     rating?: boolean
+    locationRating?: boolean
+    comfortRating?: boolean
+    serviceRating?: boolean
+    pricingRating?: boolean
     comment?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10576,6 +10641,10 @@ export namespace Prisma {
     userId?: boolean
     roomId?: boolean
     rating?: boolean
+    locationRating?: boolean
+    comfortRating?: boolean
+    serviceRating?: boolean
+    pricingRating?: boolean
     comment?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -10588,12 +10657,16 @@ export namespace Prisma {
     userId?: boolean
     roomId?: boolean
     rating?: boolean
+    locationRating?: boolean
+    comfortRating?: boolean
+    serviceRating?: boolean
+    pricingRating?: boolean
     comment?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "roomId" | "rating" | "comment" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "roomId" | "rating" | "locationRating" | "comfortRating" | "serviceRating" | "pricingRating" | "comment" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     room?: boolean | RoomDefaultArgs<ExtArgs>
@@ -10618,6 +10691,10 @@ export namespace Prisma {
       userId: string
       roomId: string
       rating: number
+      locationRating: number
+      comfortRating: number
+      serviceRating: number
+      pricingRating: number
       comment: string | null
       createdAt: Date
       updatedAt: Date
@@ -11050,6 +11127,10 @@ export namespace Prisma {
     readonly userId: FieldRef<"Review", 'String'>
     readonly roomId: FieldRef<"Review", 'String'>
     readonly rating: FieldRef<"Review", 'Int'>
+    readonly locationRating: FieldRef<"Review", 'Int'>
+    readonly comfortRating: FieldRef<"Review", 'Int'>
+    readonly serviceRating: FieldRef<"Review", 'Int'>
+    readonly pricingRating: FieldRef<"Review", 'Int'>
     readonly comment: FieldRef<"Review", 'String'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
     readonly updatedAt: FieldRef<"Review", 'DateTime'>
@@ -18643,6 +18724,7 @@ export namespace Prisma {
     rules: 'rules',
     price: 'price',
     capacity: 'capacity',
+    bedType: 'bedType',
     roomTypeId: 'roomTypeId',
     isAvailable: 'isAvailable',
     createdAt: 'createdAt',
@@ -18667,6 +18749,10 @@ export namespace Prisma {
     userId: 'userId',
     roomId: 'roomId',
     rating: 'rating',
+    locationRating: 'locationRating',
+    comfortRating: 'comfortRating',
+    serviceRating: 'serviceRating',
+    pricingRating: 'pricingRating',
     comment: 'comment',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -19393,6 +19479,7 @@ export namespace Prisma {
     rules?: StringNullableListFilter<"Room">
     price?: DecimalFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"Room"> | number
+    bedType?: StringNullableFilter<"Room"> | string | null
     roomTypeId?: UuidFilter<"Room"> | string
     isAvailable?: BoolFilter<"Room"> | boolean
     createdAt?: DateTimeFilter<"Room"> | Date | string
@@ -19414,6 +19501,7 @@ export namespace Prisma {
     rules?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
+    bedType?: SortOrderInput | SortOrder
     roomTypeId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
@@ -19438,6 +19526,7 @@ export namespace Prisma {
     rules?: StringNullableListFilter<"Room">
     price?: DecimalFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"Room"> | number
+    bedType?: StringNullableFilter<"Room"> | string | null
     roomTypeId?: UuidFilter<"Room"> | string
     isAvailable?: BoolFilter<"Room"> | boolean
     createdAt?: DateTimeFilter<"Room"> | Date | string
@@ -19459,6 +19548,7 @@ export namespace Prisma {
     rules?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
+    bedType?: SortOrderInput | SortOrder
     roomTypeId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
@@ -19482,6 +19572,7 @@ export namespace Prisma {
     rules?: StringNullableListFilter<"Room">
     price?: DecimalWithAggregatesFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntWithAggregatesFilter<"Room"> | number
+    bedType?: StringNullableWithAggregatesFilter<"Room"> | string | null
     roomTypeId?: UuidWithAggregatesFilter<"Room"> | string
     isAvailable?: BoolWithAggregatesFilter<"Room"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Room"> | Date | string
@@ -19546,6 +19637,10 @@ export namespace Prisma {
     userId?: UuidFilter<"Review"> | string
     roomId?: UuidFilter<"Review"> | string
     rating?: IntFilter<"Review"> | number
+    locationRating?: IntFilter<"Review"> | number
+    comfortRating?: IntFilter<"Review"> | number
+    serviceRating?: IntFilter<"Review"> | number
+    pricingRating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
@@ -19558,6 +19653,10 @@ export namespace Prisma {
     userId?: SortOrder
     roomId?: SortOrder
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
     comment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19574,6 +19673,10 @@ export namespace Prisma {
     userId?: UuidFilter<"Review"> | string
     roomId?: UuidFilter<"Review"> | string
     rating?: IntFilter<"Review"> | number
+    locationRating?: IntFilter<"Review"> | number
+    comfortRating?: IntFilter<"Review"> | number
+    serviceRating?: IntFilter<"Review"> | number
+    pricingRating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
@@ -19586,6 +19689,10 @@ export namespace Prisma {
     userId?: SortOrder
     roomId?: SortOrder
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
     comment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19604,6 +19711,10 @@ export namespace Prisma {
     userId?: UuidWithAggregatesFilter<"Review"> | string
     roomId?: UuidWithAggregatesFilter<"Review"> | string
     rating?: IntWithAggregatesFilter<"Review"> | number
+    locationRating?: IntWithAggregatesFilter<"Review"> | number
+    comfortRating?: IntWithAggregatesFilter<"Review"> | number
+    serviceRating?: IntWithAggregatesFilter<"Review"> | number
+    pricingRating?: IntWithAggregatesFilter<"Review"> | number
     comment?: StringNullableWithAggregatesFilter<"Review"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -20536,6 +20647,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20556,6 +20668,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -20576,6 +20689,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20596,6 +20710,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20616,6 +20731,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -20631,6 +20747,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20645,6 +20762,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20702,6 +20820,10 @@ export namespace Prisma {
   export type ReviewCreateInput = {
     id?: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20714,6 +20836,10 @@ export namespace Prisma {
     userId: string
     roomId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20722,6 +20848,10 @@ export namespace Prisma {
   export type ReviewUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20734,6 +20864,10 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     roomId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20744,6 +20878,10 @@ export namespace Prisma {
     userId: string
     roomId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20752,6 +20890,10 @@ export namespace Prisma {
   export type ReviewUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20762,6 +20904,10 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     roomId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21832,6 +21978,7 @@ export namespace Prisma {
     rules?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
+    bedType?: SortOrder
     roomTypeId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
@@ -21850,6 +21997,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
+    bedType?: SortOrder
     roomTypeId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
@@ -21863,6 +22011,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     capacity?: SortOrder
+    bedType?: SortOrder
     roomTypeId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
@@ -21926,6 +22075,10 @@ export namespace Prisma {
     userId?: SortOrder
     roomId?: SortOrder
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21933,6 +22086,10 @@ export namespace Prisma {
 
   export type ReviewAvgOrderByAggregateInput = {
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
   }
 
   export type ReviewMaxOrderByAggregateInput = {
@@ -21940,6 +22097,10 @@ export namespace Prisma {
     userId?: SortOrder
     roomId?: SortOrder
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21950,6 +22111,10 @@ export namespace Prisma {
     userId?: SortOrder
     roomId?: SortOrder
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21957,6 +22122,10 @@ export namespace Prisma {
 
   export type ReviewSumOrderByAggregateInput = {
     rating?: SortOrder
+    locationRating?: SortOrder
+    comfortRating?: SortOrder
+    serviceRating?: SortOrder
+    pricingRating?: SortOrder
   }
 
   export type WishlistUserIdRoomIdCompoundUniqueInput = {
@@ -23934,6 +24103,10 @@ export namespace Prisma {
   export type ReviewCreateWithoutUserInput = {
     id?: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23944,6 +24117,10 @@ export namespace Prisma {
     id?: string
     roomId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24138,6 +24315,10 @@ export namespace Prisma {
     userId?: UuidFilter<"Review"> | string
     roomId?: UuidFilter<"Review"> | string
     rating?: IntFilter<"Review"> | number
+    locationRating?: IntFilter<"Review"> | number
+    comfortRating?: IntFilter<"Review"> | number
+    serviceRating?: IntFilter<"Review"> | number
+    pricingRating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
     updatedAt?: DateTimeFilter<"Review"> | Date | string
@@ -24391,6 +24572,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24410,6 +24592,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24458,6 +24641,7 @@ export namespace Prisma {
     rules?: StringNullableListFilter<"Room">
     price?: DecimalFilter<"Room"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"Room"> | number
+    bedType?: StringNullableFilter<"Room"> | string | null
     roomTypeId?: UuidFilter<"Room"> | string
     isAvailable?: BoolFilter<"Room"> | boolean
     createdAt?: DateTimeFilter<"Room"> | Date | string
@@ -24604,6 +24788,10 @@ export namespace Prisma {
   export type ReviewCreateWithoutRoomInput = {
     id?: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24614,6 +24802,10 @@ export namespace Prisma {
     id?: string
     userId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24786,6 +24978,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24805,6 +24998,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -24840,6 +25034,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24859,6 +25054,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24917,6 +25113,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24936,6 +25133,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -25016,6 +25214,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25035,6 +25234,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25093,6 +25293,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25112,6 +25313,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -25192,6 +25394,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25211,6 +25414,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25269,6 +25473,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25288,6 +25493,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -25484,6 +25690,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25503,6 +25710,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25847,6 +26055,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25866,6 +26075,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     roomTypeId: string
     isAvailable?: boolean
     createdAt?: Date | string
@@ -25970,6 +26180,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25989,6 +26200,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     roomTypeId?: StringFieldUpdateOperationsInput | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26292,6 +26504,10 @@ export namespace Prisma {
     id?: string
     roomId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26406,6 +26622,10 @@ export namespace Prisma {
   export type ReviewUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26416,6 +26636,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roomId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26425,6 +26649,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roomId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26540,6 +26768,7 @@ export namespace Prisma {
     rules?: RoomCreaterulesInput | string[]
     price: Decimal | DecimalJsLike | number | string
     capacity: number
+    bedType?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26554,6 +26783,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26573,6 +26803,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26592,6 +26823,7 @@ export namespace Prisma {
     rules?: RoomUpdaterulesInput | string[]
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    bedType?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26643,6 +26875,10 @@ export namespace Prisma {
     id?: string
     userId: string
     rating: number
+    locationRating: number
+    comfortRating: number
+    serviceRating: number
+    pricingRating: number
     comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26791,6 +27027,10 @@ export namespace Prisma {
   export type ReviewUpdateWithoutRoomInput = {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26801,6 +27041,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26810,6 +27054,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
+    locationRating?: IntFieldUpdateOperationsInput | number
+    comfortRating?: IntFieldUpdateOperationsInput | number
+    serviceRating?: IntFieldUpdateOperationsInput | number
+    pricingRating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

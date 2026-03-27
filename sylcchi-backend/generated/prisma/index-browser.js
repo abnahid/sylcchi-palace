@@ -183,6 +183,7 @@ exports.Prisma.RoomScalarFieldEnum = {
   rules: 'rules',
   price: 'price',
   capacity: 'capacity',
+  bedType: 'bedType',
   roomTypeId: 'roomTypeId',
   isAvailable: 'isAvailable',
   createdAt: 'createdAt',
@@ -201,6 +202,10 @@ exports.Prisma.ReviewScalarFieldEnum = {
   userId: 'userId',
   roomId: 'roomId',
   rating: 'rating',
+  locationRating: 'locationRating',
+  comfortRating: 'comfortRating',
+  serviceRating: 'serviceRating',
+  pricingRating: 'pricingRating',
   comment: 'comment',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

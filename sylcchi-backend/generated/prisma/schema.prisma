@@ -143,6 +143,7 @@ model Room {
   rules       String[] @default([])
   price       Decimal  @db.Decimal(10, 2)
   capacity    Int
+  bedType     String?  @map("bed_type")
   roomTypeId  String   @map("room_type_id") @db.Uuid
   isAvailable Boolean  @default(true) @map("is_available")
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
@@ -174,13 +175,17 @@ model RoomImage {
 // -----------------------------------------------------------------------------
 
 model Review {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  roomId    String   @map("room_id") @db.Uuid
-  rating    Int
-  comment   String?
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  roomId         String   @map("room_id") @db.Uuid
+  rating         Int
+  locationRating Int      @map("location_rating")
+  comfortRating  Int      @map("comfort_rating")
+  serviceRating  Int      @map("service_rating")
+  pricingRating  Int      @map("pricing_rating")
+  comment        String?
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)

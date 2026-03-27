@@ -3,6 +3,10 @@ import status from "http-status";
 import { AppError } from "../../errorHelpers/AppError";
 import { RoomService } from "./room.service";
 
+const ALLOWED_BED_TYPES = ["King", "Queen", "Twin", "Bunk"] as const;
+
+type BedType = (typeof ALLOWED_BED_TYPES)[number];
+
 function asBodyObject(body: unknown): Record<string, unknown> {
   if (!body || typeof body !== "object") {
     throw new AppError("Request body is required", status.BAD_REQUEST);
@@ -67,6 +71,26 @@ function getOptionalString(
   }
 
   return value.trim() === "" ? undefined : value.trim();
+}
+
+function getOptionalBedType(
+  obj: Record<string, unknown>,
+  key: string,
+): BedType | undefined {
+  const value = getOptionalString(obj, key);
+
+  if (!value) {
+    return undefined;
+  }
+
+  if (!ALLOWED_BED_TYPES.includes(value as BedType)) {
+    throw new AppError(
+      `${key} must be one of: ${ALLOWED_BED_TYPES.join(", ")}`,
+      status.BAD_REQUEST,
+    );
+  }
+
+  return value as BedType;
 }
 
 function getOptionalPositiveNumber(
@@ -258,6 +282,7 @@ export const RoomController = {
 
     const isAvailable =
       typeof body.isAvailable === "boolean" ? body.isAvailable : undefined;
+    const bedType = getOptionalBedType(body, "bedType");
 
     const result = await RoomService.createRoom({
       name,
@@ -269,6 +294,7 @@ export const RoomController = {
       facilities,
       rules,
       isAvailable,
+      bedType,
     });
 
     res.status(status.CREATED).json({
@@ -297,6 +323,7 @@ export const RoomController = {
       capacity: getOptionalPositiveInt(body, "capacity"),
       roomTypeId: getOptionalString(body, "roomTypeId"),
       isAvailable: getOptionalBoolean(body, "isAvailable"),
+      bedType: getOptionalBedType(body, "bedType"),
     };
 
     const hasAnyField = Object.values(updatePayload).some(
