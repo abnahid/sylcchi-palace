@@ -2,73 +2,64 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 1.x.x   | Yes       |
+| < 1.0   | No        |
 
 ## Reporting a Vulnerability
 
-We take the security of Zenvira seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+Security issues should be reported privately.
 
-### How to Report
+Do not open public issues for vulnerabilities.
 
-**Please do NOT report security vulnerabilities through public GitHub issues.**
+Send reports to: **security@abnahid.com**
 
-Instead, please send an email to **security@abnahid.com** with the following information:
+Please include:
 
-1. **Type of vulnerability** (e.g., SQL injection, XSS, authentication bypass)
-2. **Location** of the vulnerability (file path, URL, or component)
-3. **Step-by-step instructions** to reproduce the issue
-4. **Proof of concept** or exploit code (if available)
-5. **Impact assessment** of the vulnerability
-6. **Suggested fix** (if you have one)
+1. Vulnerability type and affected area
+2. Reproduction steps
+3. Impact assessment
+4. Proof of concept (if available)
+5. Suggested mitigation (optional)
 
-### What to Expect
+## Response Targets
 
-- **Acknowledgment**: We will acknowledge receipt of your report within 48 hours
-- **Assessment**: We will assess the vulnerability and determine its impact
-- **Updates**: We will keep you informed of our progress
-- **Resolution**: We aim to resolve critical vulnerabilities within 7 days
-- **Credit**: We will credit you in our security acknowledgments (unless you prefer to remain anonymous)
+- Acknowledgment: within 48 hours
+- Initial triage: within 5 business days
+- Critical fix target: as soon as possible, typically within 7 days
 
-### Scope
+## Scope
 
-The following are in scope:
-- Zenvira client application (zenvira-client)
-- Zenvira server API (server)
-- Authentication and authorization systems
-- Data handling and storage
-- API endpoints
+In scope:
 
-### Out of Scope
+- `sylcchi-backend` API and authentication logic
+- `sylcchi-client` frontend security-sensitive flows
+- Role and permission enforcement (`CUSTOMER`, `MANAGER`, `ADMIN`)
+- Payment callback/webhook validation
 
-- Vulnerabilities in third-party dependencies (report these to the respective maintainers)
+Out of scope:
+
+- Vulnerabilities only in third-party services or packages
 - Social engineering attacks
-- Physical security issues
-- Denial of service attacks
+- Physical security threats
+- Volumetric DDoS without app-layer exploit details
 
-## Security Best Practices
+## Security Expectations for Contributors
 
-When contributing to Zenvira, please follow these security practices:
+- Keep all trust decisions on backend services.
+- Never commit secrets or credentials.
+- Validate and sanitize all external input.
+- Enforce authorization checks on protected routes.
+- Use least privilege when adding new access paths.
 
-1. **Never commit secrets** - Use environment variables for API keys, passwords, etc.
-2. **Validate all inputs** - Sanitize user input on both client and server
-3. **Use parameterized queries** - Prevent SQL injection with Prisma's query builder
-4. **Implement proper authentication** - Use Better Auth's built-in security features
-5. **Keep dependencies updated** - Regularly update npm packages
+## Current Security Controls
 
-## Security Features
+- Better Auth for session and auth lifecycle
+- JWT-based auth for API route protection
+- RBAC middleware for admin/manager/customer access
+- Prisma ORM to reduce injection risks
+- CORS and cookie parsing controls
+- Webhook endpoints for payment reconciliation
 
-Zenvira implements the following security measures:
-
-- **Password hashing** with bcrypt
-- **Session-based authentication** with secure cookies
-- **Role-based access control** (customer, seller, admin)
-- **Email verification** for new accounts
-- **CORS protection** with configurable origins
-- **Input validation** on all API endpoints
-
----
-
-Thank you for helping keep Zenvira and our users safe!
+Thank you for helping keep Sylcchi Palace secure.

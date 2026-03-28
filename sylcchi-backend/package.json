@@ -1,7 +1,7 @@
 {
   "name": "sylcchi-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Sylcchi Palace hotel booking platform",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "author": "ab nahid",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.5.6",

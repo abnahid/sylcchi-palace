@@ -1,86 +1,92 @@
-# Contributing to Zenvira
+# Contributing to Sylcchi Palace
 
-Thank you for considering contributing to Zenvira!
+Thanks for your interest in contributing to Sylcchi Palace.
 
 ## Code of Conduct
 
-This project is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+This project follows the rules in `CODE_OF_CONDUCT.md`. By participating, you agree to follow them.
 
-## How Can I Contribute?
+## Ways to Contribute
 
-### Reporting Bugs
+### Report Bugs
 
-Before creating bug reports, check existing issues. Include:
+Before opening a new issue, search existing issues first.
 
-- **Description**: Clear description of the bug
-- **Steps to Reproduce**: Steps to reproduce the behavior
-- **Expected vs Actual Behavior**: What you expected vs what happened
-- **Screenshots**: If applicable
-- **Environment**: OS, Node.js version, Browser
+Please include:
 
-### Suggesting Enhancements
+- A clear bug description
+- Reproduction steps
+- Expected behavior vs actual behavior
+- Screenshots or logs when helpful
+- Environment details (OS, Node version, browser)
 
-Include:
-- **Use Case**: The problem you're solving
-- **Proposed Solution**: Your suggested approach
-- **Alternatives**: Other options you've considered
+### Suggest Improvements
 
-### Pull Requests
+Please include:
 
-1. **Fork & Clone**
-   ```bash
-   git clone https://github.com/abnahid/Zenvira.git
-   cd Zenvira
-   ```
+- The problem or use case
+- Your proposed solution
+- Any alternatives considered
 
-2. **Create a Branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+### Submit Pull Requests
 
-3. **Make Changes** - Follow coding style, write meaningful commits
+1. Fork and clone the repository.
+2. Create a branch from `main`.
+3. Make focused, testable changes.
+4. Run checks locally.
+5. Open a PR with clear context.
 
-4. **Test**
-   ```bash
-   cd server && npm run build
-   cd zenvira-client && npm run build && npm run lint
-   ```
-
-5. **Push & Open PR**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-## Development Setup
+## Local Development
 
 ```bash
+git clone <your-fork-url>
+cd "Sylcchi Palace"
+
 # Backend
-cd server
+cd sylcchi-backend
 npm install
-cp .env.example .env
-npm run db:migrate
+cp .env.example .env.local
+npm run prisma:generate
+npm run prisma:migrate:dev
 npm run dev
 
-# Frontend
-cd zenvira-client
+# Frontend (new terminal)
+cd ../sylcchi-client
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-## Commit Messages
+## Validation Checklist
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Before opening a PR:
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation
-- `style`: Code style
-- `refactor`: Refactoring
-- `test`: Tests
-- `chore`: Build/tooling
+- Backend: `cd sylcchi-backend && npm run prisma:validate`
+- Frontend: `cd sylcchi-client && npm run lint`
+- Build affected app(s) when your change impacts runtime behavior
 
-Example: `feat(auth): add email verification`
+## Commit Style
 
----
+Conventional Commits are recommended:
 
-Thank you for contributing!
+- `feat`: new feature
+- `fix`: bug fix
+- `docs`: docs changes
+- `refactor`: internal code improvement
+- `test`: tests
+- `chore`: tooling and maintenance
+
+Example:
+
+```text
+feat(booking): add refund completion guard for admin only
+```
+
+## Pull Request Tips
+
+- Keep PRs scoped to one concern.
+- Include screenshots for UI changes.
+- Mention breaking changes explicitly.
+- Reference related issues.
+
+Thanks for helping improve Sylcchi Palace.

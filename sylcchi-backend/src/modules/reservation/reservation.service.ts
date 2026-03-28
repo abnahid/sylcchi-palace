@@ -7,6 +7,7 @@ import {
   PaymentStatus,
   PaymentType,
   Prisma,
+  PrismaClient,
   RefundStatus,
 } from "../../../generated/prisma";
 import { envVars } from "../../config/env";
@@ -175,7 +176,7 @@ function getPrimaryGuestEmail(
 }
 
 async function cancelExpiredBookingsTx(
-  tx: Prisma.TransactionClient,
+  tx: Prisma.TransactionClient | PrismaClient,
 ): Promise<number> {
   const now = new Date();
 
@@ -1029,8 +1030,7 @@ export const ReservationService = {
   },
 
   cancelExpiredBookings: async () => {
-    return prisma.$transaction(async (tx) => {
-      return cancelExpiredBookingsTx(tx);
-    });
+    // Use direct query execution for scheduler sweeps to avoid transaction-start timeouts under pool pressure.
+    return cancelExpiredBookingsTx(prisma);
   },
 };

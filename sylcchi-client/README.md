@@ -1,71 +1,71 @@
 # Sylcchi Palace Client
 
-Frontend web client for Sylcchi Palace, built with Next.js App Router.
+Frontend application for Sylcchi Palace, built with Next.js App Router.
 
-## Tech Stack
+## Stack
 
 - Next.js 16
 - React 19
 - TypeScript
-- Tailwind CSS
+- Tailwind CSS 4
 - TanStack Query
+- React Hook Form + Zod
 
-## Run Locally
+## Local Setup
 
 ```bash
 npm install
+cp .env.example .env.local
+```
+
+Set:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+```
+
+Run:
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000
+Open `http://localhost:3000`.
 
-## Important Routes
+## Key Routes
 
-- `/` Home page
-- `/about` About page
-- `/rooms` Rooms listing
-- `/gallery` Gallery page
-- `/news` News listing
-- `/news/[slug]` Single news detail
-- `/contact` Contact page
+- `/`
+- `/about`
+- `/rooms`
+- `/gallery`
+- `/news`
+- `/news/[slug]`
+- `/contact`
 
-Note: The correct contact route is `/contact` (not `/contacts`).
+## Backend Integration
 
-## Data Sources (Editable)
+The client expects backend API under `NEXT_PUBLIC_API_URL`.
 
-Main fake/mock data is centralized so UI sections stay synced.
+Examples:
+
+- Rooms API calls use `/rooms`
+- Booking flows use `/bookings`
+- Auth flows use `/auth`
+
+For social auth redirects, client logic derives the backend origin from `NEXT_PUBLIC_API_URL`.
+
+## Content/Data Sources
+
+Static content and fallback UI data live in:
 
 - `src/data/rooms.ts`
-  - Home room cards
-  - Gallery room images
 - `src/data/news.ts`
-  - News list cards
-  - Sidebar recommended posts/tags/categories
-  - News detail pages by slug
 
-If you need to update text/images for rooms or news, edit these files first.
+Update those files when adjusting hotel room/news mock content.
 
-## Maps
-
-Google Maps embed is used in:
-
-- `src/components/home/ContactSection.tsx`
-- `src/components/contact/ContactClient.tsx`
-
-Both use the same responsive iframe embed URL for consistency.
-
-## Branding Notes
-
-This project is customized for **Sylcchi Palace**.
-
-- Navigation and content use Sylcchi Palace naming.
-- Contact and accommodation sections contain hotel-specific copy.
-- Logo image uses eager loading in navbar for better LCP behavior.
-
-## Checks
+## Quality Checks
 
 ```bash
 npm run lint
+npm run build
 ```
-
-Run lint after content or component updates.
