@@ -4,8 +4,10 @@ import { AppError } from "../../errorHelpers/AppError";
 import { RoomService } from "./room.service";
 
 const ALLOWED_BED_TYPES = ["King", "Queen", "Twin", "Bunk"] as const;
+const ROOMS_PER_PAGE = 6;
 
 type BedType = (typeof ALLOWED_BED_TYPES)[number];
+type PriceSort = "asc" | "desc";
 
 function asBodyObject(body: unknown): Record<string, unknown> {
   if (!body || typeof body !== "object") {
@@ -187,6 +189,93 @@ function getOptionalStringList(
   );
 }
 
+function parseQueryBoolean(value: unknown, key: string): boolean | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    throw new AppError(
+      `${key} query must be true or false`,
+      status.BAD_REQUEST,
+    );
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "true") {
+    return true;
+  }
+
+  if (normalized === "false") {
+    return false;
+  }
+
+  throw new AppError(`${key} query must be true or false`, status.BAD_REQUEST);
+}
+
+function parseQueryPositiveInt(
+  value: unknown,
+  key: string,
+): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    throw new AppError(
+      `${key} query must be a positive integer`,
+      status.BAD_REQUEST,
+    );
+  }
+
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new AppError(
+      `${key} query must be a positive integer`,
+      status.BAD_REQUEST,
+    );
+  }
+
+  return parsed;
+}
+
+function parseQueryDate(value: unknown, key: string): Date | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    throw new AppError(`${key} query must be a valid date`, status.BAD_REQUEST);
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new AppError(`${key} query must be a valid date`, status.BAD_REQUEST);
+  }
+
+  return parsed;
+}
+
+function parseQueryPriceSort(value: unknown): PriceSort | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    throw new AppError(
+      "priceSort query must be asc or desc",
+      status.BAD_REQUEST,
+    );
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "asc" || normalized === "desc") {
+    return normalized;
+  }
+
+  throw new AppError("priceSort query must be asc or desc", status.BAD_REQUEST);
+}
+
 export const RoomController = {
   listRoomTypes: async (_req: Request, res: Response) => {
     const result = await RoomService.listRoomTypes();
@@ -212,33 +301,49 @@ export const RoomController = {
   },
 
   listRooms: async (req: Request, res: Response) => {
-    const isAvailableQuery = req.query.isAvailable;
-    const roomTypeIdQuery = req.query.roomTypeId;
-
-    let isAvailable: boolean | undefined;
-
-    if (typeof isAvailableQuery === "string") {
-      const normalized = isAvailableQuery.trim().toLowerCase();
-      if (normalized === "true") {
-        isAvailable = true;
-      } else if (normalized === "false") {
-        isAvailable = false;
-      } else {
-        throw new AppError(
-          "isAvailable query must be true or false",
-          status.BAD_REQUEST,
-        );
-      }
-    }
+    const isAvailable = parseQueryBoolean(req.query.isAvailable, "isAvailable");
 
     const roomTypeId =
-      typeof roomTypeIdQuery === "string" && roomTypeIdQuery.trim() !== ""
-        ? roomTypeIdQuery.trim()
+      typeof req.query.roomTypeId === "string" &&
+      req.query.roomTypeId.trim() !== ""
+        ? req.query.roomTypeId.trim()
         : undefined;
+
+    const search =
+      typeof req.query.search === "string" && req.query.search.trim() !== ""
+        ? req.query.search.trim()
+        : undefined;
+
+    const checkInDate = parseQueryDate(req.query.checkInDate, "checkInDate");
+    const checkOutDate = parseQueryDate(req.query.checkOutDate, "checkOutDate");
+    const guests = parseQueryPositiveInt(req.query.guests, "guests");
+    const page = parseQueryPositiveInt(req.query.page, "page") ?? 1;
+    const priceSort = parseQueryPriceSort(req.query.priceSort);
+
+    if ((checkInDate && !checkOutDate) || (!checkInDate && checkOutDate)) {
+      throw new AppError(
+        "checkInDate and checkOutDate queries are required together",
+        status.BAD_REQUEST,
+      );
+    }
+
+    if (checkInDate && checkOutDate && checkOutDate <= checkInDate) {
+      throw new AppError(
+        "checkOutDate must be after checkInDate",
+        status.BAD_REQUEST,
+      );
+    }
 
     const result = await RoomService.listRooms({
       isAvailable,
       roomTypeId,
+      search,
+      checkInDate,
+      checkOutDate,
+      guests,
+      page,
+      limit: ROOMS_PER_PAGE,
+      priceSort,
     });
 
     res.status(status.OK).json({

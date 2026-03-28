@@ -1,4 +1,5 @@
 import status from "http-status";
+import { BookingStatus, Prisma } from "../../../generated/prisma";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 
@@ -26,6 +27,18 @@ type UpdateRoomPayload = {
   bedType?: BedType;
   roomTypeId?: string;
   isAvailable?: boolean;
+};
+
+type ListRoomsFilters = {
+  isAvailable?: boolean;
+  roomTypeId?: string;
+  search?: string;
+  checkInDate?: Date;
+  checkOutDate?: Date;
+  guests?: number;
+  page: number;
+  limit: number;
+  priceSort?: "asc" | "desc";
 };
 
 type BedType = "King" | "Queen" | "Twin" | "Bunk";
@@ -137,27 +150,91 @@ export const RoomService = {
     });
   },
 
-  listRooms: async (filters: {
-    isAvailable?: boolean;
-    roomTypeId?: string;
-  }) => {
-    const rooms = await prisma.room.findMany({
-      where: {
-        ...(typeof filters.isAvailable === "boolean"
-          ? { isAvailable: filters.isAvailable }
-          : {}),
-        ...(filters.roomTypeId ? { roomTypeId: filters.roomTypeId } : {}),
-      },
-      include: {
-        roomType: true,
-        images: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+  listRooms: async (filters: ListRoomsFilters) => {
+    const skip = (filters.page - 1) * filters.limit;
 
-    return rooms.map((room) => withBedType(room));
+    const where: Prisma.RoomWhereInput = {
+      ...(typeof filters.isAvailable === "boolean"
+        ? { isAvailable: filters.isAvailable }
+        : {}),
+      ...(filters.roomTypeId ? { roomTypeId: filters.roomTypeId } : {}),
+      ...(typeof filters.guests === "number"
+        ? { capacity: { gte: filters.guests } }
+        : {}),
+      ...(filters.search
+        ? {
+            OR: [
+              {
+                name: {
+                  contains: filters.search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                bedType: {
+                  contains: filters.search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                roomType: {
+                  name: {
+                    contains: filters.search,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
+      ...(filters.checkInDate && filters.checkOutDate
+        ? {
+            NOT: {
+              reservations: {
+                some: {
+                  bookingStatus: {
+                    in: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
+                  },
+                  checkInDate: {
+                    lt: filters.checkOutDate,
+                  },
+                  checkOutDate: {
+                    gt: filters.checkInDate,
+                  },
+                },
+              },
+            },
+          }
+        : {}),
+    };
+
+    const orderBy: Prisma.RoomOrderByWithRelationInput = filters.priceSort
+      ? { price: filters.priceSort }
+      : { createdAt: "desc" };
+
+    const [total, rooms] = await prisma.$transaction([
+      prisma.room.count({ where }),
+      prisma.room.findMany({
+        where,
+        include: {
+          roomType: true,
+          images: true,
+        },
+        orderBy,
+        skip,
+        take: filters.limit,
+      }),
+    ]);
+
+    return {
+      meta: {
+        total,
+        page: filters.page,
+        limit: filters.limit,
+        totalPages: Math.max(1, Math.ceil(total / filters.limit)),
+      },
+      data: rooms.map((room) => withBedType(room)),
+    };
   },
 
   getSingleRoom: async (slug: string) => {

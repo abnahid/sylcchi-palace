@@ -1029,6 +1029,17 @@ export const ReservationService = {
     });
   },
 
+  listMyBookings: async (userId: string) => {
+    return prisma.reservation.findMany({
+      where: { userId },
+      include: {
+        room: { select: { id: true, name: true, images: { take: 1 } } },
+        payment: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  },
+
   cancelExpiredBookings: async () => {
     // Use direct query execution for scheduler sweeps to avoid transaction-start timeouts under pool pressure.
     return cancelExpiredBookingsTx(prisma);

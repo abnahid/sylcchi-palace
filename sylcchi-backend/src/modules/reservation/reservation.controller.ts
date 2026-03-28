@@ -377,4 +377,18 @@ export const ReservationController = {
       data: result,
     });
   },
+
+  listMyBookings: async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      throw new AppError("Authentication required", status.UNAUTHORIZED);
+    }
+
+    const result = await ReservationService.listMyBookings(req.user.id);
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Bookings retrieved successfully",
+      data: result,
+    });
+  },
 };
