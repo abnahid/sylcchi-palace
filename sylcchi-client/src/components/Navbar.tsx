@@ -1,11 +1,29 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { MenuIcon } from "lucide-react";
+import { useSession, useSignOut } from "@/hooks/useAuth";
+import {
+  ChevronDown,
+  Heart,
+  LayoutDashboard,
+  LogOut,
+  MenuIcon,
+  Settings,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navLinks = [
@@ -21,8 +39,17 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: user, isLoading: isSessionLoading } = useSession();
+  const signOutMutation = useSignOut();
 
+  const isLoggedIn = Boolean(user);
   const isActive = (href: string) => pathname === href;
+
+  const handleSignOut = async () => {
+    await signOutMutation.mutateAsync();
+    router.push("/");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,12 +105,127 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link href="/auth/login">
-              <Button variant="outline">Login</Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button>Get Started</Button>
-            </Link>
+            {isSessionLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="h-9 w-9 animate-pulse rounded-full bg-gray-100" />
+                <div className="h-4 w-16 animate-pulse rounded bg-gray-100" />
+              </div>
+            ) : isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2.5 rounded-full border border-gray-200 py-1.5 pr-3 pl-1.5 transition-colors hover:bg-gray-50 focus:outline-none">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src={user?.image ?? undefined}
+                        alt={user?.name ?? "User"}
+                      />
+                      <AvatarFallback className="bg-[#235784] text-xs font-bold text-white">
+                        {user?.name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase() ?? "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-left">
+                      <p className="text-sm font-semibold leading-tight text-gray-800">
+                        {user?.name?.split(" ")[0]}
+                      </p>
+                      <p className="text-[11px] capitalize leading-tight text-gray-400">
+                        {user?.role?.toLowerCase()}
+                      </p>
+                    </div>
+                    <ChevronDown size={14} className="text-gray-400" />
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuLabel className="flex items-center gap-2.5 pb-2">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage
+                        src={user?.image ?? undefined}
+                        alt={user?.name ?? "User"}
+                      />
+                      <AvatarFallback className="bg-[#235784] text-xs font-bold text-white">
+                        {user?.name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase() ?? "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {user?.name}
+                      </p>
+                      <p className="text-xs font-normal text-gray-400">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer gap-2">
+                      <User size={15} />
+                      My Profile
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/wishlist" className="cursor-pointer gap-2">
+                      <Heart size={15} />
+                      Wishlist
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings" className="cursor-pointer gap-2">
+                      <Settings size={15} />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+
+                  {(user?.role === "ADMIN" || user?.role === "MANAGER") && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link
+                          href="/dashboard"
+                          className="cursor-pointer gap-2"
+                        >
+                          <LayoutDashboard size={15} />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    className="cursor-pointer gap-2 text-red-600 focus:text-red-600"
+                    disabled={signOutMutation.isPending}
+                    onClick={handleSignOut}
+                  >
+                    <LogOut size={15} />
+                    {signOutMutation.isPending ? "Signing out..." : "Sign Out"}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="outline">Login</Button>
+                </Link>
+                <Link href="/register">
+                  <Button>Get Started</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Navigation */}
@@ -115,12 +257,104 @@ export default function Navbar() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-3 pt-6 border-t">
-                  <Link href="/auth/login" className="w-full">
-                    <Button variant="outline">Login</Button>
-                  </Link>
-                  <Link href="/auth/register" className="w-full">
-                    <Button>Get Started</Button>
-                  </Link>
+                  {isSessionLoading ? null : isLoggedIn ? (
+                    <>
+                      <div className="flex items-center gap-3 px-1 pb-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage
+                            src={user?.image ?? undefined}
+                            alt={user?.name ?? "User"}
+                          />
+                          <AvatarFallback className="bg-[#235784] text-sm font-bold text-white">
+                            {user?.name
+                              ?.split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)
+                              .toUpperCase() ?? "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {user?.name}
+                          </p>
+                          <p className="text-xs capitalize text-gray-400">
+                            {user?.role?.toLowerCase()}
+                          </p>
+                        </div>
+                      </div>
+
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        onClick={() => setOpen(false)}
+                      >
+                        <User size={16} /> My Profile
+                      </Link>
+
+                      <Link
+                        href="/wishlist"
+                        className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        onClick={() => setOpen(false)}
+                      >
+                        <Heart size={16} /> Wishlist
+                      </Link>
+
+                      <Link
+                        href="/settings"
+                        className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        onClick={() => setOpen(false)}
+                      >
+                        <Settings size={16} /> Settings
+                      </Link>
+
+                      {(user?.role === "ADMIN" ||
+                        user?.role === "MANAGER") && (
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                          onClick={() => setOpen(false)}
+                        >
+                          <LayoutDashboard size={16} /> Dashboard
+                        </Link>
+                      )}
+
+                      <div className="border-t pt-2">
+                        <button
+                          className="flex w-full items-center gap-2.5 rounded-md px-2 py-2 text-sm text-red-600 transition-colors hover:bg-red-50"
+                          disabled={signOutMutation.isPending}
+                          onClick={() => {
+                            handleSignOut();
+                            setOpen(false);
+                          }}
+                        >
+                          <LogOut size={16} />
+                          {signOutMutation.isPending
+                            ? "Signing out..."
+                            : "Sign Out"}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        className="w-full"
+                        onClick={() => setOpen(false)}
+                      >
+                        <Button variant="outline" className="w-full">
+                          Login
+                        </Button>
+                      </Link>
+                      <Link
+                        href="/register"
+                        className="w-full"
+                        onClick={() => setOpen(false)}
+                      >
+                        <Button className="w-full">Get Started</Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>

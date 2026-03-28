@@ -20,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(mulish.variable, openSans.variable)}>
       <body className="bg-background text-foreground font-open-sans">
-        <Navbar />
-        <QueryProvider>{children}</QueryProvider>
-        <Footer />
+        <QueryProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );
