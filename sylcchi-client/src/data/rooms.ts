@@ -139,3 +139,6 @@ export const homeRoomCards: HomeRoomCard[] = primaryRooms.map((room) => ({
   bedLabel: `${room.bedType} bed`,
   price: Number.parseFloat(room.price),
 }));
+
+export const getRoomBySlug = (slug: string) =>
+  primaryRooms.find((room) => room.slug === slug);

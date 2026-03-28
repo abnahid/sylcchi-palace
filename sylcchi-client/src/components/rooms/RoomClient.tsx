@@ -2,7 +2,7 @@ const RoomClient = () => {
   return (
     <div>
       rooms detail page
-      <RoomClient />
+      <roomlist />
     </div>
   );
 };
