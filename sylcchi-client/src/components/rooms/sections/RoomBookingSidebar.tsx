@@ -3,23 +3,53 @@
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type RoomBookingSidebarProps = {
+  roomId: string;
+  roomSlug: string;
+  roomName: string;
   nightlyPrice: number;
 };
 
-const RoomBookingSidebar = ({ nightlyPrice }: RoomBookingSidebarProps) => {
+const RoomBookingSidebar = ({
+  roomId,
+  roomSlug,
+  roomName,
+  nightlyPrice,
+}: RoomBookingSidebarProps) => {
+  const router = useRouter();
   const [checkInDate, setCheckInDate] = useState<Date | undefined>();
   const [checkOutDate, setCheckOutDate] = useState<Date | undefined>();
   const [openCalendar, setOpenCalendar] = useState<
     "checkIn" | "checkOut" | null
   >(null);
+  const [dateError, setDateError] = useState<string | null>(null);
 
   const addOneDay = (date: Date) => {
     const nextDate = new Date(date);
     nextDate.setDate(nextDate.getDate() + 1);
     return nextDate;
+  };
+
+  const handleBookNow = () => {
+    if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) {
+      setDateError("Please select valid check-in and check-out dates.");
+      return;
+    }
+
+    setDateError(null);
+
+    const query = new URLSearchParams({
+      roomId,
+      slug: roomSlug,
+      roomName,
+      checkIn: format(checkInDate, "yyyy-MM-dd"),
+      checkOut: format(checkOutDate, "yyyy-MM-dd"),
+    });
+
+    router.push(`/booking?${query.toString()}`);
   };
 
   return (
@@ -65,10 +95,12 @@ const RoomBookingSidebar = ({ nightlyPrice }: RoomBookingSidebarProps) => {
                   onSelect={(date) => {
                     if (!date) {
                       setCheckInDate(undefined);
+                      setDateError(null);
                       return;
                     }
 
                     setCheckInDate(date);
+                    setDateError(null);
 
                     if (!checkOutDate || checkOutDate <= date) {
                       setCheckOutDate(addOneDay(date));
@@ -114,6 +146,7 @@ const RoomBookingSidebar = ({ nightlyPrice }: RoomBookingSidebarProps) => {
                   }
                   onSelect={(date) => {
                     setCheckOutDate(date);
+                    setDateError(null);
                     setOpenCalendar(null);
                   }}
                 />
@@ -122,8 +155,13 @@ const RoomBookingSidebar = ({ nightlyPrice }: RoomBookingSidebarProps) => {
           </div>
         </div>
 
+        {dateError ? (
+          <p className="font-open-sans text-xs text-red-600">{dateError}</p>
+        ) : null}
+
         <button
           type="submit"
+          onClick={handleBookNow}
           className="rounded-md bg-primary px-6 py-2.5 font-mulish text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
         >
           Book now

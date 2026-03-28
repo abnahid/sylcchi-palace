@@ -95,7 +95,12 @@ export default function RoomDetailClient({
 
           <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
             <RoomInfoSection room={room} />
-            <RoomBookingSidebar nightlyPrice={nightlyPrice} />
+            <RoomBookingSidebar
+              roomId={room.id}
+              roomSlug={room.slug}
+              roomName={room.name}
+              nightlyPrice={nightlyPrice}
+            />
           </div>
         </div>
       </section>
