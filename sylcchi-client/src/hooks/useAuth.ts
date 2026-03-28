@@ -8,6 +8,7 @@ import {
   signIn,
   signOut,
   signUp,
+  socialSignIn,
   verifyOtp,
 } from "@/lib/api/auth";
 import type { AuthResponse, AuthUser } from "@/lib/api/auth";
@@ -105,5 +106,16 @@ export function useResetPassword() {
     { email: string; otp: string; password: string }
   >({
     mutationFn: (body) => resetPassword(body),
+  });
+}
+
+export function useSocialSignIn() {
+  return useMutation<
+    { url: string },
+    Error,
+    { provider: "google"; callbackURL: string }
+  >({
+    mutationFn: ({ provider, callbackURL }) =>
+      socialSignIn(provider, callbackURL),
   });
 }

@@ -1,4 +1,8 @@
+import axios from "axios";
+
 import { api, toApiError } from "@/lib/api";
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
 export type AuthUser = {
   id: string;
@@ -110,6 +114,22 @@ export async function resetPassword(body: {
     const response = await api.post<AuthResponse>(
       "/auth/reset-password",
       body,
+    );
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
+export async function socialSignIn(
+  provider: "google",
+  callbackURL: string,
+): Promise<{ url: string }> {
+  try {
+    const response = await axios.post<{ url: string }>(
+      `${BACKEND_URL}/api/auth/sign-in/social`,
+      { provider, callbackURL },
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
