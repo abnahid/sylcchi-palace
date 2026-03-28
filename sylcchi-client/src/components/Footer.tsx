@@ -25,7 +25,7 @@ const socialLinks = [
 const contact = {
   address: "Dargah Gate Road, Sylhet 3100, Bangladesh",
   phones: ["+880 1819-334455", "+880 1677-998877"],
-  email: "city@sylcchipalace.com",
+  email: "info@sylcchipalace.com",
 };
 
 export default function Footer() {

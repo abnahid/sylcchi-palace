@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-otp
+Disallow: /booking
+Disallow: /payment
+Disallow: /profile
+Disallow: /settings
+Disallow: /dashboard
+Disallow: /wishlist
+Disallow: /auth/
+
+Sitemap: https://sylcchipalace.com/sitemap.xml

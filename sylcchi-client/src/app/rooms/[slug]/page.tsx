@@ -3,6 +3,7 @@ import { getRooms } from "@/lib/api/rooms";
 import { mapApiRoomsToPrimaryRooms } from "@/lib/mappers/rooms";
 import { roomsResponseSchema } from "@/lib/schemas/room";
 import type { PrimaryRoom } from "@/lib/types/rooms";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 type RoomDetailPageProps = {
@@ -83,6 +84,31 @@ const getSourceRooms = async (): Promise<PrimaryRoom[]> => {
 export async function generateStaticParams() {
   const sourceRooms = await getSourceRooms();
   return sourceRooms.map((room) => ({ slug: room.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: RoomDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const sourceRooms = await getSourceRooms();
+  const room = sourceRooms.find((item) => item.slug === slug);
+
+  if (!room) {
+    return { title: "Room Not Found" };
+  }
+
+  return {
+    title: `${room.name} — Room Details`,
+    description: `Book the ${room.name} at Sylcchi Palace, Sylhet. ${room.description.slice(0, 140)}`,
+    alternates: { canonical: `/rooms/${room.slug}` },
+    openGraph: {
+      title: `${room.name} | Sylcchi Palace`,
+      description: room.description.slice(0, 160),
+      images: room.images[0]
+        ? [{ url: room.images[0].imageUrl, alt: room.name }]
+        : undefined,
+    },
+  };
 }
 
 export default async function Page({ params }: RoomDetailPageProps) {
