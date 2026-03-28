@@ -5,19 +5,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15_000,
-});
-
-api.interceptors.request.use((config) => {
-  if (typeof window === "undefined") {
-    return config;
-  }
-
-  const token = window.localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
+  withCredentials: true,
 });
 
 export function toApiError(error: unknown): Error {
