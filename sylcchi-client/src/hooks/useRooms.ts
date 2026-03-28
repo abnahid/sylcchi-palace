@@ -1,39 +1,26 @@
 "use client";
 
-import { getRooms } from "@/lib/api/rooms";
-import { roomsResponseSchema, type RoomsResponse } from "@/lib/schemas/room";
-import { useQuery } from "@tanstack/react-query";
+import {
+  createRoom,
+  deleteRoom,
+  getRoomBySlug,
+  getRooms,
+  patchRoom,
+  updateRoom,
+} from "@/lib/api/rooms";
+import { mapApiRoomsToPrimaryRooms } from "@/lib/mappers/rooms";
+import { roomsResponseSchema } from "@/lib/schemas/room";
+import type { PrimaryRoom } from "@/lib/types/rooms";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const API_ENABLED = process.env.NEXT_PUBLIC_ENABLE_API === "true";
-
-const fallbackRooms: RoomsResponse = [
-  {
-    id: "6-bed-shared",
-    name: "Bed in 6-Bed Room with Shared Bathroom",
-    slug: "6-bed-shared",
-    pricePerNight: 18,
-    capacity: 1,
-    images: ["/assets/homa-hero.webp"],
-    facilities: ["Free WiFi", "Air Conditioning"],
-    rules: ["No smoking"],
-    isAvailable: true,
-  },
-  {
-    id: "double-private",
-    name: "Double Room with Private Bathroom",
-    slug: "double-private",
-    pricePerNight: 35,
-    capacity: 2,
-    images: ["/assets/homa-hero.webp"],
-    facilities: ["Free WiFi", "Private Bathroom"],
-    rules: ["No smoking"],
-    isAvailable: true,
-  },
-];
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_ENABLED =
+  Boolean(API_BASE_URL) && process.env.NEXT_PUBLIC_ENABLE_API !== "false";
 
 export const roomQueryKeys = {
   all: ["rooms"] as const,
   list: () => [...roomQueryKeys.all, "list"] as const,
+  detail: (slug: string) => [...roomQueryKeys.all, "detail", slug] as const,
 };
 
 type UseRoomsOptions = {
@@ -41,11 +28,11 @@ type UseRoomsOptions = {
 };
 
 export function useRooms(options?: UseRoomsOptions) {
-  return useQuery<RoomsResponse, Error>({
+  return useQuery<PrimaryRoom[], Error>({
     queryKey: roomQueryKeys.list(),
     queryFn: async () => {
       if (!API_ENABLED) {
-        return fallbackRooms;
+        throw new Error("Rooms API is not configured");
       }
 
       const raw = await getRooms();
@@ -55,12 +42,12 @@ export function useRooms(options?: UseRoomsOptions) {
         throw new Error("Invalid rooms response from API");
       }
 
-      return parsed.data;
+      return mapApiRoomsToPrimaryRooms(parsed.data);
     },
-    enabled: API_ENABLED && options?.enabled !== false,
-    initialData: fallbackRooms,
+    enabled: options?.enabled !== false,
     staleTime: 60_000,
     gcTime: 300_000,
+    refetchOnMount: "always",
     retry: (failureCount, error) => {
       if (!API_ENABLED) {
         return false;
@@ -71,6 +58,69 @@ export function useRooms(options?: UseRoomsOptions) {
       }
 
       return failureCount < 2;
+    },
+  });
+}
+
+export function useRoom(slug: string, options?: UseRoomsOptions) {
+  return useQuery<unknown, Error>({
+    queryKey: roomQueryKeys.detail(slug),
+    queryFn: async () => getRoomBySlug(slug),
+    enabled: API_ENABLED && options?.enabled !== false && Boolean(slug),
+    staleTime: 60_000,
+    gcTime: 300_000,
+    retry: 1,
+  });
+}
+
+export function useCreateRoom() {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, Error, Record<string, unknown>>({
+    mutationFn: (payload) => createRoom(payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: roomQueryKeys.all });
+    },
+  });
+}
+
+export function useUpdateRoom() {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    unknown,
+    Error,
+    { id: string; payload: Record<string, unknown> }
+  >({
+    mutationFn: ({ id, payload }) => updateRoom(id, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: roomQueryKeys.all });
+    },
+  });
+}
+
+export function usePatchRoom() {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    unknown,
+    Error,
+    { id: string; payload: Record<string, unknown> }
+  >({
+    mutationFn: ({ id, payload }) => patchRoom(id, payload),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: roomQueryKeys.all });
+    },
+  });
+}
+
+export function useDeleteRoom() {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, Error, { id: string }>({
+    mutationFn: ({ id }) => deleteRoom(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: roomQueryKeys.all });
     },
   });
 }

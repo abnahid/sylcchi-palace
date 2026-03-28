@@ -1,6 +1,9 @@
 "use client";
 
-import { roomGalleryCategories, roomGalleryItems } from "@/data/rooms";
+import {
+  homePhotoGalleryCategories,
+  homePhotoGalleryItems,
+} from "@/data/rooms";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,8 +13,10 @@ export default function PhotoRooms() {
 
   const filtered =
     activeCategory === "All"
-      ? roomGalleryItems
-      : roomGalleryItems.filter((item) => item.category === activeCategory);
+      ? homePhotoGalleryItems
+      : homePhotoGalleryItems.filter(
+          (item) => item.category === activeCategory,
+        );
 
   // Show max 5 items in the grid layout
   const displayItems = filtered.slice(0, 5);
@@ -25,7 +30,7 @@ export default function PhotoRooms() {
             Photos of our rooms
           </h2>
           <div className="flex flex-wrap gap-4">
-            {roomGalleryCategories.map((category) => (
+            {homePhotoGalleryCategories.map((category) => (
               <button
                 key={category}
                 type="button"

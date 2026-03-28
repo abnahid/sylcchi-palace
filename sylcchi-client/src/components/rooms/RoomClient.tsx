@@ -1,10 +1,5 @@
 const RoomClient = () => {
-  return (
-    <div>
-      rooms detail page
-      <roomlist />
-    </div>
-  );
+  return <div>rooms detail page</div>;
 };
 
 export default RoomClient;

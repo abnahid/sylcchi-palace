@@ -1,4 +1,4 @@
-import type { PrimaryRoom } from "@/data/rooms";
+import type { PrimaryRoom } from "@/lib/types/rooms";
 import { BedDouble, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -9,11 +9,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { primaryRooms } from "@/data/rooms";
+import { useRooms } from "@/hooks/useRooms";
 import { Filter } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export default function RoomsList() {
+  const { data: rooms = [], isLoading, isError, error } = useRooms();
+
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [guestCount, setGuestCount] = useState("1");
@@ -26,7 +28,7 @@ export default function RoomsList() {
     const guestCountNumber = Number.parseInt(guestCount, 10);
     const query = searchTerm.trim().toLowerCase();
 
-    const matched = primaryRooms.filter((room) => {
+    const matched = rooms.filter((room) => {
       const matchesSearch = query
         ? [room.name, room.description, room.roomType.name, room.bedType]
             .join(" ")
@@ -54,7 +56,7 @@ export default function RoomsList() {
     }
 
     return matched;
-  }, [guestCount, priceSort, searchTerm]);
+  }, [guestCount, priceSort, rooms, searchTerm]);
 
   const resetFilters = () => {
     setCheckInDate("");
@@ -64,7 +66,21 @@ export default function RoomsList() {
     setPriceSort("default");
   };
 
-  if (!primaryRooms.length) {
+  if (isLoading) {
+    return (
+      <p className="font-open-sans text-sm text-[#5b6774]">Loading rooms...</p>
+    );
+  }
+
+  if (isError) {
+    return (
+      <p className="font-open-sans text-sm text-red-600">
+        Failed to fetch rooms: {error.message}
+      </p>
+    );
+  }
+
+  if (!rooms.length) {
     return <p>No rooms available right now.</p>;
   }
 

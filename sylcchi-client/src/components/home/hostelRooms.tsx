@@ -1,12 +1,14 @@
+"use client";
+
 import RoomCard, { type RoomCardData } from "@/components/home/RoomCard";
 import { homeRoomCards } from "@/data/rooms";
 import Link from "next/link";
 
-const rooms: RoomCardData[] = homeRoomCards.slice(0, 2);
-
 // button rounded-md bg-secondary px-6 py-3 font-mulish font-bold text-primary transition-colors hover:bg-secondary/90
 
 export default function HostelRooms() {
+  const roomCards: Array<RoomCardData & { slug: string }> = homeRoomCards;
+
   return (
     <section className="py-12 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
@@ -23,9 +25,9 @@ export default function HostelRooms() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:auto-rows-fr">
-          {rooms.map((room) => (
+          {roomCards.map((room) => (
             <Link
-              href={`/rooms/${room.id}`}
+              href={`/rooms/${room.slug}`}
               key={room.id}
               className="block h-full"
             >

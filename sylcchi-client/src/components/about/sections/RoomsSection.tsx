@@ -1,19 +1,26 @@
+"use client";
+
 import RoomCard, { type RoomCardData } from "@/components/home/RoomCard";
-import { primaryRooms } from "@/data/rooms";
+import { useRooms } from "@/hooks/useRooms";
 import Link from "next/link";
+import { useMemo } from "react";
 
 const RoomsSection = () => {
-  const roomsDictionary: Array<RoomCardData & { slug: string }> = primaryRooms
-    .slice(0, 3)
-    .map((room) => ({
-      id: room.id,
-      slug: room.slug,
-      name: room.name,
-      image: room.images[0]?.imageUrl ?? "/Gallery/room-1.webp",
-      sleeps: room.capacity,
-      bedLabel: `${room.bedType} bed`,
-      price: Number.parseFloat(room.price),
-    }));
+  const { data: rooms = [] } = useRooms();
+
+  const roomsDictionary: Array<RoomCardData & { slug: string }> = useMemo(
+    () =>
+      rooms.slice(0, 3).map((room) => ({
+        id: room.id,
+        slug: room.slug,
+        name: room.name,
+        image: room.images[0]?.imageUrl ?? "/Gallery/room-1.webp",
+        sleeps: room.capacity,
+        bedLabel: `${room.bedType} bed`,
+        price: Number.parseFloat(room.price),
+      })),
+    [rooms],
+  );
 
   return (
     <section className="bg-[#f7fafd] py-12 lg:py-16">

@@ -1,11 +1,31 @@
 "use client";
 
-import { roomGalleryCategories, roomGalleryItems } from "@/data/rooms";
+import { useRooms } from "@/hooks/useRooms";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function GalleryClient() {
+  const { data: rooms = [] } = useRooms();
+
+  const galleryItems = useMemo(
+    () =>
+      rooms.flatMap((room) =>
+        room.images.map((image) => ({
+          id: image.id,
+          title: room.name,
+          category: room.roomType.name,
+          image: image.imageUrl,
+        })),
+      ),
+    [rooms],
+  );
+
+  const roomGalleryCategories = useMemo(
+    () => ["All", ...new Set(galleryItems.map((item) => item.category))],
+    [galleryItems],
+  );
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedImage, setSelectedImage] = useState<{
     src: string;
@@ -14,8 +34,8 @@ export default function GalleryClient() {
 
   const filteredItems =
     activeCategory === "All"
-      ? roomGalleryItems
-      : roomGalleryItems.filter((item) => item.category === activeCategory);
+      ? galleryItems
+      : galleryItems.filter((item) => item.category === activeCategory);
 
   useEffect(() => {
     const onEscape = (event: KeyboardEvent) => {
@@ -94,7 +114,7 @@ export default function GalleryClient() {
 
       {selectedImage && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/85 p-4"
           onClick={() => setSelectedImage(null)}
           role="dialog"
           aria-modal="true"
