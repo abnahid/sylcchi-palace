@@ -3,6 +3,13 @@ import { BookingStatus, Prisma } from "../../../generated/prisma";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 
+function formatLocalDate(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 type CreateRoomPayload = {
   name: string;
   slug?: string;
@@ -394,8 +401,8 @@ export const RoomService = {
     });
 
     return reservations.map((r) => ({
-      checkInDate: r.checkInDate.toISOString().split("T")[0],
-      checkOutDate: r.checkOutDate.toISOString().split("T")[0],
+      checkInDate: formatLocalDate(r.checkInDate),
+      checkOutDate: formatLocalDate(r.checkOutDate),
       status: r.bookingStatus,
     }));
   },

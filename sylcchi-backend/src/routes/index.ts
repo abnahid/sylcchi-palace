@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authRouter } from "../modules/auth/auth.route";
 import { checkinRouter } from "../modules/checkin/checkin.route";
+import { paymentRouter } from "../modules/payment/payment.route";
 import { reservationRouter } from "../modules/reservation/reservation.route";
 import { reviewRouter } from "../modules/review/review.route";
 import { roomRouter } from "../modules/room/room.route";
@@ -14,6 +15,7 @@ export const appRouter = Router();
 appRouter.use("/api/v1/auth", authRouter);
 appRouter.use("/api/v1/bookings", reservationRouter);
 appRouter.use("/api/v1/checkin", checkinRouter);
+appRouter.use("/api/v1/payments", paymentRouter);
 appRouter.use("/api/v1/rooms", roomRouter);
 appRouter.use("/api/v1/rooms", roomImageRouter);
 appRouter.use("/api/v1/rooms", reviewRouter);
