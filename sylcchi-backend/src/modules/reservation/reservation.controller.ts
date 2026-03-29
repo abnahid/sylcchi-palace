@@ -57,6 +57,21 @@ function getRequiredString(obj: Record<string, unknown>, key: string): string {
   return value.trim();
 }
 
+function getRequiredStringFromAliases(
+  obj: Record<string, unknown>,
+  keys: string[],
+  label: string,
+): string {
+  for (const key of keys) {
+    const value = obj[key];
+    if (typeof value === "string" && value.trim() !== "") {
+      return value.trim();
+    }
+  }
+
+  throw new AppError(`${label} is required`, status.BAD_REQUEST);
+}
+
 function getOptionalString(
   obj: Record<string, unknown>,
   key: string,
@@ -110,8 +125,23 @@ function getRequiredPositiveInt(
   return value;
 }
 
+function isDateOnlyInput(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
 function parseDate(value: string, key: string): Date {
-  const parsed = new Date(value);
+  let parsed: Date;
+
+  // Parse date-only values in local time to avoid timezone shifts.
+  if (isDateOnlyInput(value)) {
+    const [yearRaw, monthRaw, dayRaw] = value.split("-");
+    const year = Number(yearRaw);
+    const month = Number(monthRaw);
+    const day = Number(dayRaw);
+    parsed = new Date(year, month - 1, day);
+  } else {
+    parsed = new Date(value);
+  }
 
   if (Number.isNaN(parsed.getTime())) {
     throw new AppError(`${key} must be a valid date`, status.BAD_REQUEST);
@@ -227,13 +257,29 @@ export const ReservationController = {
 
     const roomId = getRequiredString(body, "roomId");
     const checkInDate = parseDate(
-      getRequiredString(body, "checkInDate"),
+      getRequiredStringFromAliases(
+        body,
+        ["checkInDate", "checkIn"],
+        "checkInDate",
+      ),
       "checkInDate",
     );
     const checkOutDate = parseDate(
-      getRequiredString(body, "checkOutDate"),
+      getRequiredStringFromAliases(
+        body,
+        ["checkOutDate", "checkOut"],
+        "checkOutDate",
+      ),
       "checkOutDate",
     );
+
+    if (checkOutDate <= checkInDate) {
+      throw new AppError(
+        "checkOutDate must be later than checkInDate",
+        status.BAD_REQUEST,
+      );
+    }
+
     const guests = getRequiredPositiveInt(body, "guests");
     const guestDetails = getGuestDetails(body);
     const paymentMethod = getCreatePaymentMethod(body);

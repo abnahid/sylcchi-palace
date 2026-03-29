@@ -22,6 +22,10 @@ type UpdateMyProfilePayload = {
   name?: string;
   phone?: string;
   image?: string;
+  location?: string;
+  website?: string;
+  nationality?: string;
+  bio?: string;
 };
 
 export const UserService = {
@@ -71,6 +75,10 @@ export const UserService = {
           role: true,
           emailVerified: true,
           image: true,
+          location: true,
+          website: true,
+          nationality: true,
+          bio: true,
           createdAt: true,
           updatedAt: true,
         },
@@ -104,6 +112,10 @@ export const UserService = {
         role: true,
         emailVerified: true,
         image: true,
+        location: true,
+        website: true,
+        nationality: true,
+        bio: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -137,6 +149,10 @@ export const UserService = {
         role: true,
         emailVerified: true,
         image: true,
+        location: true,
+        website: true,
+        nationality: true,
+        bio: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -164,6 +180,14 @@ export const UserService = {
         role: true,
         emailVerified: true,
         image: true,
+        location: true,
+        website: true,
+        nationality: true,
+        bio: true,
+        location: true,
+        website: true,
+        nationality: true,
+        bio: true,
         createdAt: true,
         updatedAt: true,
       },

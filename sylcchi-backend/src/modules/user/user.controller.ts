@@ -114,6 +114,84 @@ function parseQueryBoolean(value: unknown): boolean | undefined {
   );
 }
 
+function isValidUrl(value: string): boolean {
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function getOptionalBio(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = getOptionalString(obj, key);
+  if (!value) return undefined;
+
+  if (value.length > 36) {
+    throw new AppError("bio must be 36 characters or less", status.BAD_REQUEST);
+  }
+
+  return value;
+}
+
+function getOptionalWebsite(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = getOptionalString(obj, key);
+  if (!value) return undefined;
+
+  if (value.length > 255) {
+    throw new AppError(
+      "website must be 255 characters or less",
+      status.BAD_REQUEST,
+    );
+  }
+
+  if (!isValidUrl(value)) {
+    throw new AppError("website must be a valid URL", status.BAD_REQUEST);
+  }
+
+  return value;
+}
+
+function getOptionalLocation(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = getOptionalString(obj, key);
+  if (!value) return undefined;
+
+  if (value.length > 100) {
+    throw new AppError(
+      "location must be 100 characters or less",
+      status.BAD_REQUEST,
+    );
+  }
+
+  return value;
+}
+
+function getOptionalNationality(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = getOptionalString(obj, key);
+  if (!value) return undefined;
+
+  if (value.length > 100) {
+    throw new AppError(
+      "nationality must be 100 characters or less",
+      status.BAD_REQUEST,
+    );
+  }
+
+  return value;
+}
+
 export const UserController = {
   getMyProfile: async (req: Request, res: Response) => {
     if (!req.user?.id) {
@@ -147,6 +225,10 @@ export const UserController = {
       name: getOptionalString(body, "name"),
       phone: getOptionalString(body, "phone"),
       image: getOptionalString(body, "image"),
+      location: getOptionalLocation(body, "location"),
+      website: getOptionalWebsite(body, "website"),
+      nationality: getOptionalNationality(body, "nationality"),
+      bio: getOptionalBio(body, "bio"),
     };
 
     const hasAnyField = Object.values(payload).some(

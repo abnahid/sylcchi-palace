@@ -338,19 +338,16 @@ async function createSslCommerzSession(payload: {
   redirectUrl: string;
   transactionId: string;
 }> {
-  if (!envVars.SSLCOMMERZ_STORE_ID || !envVars.SSLCOMMERZ_STORE_PASSWORD) {
+  const storeId = envVars.SSLCOMMERZ_STORE_ID?.trim();
+  const storePassword = envVars.SSLCOMMERZ_STORE_PASSWORD?.trim();
+
+  if (!storeId || !storePassword) {
     throw new AppError("SSLCommerz is not configured", status.BAD_REQUEST);
   }
 
-  const isLive =
-    envVars.SSLCOMMERZ_API_URL.toLowerCase().includes("securepay") ||
-    envVars.SSLCOMMERZ_API_URL.toLowerCase().includes("secure");
+  const isLive = !envVars.SSLCOMMERZ_API_URL.toLowerCase().includes("sandbox");
 
-  const sslcz = new SSLCommerzPayment(
-    envVars.SSLCOMMERZ_STORE_ID,
-    envVars.SSLCOMMERZ_STORE_PASSWORD,
-    isLive,
-  );
+  const sslcz = new SSLCommerzPayment(storeId, storePassword, isLive);
 
   const transactionId = `booking-${payload.bookingId}-${Date.now()}`;
 
@@ -379,8 +376,20 @@ async function createSslCommerzSession(payload: {
   };
 
   if (result.status !== "SUCCESS" || !result.GatewayPageURL) {
+    const failedReason = result.failedreason?.trim();
+
+    if (
+      failedReason &&
+      /store credential error|store is de-active/i.test(failedReason)
+    ) {
+      throw new AppError(
+        "SSLCommerz credentials are invalid or the store is deactivated. Please verify sandbox/live store credentials in SSLCommerz Merchant Panel.",
+        status.BAD_REQUEST,
+      );
+    }
+
     throw new AppError(
-      `Failed to create SSLCommerz session${result.failedreason ? `: ${result.failedreason}` : ""}`,
+      `Failed to create SSLCommerz session${failedReason ? `: ${failedReason}` : ""}`,
       status.BAD_GATEWAY,
     );
   }

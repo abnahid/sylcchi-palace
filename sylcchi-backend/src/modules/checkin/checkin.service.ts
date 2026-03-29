@@ -276,15 +276,18 @@ async function createSslCommerzSession(payload: {
   amount: number;
   customer: GuestDetail;
 }): Promise<{ redirectUrl: string; transactionId: string }> {
-  if (!envVars.SSLCOMMERZ_STORE_ID || !envVars.SSLCOMMERZ_STORE_PASSWORD) {
+  const storeId = envVars.SSLCOMMERZ_STORE_ID?.trim();
+  const storePassword = envVars.SSLCOMMERZ_STORE_PASSWORD?.trim();
+
+  if (!storeId || !storePassword) {
     throw new AppError("SSLCommerz is not configured", status.BAD_REQUEST);
   }
 
   const transactionId = `checkin-${payload.bookingId}-${Date.now()}`;
 
   const body = new URLSearchParams({
-    store_id: envVars.SSLCOMMERZ_STORE_ID,
-    store_passwd: envVars.SSLCOMMERZ_STORE_PASSWORD,
+    store_id: storeId,
+    store_passwd: storePassword,
     total_amount: String(payload.amount),
     currency: "BDT",
     tran_id: transactionId,
@@ -324,10 +327,26 @@ async function createSslCommerzSession(payload: {
   const result = (await response.json()) as {
     status?: string;
     GatewayPageURL?: string;
+    failedreason?: string;
   };
 
   if (result.status !== "SUCCESS" || !result.GatewayPageURL) {
-    throw new AppError("Invalid SSLCommerz response", status.BAD_GATEWAY);
+    const failedReason = result.failedreason?.trim();
+
+    if (
+      failedReason &&
+      /store credential error|store is de-active/i.test(failedReason)
+    ) {
+      throw new AppError(
+        "SSLCommerz credentials are invalid or the store is deactivated. Please verify sandbox/live store credentials in SSLCommerz Merchant Panel.",
+        status.BAD_REQUEST,
+      );
+    }
+
+    throw new AppError(
+      `Invalid SSLCommerz response${failedReason ? `: ${failedReason}` : ""}`,
+      status.BAD_GATEWAY,
+    );
   }
 
   return {

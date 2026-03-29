@@ -5,6 +5,14 @@ import { z } from "zod";
 import { deleteFileFromCloudinary } from "../config/cloudinary.config";
 import { envVars } from "../config/env";
 import { AppError } from "../errorHelpers/AppError";
+import {
+  handleBetterAuthError,
+  isBetterAuthError,
+} from "../errorHelpers/handleBetterAuthError";
+import {
+  handlePrismaError,
+  isPrismaError,
+} from "../errorHelpers/handlePrismaError";
 import { handleZodError } from "../errorHelpers/handleZodError";
 import { TErrorResponse, TErrorSources } from "../interfaces/error.interface";
 
@@ -39,7 +47,8 @@ export const globalErrorHandler = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (envVars.NODE_ENV === "development") {
+  // Only log non-auth errors in development (auth errors are expected/handled)
+  if (envVars.NODE_ENV === "development" && !isBetterAuthError(err)) {
     console.log("Error from Global Error Handler", err);
   }
 
@@ -67,6 +76,28 @@ export const globalErrorHandler = async (
     message = simplifiedError.message;
     errorSources = [...simplifiedError.errorSources];
     stack = err.stack;
+  } else if (isBetterAuthError(err)) {
+    const authError = handleBetterAuthError(err);
+    statusCode = authError.statusCode;
+    message = authError.message;
+    stack = authError.stack;
+    errorSources = [
+      {
+        path: "",
+        message: authError.message,
+      },
+    ];
+  } else if (isPrismaError(err)) {
+    const prismaError = handlePrismaError(err);
+    statusCode = prismaError.statusCode;
+    message = prismaError.message;
+    stack = prismaError.stack;
+    errorSources = [
+      {
+        path: "",
+        message: prismaError.message,
+      },
+    ];
   } else if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
@@ -92,6 +123,7 @@ export const globalErrorHandler = async (
   const errorResponse: TErrorResponse = {
     success: false,
     message,
+    statusCode,
     errorSources,
     error: envVars.NODE_ENV === "development" ? err : undefined,
     stack: envVars.NODE_ENV === "development" ? stack : undefined,
