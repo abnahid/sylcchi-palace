@@ -1,5 +1,6 @@
 import { envVars } from "../config/env";
 import { sendEmail } from "../utils/email";
+import { buildOtpEmailTemplate } from "../utils/emailTemplates";
 import { prisma } from "./prisma";
 
 const baseURL = envVars.BETTER_AUTH_URL;
@@ -44,6 +45,8 @@ async function createAuth(): Promise<BetterAuthInstance> {
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
+      minPasswordLength: 8,
+      maxPasswordLength: 128,
     },
     socialProviders: googleProvider,
     emailVerification: {
@@ -68,31 +71,27 @@ async function createAuth(): Promise<BetterAuthInstance> {
           const user = await prisma.user.findUnique({ where: { email } });
           const name = user?.name ?? "there";
 
-          if (type === "email-verification") {
-            await sendEmail({
-              to: email,
-              subject: "Verify your email – Sylcchi Palace",
-              html: `<p>Hello ${name},</p><p>Your email verification code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
-            });
-            return;
-          }
+          const otpType =
+            type === "email-verification" ||
+            type === "sign-in" ||
+            type === "forget-password"
+              ? type
+              : "sign-in";
 
-          if (type === "sign-in") {
-            await sendEmail({
-              to: email,
-              subject: "Sign-in OTP – Sylcchi Palace",
-              html: `<p>Hello ${name},</p><p>Your sign-in code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
-            });
-            return;
-          }
+          const emailContent = buildOtpEmailTemplate({
+            recipientName: name,
+            otp,
+            type: otpType,
+            expiresInMinutes: 2,
+          });
 
-          if (type === "forget-password") {
-            await sendEmail({
-              to: email,
-              subject: "Password reset OTP – Sylcchi Palace",
-              html: `<p>Hello ${name},</p><p>Your password reset code is: <b>${otp}</b></p><p>This code expires in 2 minutes.</p>`,
-            });
-          }
+          await sendEmail({
+            to: email,
+            subject: emailContent.subject,
+            html: emailContent.html,
+            text: emailContent.text,
+            replyTo: envVars.SUPPORT_EMAIL,
+          });
         },
         expiresIn: 2 * 60,
         otpLength: 6,
@@ -106,41 +105,25 @@ async function createAuth(): Promise<BetterAuthInstance> {
         maxAge: oneDayInSeconds,
       },
     },
-    trustedOrigins: [baseURL, envVars.FRONTEND_URL],
+    trustedOrigins: envVars.TRUSTED_ORIGINS,
     advanced: {
       database: {
         generateId: "uuid",
       },
       useSecureCookies: envVars.NODE_ENV === "production",
-      cookies:
+      defaultCookieAttributes:
         envVars.NODE_ENV === "production"
           ? {
-              state: {
-                attributes: {
-                  sameSite: "none",
-                  secure: true,
-                  httpOnly: true,
-                  path: "/",
-                },
-              },
-              sessionToken: {
-                attributes: {
-                  sameSite: "none",
-                  secure: true,
-                  httpOnly: true,
-                  path: "/",
-                },
-              },
+              sameSite: "none" as const,
+              secure: true,
+              httpOnly: true,
+              path: "/",
             }
           : {
-              sessionToken: {
-                attributes: {
-                  sameSite: "lax",
-                  secure: false,
-                  httpOnly: true,
-                  path: "/",
-                },
-              },
+              sameSite: "lax" as const,
+              secure: false,
+              httpOnly: true,
+              path: "/",
             },
     },
   }) as BetterAuthInstance;

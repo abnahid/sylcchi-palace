@@ -5,6 +5,8 @@ type EmailPayload = {
   to: string;
   subject: string;
   html: string;
+  text?: string;
+  replyTo?: string;
 };
 
 let transporter: nodemailer.Transporter | null = null;
@@ -46,5 +48,7 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
     to: payload.to,
     subject: payload.subject,
     html: payload.html,
+    text: payload.text,
+    replyTo: payload.replyTo,
   });
 }

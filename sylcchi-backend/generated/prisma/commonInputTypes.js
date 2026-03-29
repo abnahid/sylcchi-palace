@@ -4,8 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file should be your main import to use Prisma. Through it you get access to all the models, enums, and input types.
- * If you're looking for something you can import in the client-side of your application, please refer to the `browser.ts` file instead.
+ * This file exports various common sort, input & filter types that are not directly linked to a particular model.
  *
  * 🟢 You can import this file directly.
  */
@@ -42,36 +41,6 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Prisma = exports.PrismaClient = exports.$Enums = void 0;
-const process = __importStar(require("node:process"));
-const path = __importStar(require("node:path"));
-const node_url_1 = require("node:url");
-globalThis['__dirname'] = path.dirname((0, node_url_1.fileURLToPath)(import.meta.url));
-const runtime = __importStar(require("@prisma/client/runtime/client"));
 const $Enums = __importStar(require("./enums.js"));
-const $Class = __importStar(require("./internal/class.js"));
-const Prisma = __importStar(require("./internal/prismaNamespace.js"));
-exports.Prisma = Prisma;
-exports.$Enums = __importStar(require("./enums.js"));
-__exportStar(require("./enums.js"), exports);
-/**
- * ## Prisma Client
- *
- * Type-safe database client for TypeScript
- * @example
- * ```
- * const prisma = new PrismaClient({
- *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
- * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
- * ```
- *
- * Read more in our [docs](https://pris.ly/d/client).
- */
-exports.PrismaClient = $Class.getPrismaClientClass();
-//# sourceMappingURL=client.js.map
+//# sourceMappingURL=commonInputTypes.js.map

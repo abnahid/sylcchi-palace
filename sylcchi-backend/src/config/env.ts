@@ -18,6 +18,7 @@ type EnvVars = {
   BETTER_AUTH_URL: string;
   BETTER_AUTH_SECRET: string;
   FRONTEND_URL: string;
+  TRUSTED_ORIGINS: string[];
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;
   SMTP_HOST?: string;
@@ -26,6 +27,7 @@ type EnvVars = {
   SMTP_USER?: string;
   SMTP_PASS?: string;
   SMTP_FROM: string;
+  SUPPORT_EMAIL: string;
   CLOUDINARY_CLOUD_NAME?: string;
   CLOUDINARY_API_KEY?: string;
   CLOUDINARY_API_SECRET?: string;
@@ -87,6 +89,35 @@ function parseBoolean(value: string | undefined, fallback: boolean): boolean {
   return value.toLowerCase() === "true";
 }
 
+function isValidOrigin(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function parseTrustedOrigins(
+  raw: string | undefined,
+  defaults: string[],
+): string[] {
+  const fromEnv = (raw ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  const combined = [...fromEnv, ...defaults]
+    .filter((origin) => isValidOrigin(origin))
+    .map((origin) => origin.replace(/\/$/, ""));
+
+  return Array.from(new Set(combined));
+}
+
+const betterAuthUrl = process.env.BETTER_AUTH_URL ?? "http://localhost:5000";
+const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
+const smtpFrom = process.env.SMTP_FROM ?? "no-reply@sylcchi.local";
+
 export const envVars: EnvVars = {
   NODE_ENV: parseNodeEnv(process.env.NODE_ENV ?? "development"),
   PORT: parsePort(process.env.PORT ?? "5000"),
@@ -95,10 +126,14 @@ export const envVars: EnvVars = {
   JWT_SECRET: process.env.JWT_SECRET ?? "dev-secret-change-me",
   ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN ?? "15m",
   REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN ?? "30d",
-  BETTER_AUTH_URL: process.env.BETTER_AUTH_URL ?? "http://localhost:5000",
+  BETTER_AUTH_URL: betterAuthUrl,
   BETTER_AUTH_SECRET:
     process.env.BETTER_AUTH_SECRET ?? "dev-better-auth-secret-change-me",
-  FRONTEND_URL: process.env.FRONTEND_URL ?? "http://localhost:3000",
+  FRONTEND_URL: frontendUrl,
+  TRUSTED_ORIGINS: parseTrustedOrigins(process.env.TRUSTED_ORIGINS, [
+    betterAuthUrl,
+    frontendUrl,
+  ]),
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   SMTP_HOST: process.env.SMTP_HOST,
@@ -106,7 +141,8 @@ export const envVars: EnvVars = {
   SMTP_SECURE: parseBoolean(process.env.SMTP_SECURE, false),
   SMTP_USER: process.env.SMTP_USER,
   SMTP_PASS: process.env.SMTP_PASS,
-  SMTP_FROM: process.env.SMTP_FROM ?? "no-reply@sylcchi.local",
+  SMTP_FROM: smtpFrom,
+  SUPPORT_EMAIL: process.env.SUPPORT_EMAIL ?? smtpFrom,
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,

@@ -18,6 +18,7 @@ import { buildUniqueFileName } from "../../config/multer.config";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { sendEmail } from "../../utils/email";
+import { buildOtpEmailTemplate } from "../../utils/emailTemplates";
 
 type LookupPayload = {
   bookingCode: string;
@@ -549,10 +550,18 @@ export const CheckinService = {
       });
     });
 
+    const emailContent = buildOtpEmailTemplate({
+      recipientName: matchedGuest?.name ?? primaryGuest.name,
+      otp,
+      type: "checkin",
+      expiresInMinutes: OTP_TTL_MINUTES,
+    });
+
     await sendEmail({
       to: otpTargetEmail,
-      subject: "Your Sylcchi Palace check-in verification code",
-      html: `<p>Your OTP for online check-in is <b>${otp}</b>.</p><p>This code will expire in ${OTP_TTL_MINUTES} minutes.</p>`,
+      subject: emailContent.subject,
+      html: emailContent.html,
+      text: emailContent.text,
     });
 
     return {

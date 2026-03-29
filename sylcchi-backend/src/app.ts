@@ -8,10 +8,18 @@ import { notFound } from "./middleware/notFound";
 import { appRouter } from "./routes";
 
 const app = express();
+const allowedOrigins = new Set(envVars.TRUSTED_ORIGINS);
 
 app.use(
   cors({
-    origin: [envVars.BETTER_AUTH_URL, envVars.FRONTEND_URL],
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      callback(null, allowedOrigins.has(origin));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
