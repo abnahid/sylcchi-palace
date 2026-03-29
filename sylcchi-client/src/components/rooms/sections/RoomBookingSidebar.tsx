@@ -1,18 +1,69 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
+import { getRoomBookedDates, type BookedDateRange } from "@/lib/api/rooms";
 import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type RoomBookingSidebarProps = {
+  roomId: string;
   roomSlug: string;
   roomName: string;
   nightlyPrice: number;
 };
 
+// ── Date helpers (timezone-safe) ──
+
+function toDateStr(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function isDateBooked(date: Date, ranges: BookedDateRange[]): boolean {
+  const str = toDateStr(date);
+  for (const r of ranges) {
+    if (str >= r.checkInDate && str < r.checkOutDate) return true;
+  }
+  return false;
+}
+
+function hasOverlap(
+  checkIn: Date,
+  checkOut: Date,
+  ranges: BookedDateRange[],
+): boolean {
+  const inStr = toDateStr(checkIn);
+  const outStr = toDateStr(checkOut);
+  for (const r of ranges) {
+    if (inStr < r.checkOutDate && outStr > r.checkInDate) return true;
+  }
+  return false;
+}
+
+function getNextBookedDate(
+  after: Date,
+  ranges: BookedDateRange[],
+): Date | null {
+  const str = toDateStr(after);
+  let earliest: string | null = null;
+  for (const r of ranges) {
+    if (r.checkInDate > str) {
+      if (!earliest || r.checkInDate < earliest) earliest = r.checkInDate;
+    }
+  }
+  if (!earliest) return null;
+  const [y, m, d] = earliest.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+// ── Component ──
+
 const RoomBookingSidebar = ({
+  roomId,
   roomSlug,
   roomName,
   nightlyPrice,
@@ -24,19 +75,48 @@ const RoomBookingSidebar = ({
     "checkIn" | "checkOut" | null
   >(null);
   const [dateError, setDateError] = useState<string | null>(null);
+  const [bookedRanges, setBookedRanges] = useState<BookedDateRange[]>([]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  useEffect(() => {
+    getRoomBookedDates(roomId)
+      .then(setBookedRanges)
+      .catch(() => {});
+  }, [roomId]);
+
   const addOneDay = (date: Date) => {
-    const nextDate = new Date(date);
-    nextDate.setDate(nextDate.getDate() + 1);
-    return nextDate;
+    const d = new Date(date);
+    d.setDate(d.getDate() + 1);
+    return d;
   };
+
+  const maxCheckoutDate = checkInDate
+    ? getNextBookedDate(checkInDate, bookedRanges)
+    : null;
+
+  const nights =
+    checkInDate && checkOutDate
+      ? Math.max(
+          0,
+          Math.ceil(
+            (checkOutDate.getTime() - checkInDate.getTime()) /
+              (1000 * 60 * 60 * 24),
+          ),
+        )
+      : 0;
 
   const handleBookNow = () => {
     if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) {
       setDateError("Please select valid check-in and check-out dates.");
+      return;
+    }
+
+    if (hasOverlap(checkInDate, checkOutDate, bookedRanges)) {
+      setDateError(
+        "Your selected dates overlap with an existing booking. Please choose different dates.",
+      );
       return;
     }
 
@@ -61,10 +141,25 @@ const RoomBookingSidebar = ({
         </span>
       </p>
 
+      {/* Legend */}
+      {bookedRanges.length > 0 && (
+        <div className="mt-4 flex items-center gap-4 text-xs text-[#707884]">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-3 rounded-sm bg-amber-100 border border-amber-300" />
+            Booked
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-3 rounded-sm bg-white border border-[#cbd4de]" />
+            Available
+          </span>
+        </div>
+      )}
+
       <form
         className="mt-6 space-y-4"
         onSubmit={(event) => event.preventDefault()}
       >
+        {/* Check-in */}
         <div>
           <label className="mb-1 block font-mulish text-sm font-bold text-[#101b25]">
             Check-in
@@ -92,7 +187,16 @@ const RoomBookingSidebar = ({
                 <Calendar
                   mode="single"
                   selected={checkInDate}
-                  disabled={(date) => date < today}
+                  disabled={(date) =>
+                    date < today || isDateBooked(date, bookedRanges)
+                  }
+                  modifiers={{
+                    booked: (date) => isDateBooked(date, bookedRanges),
+                  }}
+                  modifiersClassNames={{
+                    booked:
+                      "!bg-amber-100 !text-amber-700 !opacity-60 line-through",
+                  }}
                   onSelect={(date) => {
                     if (!date) {
                       setCheckInDate(undefined);
@@ -115,6 +219,7 @@ const RoomBookingSidebar = ({
           </div>
         </div>
 
+        {/* Check-out */}
         <div>
           <label className="mb-1 block font-mulish text-sm font-bold text-[#101b25]">
             Check-out
@@ -144,9 +249,19 @@ const RoomBookingSidebar = ({
                   selected={checkOutDate}
                   disabled={(date) => {
                     const minDate = checkInDate ?? today;
-                    return date <= minDate;
+                    if (date <= minDate) return true;
+                    if (maxCheckoutDate && date > maxCheckoutDate) return true;
+                    return false;
+                  }}
+                  modifiers={{
+                    booked: (date) => isDateBooked(date, bookedRanges),
+                  }}
+                  modifiersClassNames={{
+                    booked:
+                      "!bg-amber-100 !text-amber-700 !opacity-60 line-through",
                   }}
                   onSelect={(date) => {
+                    if (!date) return;
                     setCheckOutDate(date);
                     setDateError(null);
                     setOpenCalendar(null);
@@ -156,6 +271,21 @@ const RoomBookingSidebar = ({
             )}
           </div>
         </div>
+
+        {/* Nights summary */}
+        {nights > 0 && checkInDate && checkOutDate && (
+          <div className="rounded-lg bg-white border border-[#e8edf2] p-3 text-sm">
+            <div className="flex justify-between text-[#707884]">
+              <span>
+                ${Math.round(nightlyPrice)} × {nights} night
+                {nights > 1 ? "s" : ""}
+              </span>
+              <span className="font-bold text-[#101b25]">
+                ${Math.round(nightlyPrice * nights)}
+              </span>
+            </div>
+          </div>
+        )}
 
         {dateError ? (
           <p className="font-open-sans text-xs text-red-600">{dateError}</p>

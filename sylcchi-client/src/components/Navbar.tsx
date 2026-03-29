@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSession, useSignOut } from "@/hooks/useAuth";
 import {
   ChevronDown,
+  ClipboardCheck,
   Heart,
   LayoutDashboard,
   LogOut,
@@ -211,6 +212,13 @@ export default function Navbar() {
                     </Link>
                   </DropdownMenuItem>
 
+                  <DropdownMenuItem asChild>
+                    <Link href="/checkin" className="cursor-pointer gap-2">
+                      <ClipboardCheck size={15} />
+                      Check-in
+                    </Link>
+                  </DropdownMenuItem>
+
                   {(user?.role === "ADMIN" || user?.role === "MANAGER") && (
                     <>
                       <DropdownMenuSeparator />
@@ -328,6 +336,14 @@ export default function Navbar() {
                         onClick={() => setOpen(false)}
                       >
                         <Settings size={16} /> Settings
+                      </Link>
+
+                      <Link
+                        href="/checkin"
+                        className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                        onClick={() => setOpen(false)}
+                      >
+                        <ClipboardCheck size={16} /> Check-in
                       </Link>
 
                       {(user?.role === "ADMIN" || user?.role === "MANAGER") && (

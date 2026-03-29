@@ -97,8 +97,10 @@ function BookingFormContent() {
     });
   }, [guestDetails]);
 
+  const maxGuests = room?.capacity ?? 6;
+
   const handleGuestsCountChange = (nextCount: number) => {
-    const safeCount = Math.min(6, Math.max(1, nextCount));
+    const safeCount = Math.min(maxGuests, Math.max(1, nextCount));
     setGuestsCount(safeCount);
 
     setGuestDetails((previous) => {
@@ -274,6 +276,7 @@ function BookingFormContent() {
               checkOut={checkOutDate}
               nights={nights}
               guests={guestsCount}
+              maxGuests={maxGuests}
               onGuestsChange={handleGuestsCountChange}
             />
 

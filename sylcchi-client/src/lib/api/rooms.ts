@@ -6,6 +6,7 @@ export async function getRooms(filters?: RoomFilters): Promise<unknown> {
     const params: Record<string, string> = {};
 
     if (filters?.page) params.page = String(filters.page);
+    if (filters?.limit) params.limit = String(filters.limit);
     if (filters?.search) params.search = filters.search;
     if (filters?.guests) params.guests = String(filters.guests);
     if (filters?.roomTypeId) params.roomTypeId = filters.roomTypeId;
@@ -38,6 +39,26 @@ export async function getRoomBySlug(slug: string): Promise<unknown> {
   try {
     const response = await api.get<unknown>(`/rooms/${slug}`);
     return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
+export interface BookedDateRange {
+  checkInDate: string;
+  checkOutDate: string;
+  status: string;
+}
+
+export async function getRoomBookedDates(
+  roomId: string,
+): Promise<BookedDateRange[]> {
+  try {
+    const response = await api.get<{
+      success: boolean;
+      data: BookedDateRange[];
+    }>(`/rooms/${roomId}/booked-dates`);
+    return response.data.data;
   } catch (error) {
     throw toApiError(error);
   }

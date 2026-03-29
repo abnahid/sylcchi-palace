@@ -6,8 +6,14 @@ export const metadata: Metadata = {
   description: "Sign in to your Sylcchi Palace account.",
 };
 
+import { Suspense } from "react";
+
 const page = () => {
-  return <LoginClient />;
+  return (
+    <Suspense>
+      <LoginClient />
+    </Suspense>
+  );
 };
 
 export default page;

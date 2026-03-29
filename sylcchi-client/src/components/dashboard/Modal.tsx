@@ -69,7 +69,7 @@ export default function Modal({
           </div>
           <button
             onClick={onClose}
-            className="shrink-0 text-slate-400 hover:text-[#5802f7] transition-colors p-1 rounded-lg hover:bg-slate-50"
+            className="shrink-0 text-slate-400 hover:text-primary transition-colors p-1 rounded-lg hover:bg-slate-50"
           >
             <X size={18} />
           </button>

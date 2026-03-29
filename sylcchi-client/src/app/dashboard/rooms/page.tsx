@@ -7,17 +7,17 @@ import RoleGuard from "@/components/dashboard/RoleGuard";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "@/hooks/useAuth";
 import {
   useCreateRoom,
   useDashboardRoomTypes,
   useDashboardRooms,
   useDeleteRoom,
-  useUpdateRoom,
-  useUploadRoomImages,
   useDeleteRoomImage,
   useRoomImages,
+  useUpdateRoom,
+  useUploadRoomImages,
 } from "@/hooks/useDashboard";
-import { useSession } from "@/hooks/useAuth";
 import type { PrimaryRoom } from "@/lib/types/dashboard";
 import { Edit, ImagePlus, Plus, Search, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -105,9 +105,7 @@ export default function RoomsPage() {
     {
       key: "bedType",
       header: "Bed",
-      render: (row) => (
-        <span className="text-slate-600">{row.bedType}</span>
-      ),
+      render: (row) => <span className="text-slate-600">{row.bedType}</span>,
     },
     {
       key: "isAvailable",
@@ -127,7 +125,7 @@ export default function RoomsPage() {
               e.stopPropagation();
               setImageRoom(row);
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-[#5802f7] hover:bg-[#f3f0ff] transition-all"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-[#f3f0ff] transition-all"
             title="Images"
           >
             <ImagePlus size={16} />
@@ -137,7 +135,7 @@ export default function RoomsPage() {
               e.stopPropagation();
               setEditRoom(row);
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-[#5802f7] hover:bg-[#f3f0ff] transition-all"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-[#f3f0ff] transition-all"
             title="Edit"
           >
             <Edit size={16} />
@@ -146,8 +144,7 @@ export default function RoomsPage() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                if (confirm(`Delete "${row.name}"?`))
-                  deleteRoom.mutate(row.id);
+                if (confirm(`Delete "${row.name}"?`)) deleteRoom.mutate(row.id);
               }}
               className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
               title="Delete"
@@ -169,7 +166,7 @@ export default function RoomsPage() {
           <RoleGuard roles={["ADMIN"]}>
             <button
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#5802f7] text-white text-sm font-medium shadow-lg shadow-[#5802f7]/30 hover:shadow-[#5802f7]/50 hover:-translate-y-0.5 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all"
             >
               <Plus size={18} />
               Add Room
@@ -198,7 +195,7 @@ export default function RoomsPage() {
               placeholder="Search rooms..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#5802f7]/50 transition-colors"
+              className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-primary/50 transition-colors"
             />
           </form>
           {search && (
@@ -208,7 +205,7 @@ export default function RoomsPage() {
                 setSearchInput("");
                 setPage(1);
               }}
-              className="text-sm text-slate-500 hover:text-[#5802f7] transition-colors"
+              className="text-sm text-slate-500 hover:text-primary transition-colors"
             >
               Clear
             </button>
@@ -239,7 +236,7 @@ export default function RoomsPage() {
                   <button
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
-                    className="px-3 py-1 rounded-md border border-slate-200 text-slate-500 hover:border-[#5802f7] hover:text-[#5802f7] text-xs transition-colors disabled:opacity-40"
+                    className="px-3 py-1 rounded-md border border-slate-200 text-slate-500 hover:border-primary hover:text-primary text-xs transition-colors disabled:opacity-40"
                   >
                     Prev
                   </button>
@@ -252,8 +249,8 @@ export default function RoomsPage() {
                       onClick={() => setPage(p)}
                       className={
                         p === page
-                          ? "px-3 py-1 rounded-md bg-[#5802f7] text-white text-xs shadow-md shadow-[#5802f7]/20"
-                          : "px-3 py-1 rounded-md border border-slate-200 text-slate-500 hover:border-[#5802f7] hover:text-[#5802f7] text-xs transition-colors"
+                          ? "px-3 py-1 rounded-md bg-primary text-white text-xs shadow-md shadow-primary/20"
+                          : "px-3 py-1 rounded-md border border-slate-200 text-slate-500 hover:border-primary hover:text-primary text-xs transition-colors"
                       }
                     >
                       {p}
@@ -262,7 +259,7 @@ export default function RoomsPage() {
                   <button
                     disabled={page >= totalPages}
                     onClick={() => setPage((p) => p + 1)}
-                    className="px-3 py-1 rounded-md border border-slate-200 text-slate-500 hover:border-[#5802f7] hover:text-[#5802f7] text-xs transition-colors disabled:opacity-40"
+                    className="px-3 py-1 rounded-md border border-slate-200 text-slate-500 hover:border-primary hover:text-primary text-xs transition-colors disabled:opacity-40"
                   >
                     Next
                   </button>
@@ -329,25 +326,57 @@ export default function RoomsPage() {
 // ── Modals (same logic, styled to match) ──
 
 function CreateRoomModal({
-  open, onClose, roomTypes, onCreate, isPending,
+  open,
+  onClose,
+  roomTypes,
+  onCreate,
+  isPending,
 }: {
-  open: boolean; onClose: () => void;
+  open: boolean;
+  onClose: () => void;
   roomTypes: { id: string; name: string }[];
   onCreate: (data: Record<string, unknown>) => Promise<void>;
   isPending: boolean;
 }) {
-  const [form, setForm] = useState({ name: "", description: "", price: "", capacity: "", bedType: "", roomTypeId: "", facilities: "", rules: "" });
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    price: "",
+    capacity: "",
+    bedType: "",
+    roomTypeId: "",
+    facilities: "",
+    rules: "",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await onCreate({
-      name: form.name, description: form.description,
-      price: Number(form.price), capacity: Number(form.capacity),
-      bedType: form.bedType, roomTypeId: form.roomTypeId,
-      facilities: form.facilities.split(",").map((s) => s.trim()).filter(Boolean),
-      rules: form.rules.split(",").map((s) => s.trim()).filter(Boolean),
+      name: form.name,
+      description: form.description,
+      price: Number(form.price),
+      capacity: Number(form.capacity),
+      bedType: form.bedType,
+      roomTypeId: form.roomTypeId,
+      facilities: form.facilities
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      rules: form.rules
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     });
-    setForm({ name: "", description: "", price: "", capacity: "", bedType: "", roomTypeId: "", facilities: "", rules: "" });
+    setForm({
+      name: "",
+      description: "",
+      price: "",
+      capacity: "",
+      bedType: "",
+      roomTypeId: "",
+      facilities: "",
+      rules: "",
+    });
   };
 
   return (
@@ -355,44 +384,111 @@ function CreateRoomModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Name</label>
-            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Name
+            </label>
+            <Input
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              required
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Room Type</label>
-            <select value={form.roomTypeId} onChange={(e) => setForm({ ...form, roomTypeId: e.target.value })} className="flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm focus:outline-none focus:border-[#5802f7]/50" required>
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Room Type
+            </label>
+            <select
+              value={form.roomTypeId}
+              onChange={(e) => setForm({ ...form, roomTypeId: e.target.value })}
+              className="flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm focus:outline-none focus:border-primary/50"
+              required
+            >
               <option value="">Select type</option>
-              {roomTypes.map((t) => (<option key={t.id} value={t.id}>{t.name}</option>))}
+              {roomTypes.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Price/Night ($)</label>
-            <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Price/Night ($)
+            </label>
+            <Input
+              type="number"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              required
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Capacity</label>
-            <Input type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Capacity
+            </label>
+            <Input
+              type="number"
+              value={form.capacity}
+              onChange={(e) => setForm({ ...form, capacity: e.target.value })}
+              required
+            />
           </div>
           <div className="col-span-2">
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Bed Type</label>
-            <Input value={form.bedType} onChange={(e) => setForm({ ...form, bedType: e.target.value })} placeholder="e.g. King, Queen" required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Bed Type
+            </label>
+            <Input
+              value={form.bedType}
+              onChange={(e) => setForm({ ...form, bedType: e.target.value })}
+              placeholder="e.g. King, Queen"
+              required
+            />
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Description</label>
-          <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} required />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Description
+          </label>
+          <Textarea
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+            rows={3}
+            required
+          />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Facilities (comma-separated)</label>
-          <Input value={form.facilities} onChange={(e) => setForm({ ...form, facilities: e.target.value })} placeholder="WiFi, AC, Mini Bar" />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Facilities (comma-separated)
+          </label>
+          <Input
+            value={form.facilities}
+            onChange={(e) => setForm({ ...form, facilities: e.target.value })}
+            placeholder="WiFi, AC, Mini Bar"
+          />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Rules (comma-separated)</label>
-          <Input value={form.rules} onChange={(e) => setForm({ ...form, rules: e.target.value })} placeholder="No smoking, No pets" />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Rules (comma-separated)
+          </label>
+          <Input
+            value={form.rules}
+            onChange={(e) => setForm({ ...form, rules: e.target.value })}
+            placeholder="No smoking, No pets"
+          />
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">Cancel</button>
-          <button type="submit" disabled={isPending} className="px-5 py-2.5 rounded-lg bg-[#5802f7] text-white text-sm font-medium shadow-lg shadow-[#5802f7]/30 hover:shadow-[#5802f7]/50 transition-all disabled:opacity-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all disabled:opacity-50"
+          >
             {isPending ? "Creating..." : "Create Room"}
           </button>
         </div>
@@ -402,28 +498,50 @@ function CreateRoomModal({
 }
 
 function EditRoomModal({
-  open, onClose, room, roomTypes, onUpdate, isPending,
+  open,
+  onClose,
+  room,
+  roomTypes,
+  onUpdate,
+  isPending,
 }: {
-  open: boolean; onClose: () => void; room: PrimaryRoom;
+  open: boolean;
+  onClose: () => void;
+  room: PrimaryRoom;
   roomTypes: { id: string; name: string }[];
   onUpdate: (data: Record<string, unknown>) => Promise<void>;
   isPending: boolean;
 }) {
   const [form, setForm] = useState({
-    name: room.name, description: room.description, price: String(room.price),
-    capacity: String(room.capacity), bedType: room.bedType, roomTypeId: room.roomTypeId,
-    isAvailable: room.isAvailable, facilities: room.facilities.join(", "), rules: room.rules.join(", "),
+    name: room.name,
+    description: room.description,
+    price: String(room.price),
+    capacity: String(room.capacity),
+    bedType: room.bedType,
+    roomTypeId: room.roomTypeId,
+    isAvailable: room.isAvailable,
+    facilities: room.facilities.join(", "),
+    rules: room.rules.join(", "),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await onUpdate({
-      name: form.name, description: form.description,
-      price: Number(form.price), capacity: Number(form.capacity),
-      bedType: form.bedType, roomTypeId: form.roomTypeId,
+      name: form.name,
+      description: form.description,
+      price: Number(form.price),
+      capacity: Number(form.capacity),
+      bedType: form.bedType,
+      roomTypeId: form.roomTypeId,
       isAvailable: form.isAvailable,
-      facilities: form.facilities.split(",").map((s) => s.trim()).filter(Boolean),
-      rules: form.rules.split(",").map((s) => s.trim()).filter(Boolean),
+      facilities: form.facilities
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      rules: form.rules
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     });
   };
 
@@ -432,49 +550,120 @@ function EditRoomModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Name</label>
-            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Name
+            </label>
+            <Input
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              required
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Room Type</label>
-            <select value={form.roomTypeId} onChange={(e) => setForm({ ...form, roomTypeId: e.target.value })} className="flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm focus:outline-none focus:border-[#5802f7]/50" required>
-              {roomTypes.map((t) => (<option key={t.id} value={t.id}>{t.name}</option>))}
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Room Type
+            </label>
+            <select
+              value={form.roomTypeId}
+              onChange={(e) => setForm({ ...form, roomTypeId: e.target.value })}
+              className="flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm focus:outline-none focus:border-primary/50"
+              required
+            >
+              {roomTypes.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Price/Night ($)</label>
-            <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Price/Night ($)
+            </label>
+            <Input
+              type="number"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              required
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Capacity</label>
-            <Input type="number" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Capacity
+            </label>
+            <Input
+              type="number"
+              value={form.capacity}
+              onChange={(e) => setForm({ ...form, capacity: e.target.value })}
+              required
+            />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Bed Type</label>
-            <Input value={form.bedType} onChange={(e) => setForm({ ...form, bedType: e.target.value })} required />
+            <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+              Bed Type
+            </label>
+            <Input
+              value={form.bedType}
+              onChange={(e) => setForm({ ...form, bedType: e.target.value })}
+              required
+            />
           </div>
           <div className="flex items-end">
             <label className="flex items-center gap-2 text-sm font-medium text-[#1a1a1a]">
-              <input type="checkbox" checked={form.isAvailable} onChange={(e) => setForm({ ...form, isAvailable: e.target.checked })} className="h-4 w-4 rounded border-slate-300 text-[#5802f7]" />
+              <input
+                type="checkbox"
+                checked={form.isAvailable}
+                onChange={(e) =>
+                  setForm({ ...form, isAvailable: e.target.checked })
+                }
+                className="h-4 w-4 rounded border-slate-300 text-primary"
+              />
               Available
             </label>
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Description</label>
-          <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} required />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Description
+          </label>
+          <Textarea
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+            rows={3}
+            required
+          />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Facilities</label>
-          <Input value={form.facilities} onChange={(e) => setForm({ ...form, facilities: e.target.value })} />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Facilities
+          </label>
+          <Input
+            value={form.facilities}
+            onChange={(e) => setForm({ ...form, facilities: e.target.value })}
+          />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Rules</label>
-          <Input value={form.rules} onChange={(e) => setForm({ ...form, rules: e.target.value })} />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Rules
+          </label>
+          <Input
+            value={form.rules}
+            onChange={(e) => setForm({ ...form, rules: e.target.value })}
+          />
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">Cancel</button>
-          <button type="submit" disabled={isPending} className="px-5 py-2.5 rounded-lg bg-[#5802f7] text-white text-sm font-medium shadow-lg shadow-[#5802f7]/30 transition-all disabled:opacity-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 transition-all disabled:opacity-50"
+          >
             {isPending ? "Saving..." : "Save Changes"}
           </button>
         </div>
@@ -484,12 +673,21 @@ function EditRoomModal({
 }
 
 function RoomImagesModal({
-  open, onClose, room, onUpload, onDeleteImage, isUploading, isAdmin,
+  open,
+  onClose,
+  room,
+  onUpload,
+  onDeleteImage,
+  isUploading,
+  isAdmin,
 }: {
-  open: boolean; onClose: () => void; room: PrimaryRoom;
+  open: boolean;
+  onClose: () => void;
+  room: PrimaryRoom;
   onUpload: (formData: FormData) => Promise<void>;
   onDeleteImage: (imageId: string) => Promise<void>;
-  isUploading: boolean; isAdmin: boolean;
+  isUploading: boolean;
+  isAdmin: boolean;
 }) {
   const { data: images, isLoading } = useRoomImages(room.id);
 
@@ -503,26 +701,54 @@ function RoomImagesModal({
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={`Images: ${room.name}`} description="Upload up to 3 images at a time." className="max-w-2xl">
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={`Images: ${room.name}`}
+      description="Upload up to 3 images at a time."
+      className="max-w-2xl"
+    >
       <div className="space-y-4">
-        <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-500 transition-all hover:border-[#5802f7] hover:text-[#5802f7] hover:bg-[#f3f0ff]">
+        <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-500 transition-all hover:border-primary hover:text-primary hover:bg-[#f3f0ff]">
           <ImagePlus size={18} />
           {isUploading ? "Uploading..." : "Upload Images"}
-          <input type="file" accept="image/*" multiple onChange={handleFileUpload} disabled={isUploading} className="hidden" />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileUpload}
+            disabled={isUploading}
+            className="hidden"
+          />
         </label>
 
         {isLoading ? (
           <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 3].map((i) => (<div key={i} className="aspect-video animate-pulse rounded-xl bg-slate-100" />))}
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="aspect-video animate-pulse rounded-xl bg-slate-100"
+              />
+            ))}
           </div>
         ) : images?.length ? (
           <div className="grid grid-cols-3 gap-3">
             {images.map((img) => (
               <div key={img.id} className="group relative">
-                <Image src={img.imageUrl} alt="Room" width={200} height={150} className="aspect-video w-full rounded-xl object-cover" />
+                <Image
+                  src={img.imageUrl}
+                  alt="Room"
+                  width={200}
+                  height={150}
+                  className="aspect-video w-full rounded-xl object-cover"
+                />
                 {isAdmin && (
-                  <button onClick={() => { if (confirm("Delete?")) onDeleteImage(img.id); }}
-                    className="absolute right-1 top-1 hidden rounded-lg bg-rose-500/90 p-1 text-white group-hover:block">
+                  <button
+                    onClick={() => {
+                      if (confirm("Delete?")) onDeleteImage(img.id);
+                    }}
+                    className="absolute right-1 top-1 hidden rounded-lg bg-rose-500/90 p-1 text-white group-hover:block"
+                  >
                     <Trash2 size={14} />
                   </button>
                 )}
@@ -530,7 +756,9 @@ function RoomImagesModal({
             ))}
           </div>
         ) : (
-          <p className="text-center text-sm text-slate-400 py-8">No images uploaded yet.</p>
+          <p className="text-center text-sm text-slate-400 py-8">
+            No images uploaded yet.
+          </p>
         )}
       </div>
     </Modal>

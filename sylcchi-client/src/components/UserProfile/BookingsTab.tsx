@@ -9,6 +9,7 @@ import {
   Calendar,
   CheckCircle,
   ChevronRight,
+  ClipboardCheck,
   Clock,
   Hash,
   Loader2,
@@ -230,6 +231,18 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                     >
                       View Details <ChevronRight size={13} />
                     </Link>
+                    {statusKey === "CONFIRMED" && (
+                      <Link
+                        href={`/checkin?code=${booking.bookingCode}`}
+                        className="flex items-center gap-1 rounded-md bg-[#235784] px-3 py-1 text-[12px] text-white transition-colors hover:bg-[#1a4a6d]"
+                        style={{
+                          fontFamily: "Mulish, sans-serif",
+                          fontWeight: 700,
+                        }}
+                      >
+                        <ClipboardCheck size={12} /> Check-in
+                      </Link>
+                    )}
                     {canCancel && (
                       <button
                         onClick={() => handleCancel(booking)}

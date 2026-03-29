@@ -1,35 +1,33 @@
 "use client";
 
-import { Icon } from "@iconify/react";
 import { cn } from "@/lib/utils";
+import { Icon } from "@iconify/react";
 
 type ColorTheme = "purple" | "blue" | "orange" | "teal";
 
-const colorMap: Record<
-  ColorTheme,
-  { bg: string; text: string; glow: string }
-> = {
-  purple: {
-    bg: "bg-[#f5f3ff]",
-    text: "text-[#5802f7]",
-    glow: "hover:shadow-[0_8px_30px_-4px_rgba(88,2,247,0.08)]",
-  },
-  blue: {
-    bg: "bg-blue-50",
-    text: "text-blue-600",
-    glow: "hover:shadow-[0_8px_30px_-4px_rgba(37,99,235,0.08)]",
-  },
-  orange: {
-    bg: "bg-orange-50",
-    text: "text-orange-500",
-    glow: "hover:shadow-[0_8px_30px_-4px_rgba(249,115,22,0.08)]",
-  },
-  teal: {
-    bg: "bg-teal-50",
-    text: "text-teal-600",
-    glow: "hover:shadow-[0_8px_30px_-4px_rgba(13,148,136,0.08)]",
-  },
-};
+const colorMap: Record<ColorTheme, { bg: string; text: string; glow: string }> =
+  {
+    purple: {
+      bg: "bg-[#f5f3ff]",
+      text: "text-primary",
+      glow: "hover:shadow-[0_8px_30px_-4px_rgba(88,2,247,0.08)]",
+    },
+    blue: {
+      bg: "bg-blue-50",
+      text: "text-blue-600",
+      glow: "hover:shadow-[0_8px_30px_-4px_rgba(37,99,235,0.08)]",
+    },
+    orange: {
+      bg: "bg-orange-50",
+      text: "text-orange-500",
+      glow: "hover:shadow-[0_8px_30px_-4px_rgba(249,115,22,0.08)]",
+    },
+    teal: {
+      bg: "bg-teal-50",
+      text: "text-teal-600",
+      glow: "hover:shadow-[0_8px_30px_-4px_rgba(13,148,136,0.08)]",
+    },
+  };
 
 interface StatsCardProps {
   title: string;

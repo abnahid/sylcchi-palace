@@ -10,13 +10,44 @@ import type {
   CheckinLookupPayload,
   CheckinLookupResponse,
   CheckinVerifyOtpPayload,
+  CheckinVerifyOtpResponse,
   CompleteRefundPayload,
   CreateRoomTypePayload,
+  DashboardStatsResponse,
+  PaymentsListParams,
+  PaymentsListResponse,
   RefundResponse,
+  RevenueAnalyticsResponse,
   RoomImagesResponse,
   RoomTypeResponse,
   UpdateUserPayload,
 } from "@/lib/types/dashboard";
+
+// ── Statistics ──
+
+export async function getDashboardStats(): Promise<DashboardStatsResponse> {
+  try {
+    const response = await api.get<DashboardStatsResponse>(
+      "/statistics/dashboard",
+    );
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
+export async function getRevenueAnalytics(
+  months = 12,
+): Promise<RevenueAnalyticsResponse> {
+  try {
+    const response = await api.get<RevenueAnalyticsResponse>(
+      `/statistics/revenue?months=${months}`,
+    );
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
 
 // ── User management (admin) ──
 
@@ -135,6 +166,28 @@ export async function deleteRoomImage(
   }
 }
 
+// ── Payments (admin) ──
+
+export async function getPayments(
+  params?: PaymentsListParams,
+): Promise<PaymentsListResponse> {
+  try {
+    const query: Record<string, string> = {};
+    if (params?.page) query.page = String(params.page);
+    if (params?.limit) query.limit = String(params.limit);
+    if (params?.status) query.status = params.status;
+    if (params?.paymentMethod) query.paymentMethod = params.paymentMethod;
+    if (params?.search) query.search = params.search;
+
+    const response = await api.get<PaymentsListResponse>("/payments", {
+      params: query,
+    });
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
 // ── All bookings (admin) ──
 
 export async function getAllBookings(
@@ -181,7 +234,10 @@ export async function checkinLookup(
   try {
     const response = await api.post<CheckinLookupResponse>(
       "/checkin/lookup",
-      payload,
+      {
+        bookingCode: payload.bookingCode,
+        email: payload.identity,
+      },
     );
     return response.data;
   } catch (error) {
@@ -191,11 +247,15 @@ export async function checkinLookup(
 
 export async function checkinVerifyOtp(
   payload: CheckinVerifyOtpPayload,
-): Promise<{ success: boolean; message: string }> {
+): Promise<CheckinVerifyOtpResponse> {
   try {
-    const response = await api.post<{ success: boolean; message: string }>(
+    const response = await api.post<CheckinVerifyOtpResponse>(
       "/checkin/verify-otp",
-      payload,
+      {
+        bookingCode: payload.bookingCode,
+        email: payload.identity,
+        otp: payload.otp,
+      },
     );
     return response.data;
   } catch (error) {

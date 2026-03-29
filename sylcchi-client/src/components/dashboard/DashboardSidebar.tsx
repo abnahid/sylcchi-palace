@@ -31,6 +31,13 @@ const navItems: NavItem[] = [
     section: "overview",
   },
   {
+    label: "Payments",
+    href: "/dashboard/payments",
+    icon: "solar:card-linear",
+    roles: ["ADMIN"],
+    section: "overview",
+  },
+  {
     label: "Rooms",
     href: "/dashboard/rooms",
     icon: "solar:box-minimalistic-linear",
@@ -82,7 +89,9 @@ export default function DashboardSidebar({
   const pathname = usePathname();
   const userRole = user.role ?? "CUSTOMER";
 
-  const filteredItems = navItems.filter((item) => item.roles.includes(userRole));
+  const filteredItems = navItems.filter((item) =>
+    item.roles.includes(userRole),
+  );
   const overviewItems = filteredItems.filter((i) => i.section === "overview");
   const managementItems = filteredItems.filter(
     (i) => i.section === "management",
@@ -110,12 +119,12 @@ export default function DashboardSidebar({
           className="flex items-center gap-3"
           onClick={onMobileClose}
         >
-          <div className="w-8 h-8 rounded-lg bg-[#5802f7] flex items-center justify-center text-white shadow-lg shadow-[#5802f7]/30 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white  shadow-primary/30 shrink-0">
             <span className="text-lg font-semibold">S</span>
           </div>
           {!collapsed && (
             <span className="text-[#1a1a1a] text-xl font-extrabold tracking-tight font-mulish">
-              SYLCCHI<span className="text-[#5802f7]">.</span>
+              SYLCCHI<span className="text-primary">.</span>
             </span>
           )}
         </Link>
@@ -145,8 +154,8 @@ export default function DashboardSidebar({
               className={cn(
                 "group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
                 active
-                  ? "text-[#5802f7] font-medium"
-                  : "text-slate-500 hover:bg-slate-50 hover:text-[#5802f7]",
+                  ? "text-primary font-medium"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-primary",
                 collapsed && "justify-center px-3",
               )}
               title={collapsed ? item.label : undefined}
@@ -175,8 +184,8 @@ export default function DashboardSidebar({
                   className={cn(
                     "group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
                     active
-                      ? "text-[#5802f7] font-medium"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-[#5802f7]",
+                      ? "text-primary font-medium"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-primary",
                     collapsed && "justify-center px-3",
                   )}
                   title={collapsed ? item.label : undefined}
@@ -198,8 +207,8 @@ export default function DashboardSidebar({
           className={cn(
             "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
             pathname === "/dashboard/settings"
-              ? "text-[#5802f7] font-medium"
-              : "text-slate-500 hover:bg-slate-50 hover:text-[#5802f7]",
+              ? "text-primary font-medium"
+              : "text-slate-500 hover:bg-slate-50 hover:text-primary",
             collapsed && "justify-center px-3",
           )}
           title={collapsed ? "Settings" : undefined}
@@ -240,9 +249,7 @@ export default function DashboardSidebar({
         className={cn(
           "fixed inset-y-0 left-0 z-50 bg-white/90 backdrop-blur-xl border-r border-slate-100 flex flex-col justify-between shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300",
           // Mobile: slide in/out
-          mobileOpen
-            ? "translate-x-0 w-64"
-            : "-translate-x-full w-64",
+          mobileOpen ? "translate-x-0 w-64" : "-translate-x-full w-64",
           // Desktop: always visible
           "md:relative md:translate-x-0",
           collapsed ? "md:w-[72px]" : "md:w-64",
@@ -253,13 +260,9 @@ export default function DashboardSidebar({
         {/* Collapse toggle (desktop only) */}
         <button
           onClick={onToggle}
-          className="hidden md:flex absolute -right-3 top-24 h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm hover:bg-slate-50 hover:text-[#5802f7] transition-colors"
+          className="hidden md:flex absolute -right-3 top-24 h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm hover:bg-slate-50 hover:text-primary transition-colors"
         >
-          {collapsed ? (
-            <ChevronRight size={14} />
-          ) : (
-            <ChevronLeft size={14} />
-          )}
+          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
       </aside>
     </>

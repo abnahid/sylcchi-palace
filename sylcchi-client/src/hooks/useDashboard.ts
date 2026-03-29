@@ -11,6 +11,9 @@ import {
   deleteRoomImage,
   deleteUser,
   getAllBookings,
+  getDashboardStats,
+  getPayments,
+  getRevenueAnalytics,
   getRoomImages,
   getUsers,
   updateUser,
@@ -27,8 +30,12 @@ import type {
   CheckinVerifyOtpPayload,
   CompleteRefundPayload,
   CreateRoomTypePayload,
+  DashboardStatsResponse,
+  PaymentRecord,
+  PaymentsListParams,
   PrimaryRoom,
   PrimaryRoomImage,
+  RevenueDataPoint,
   RoomType,
   RoomsListResponse,
   UpdateRoomPayload,
@@ -49,6 +56,9 @@ export const dashboardKeys = {
   roomImages: (roomId: string) =>
     [...dashboardKeys.all, "roomImages", roomId] as const,
   bookings: () => [...dashboardKeys.all, "bookings"] as const,
+  payments: () => [...dashboardKeys.all, "payments"] as const,
+  stats: () => [...dashboardKeys.all, "stats"] as const,
+  revenue: (months: number) => [...dashboardKeys.all, "revenue", months] as const,
   overview: () => [...dashboardKeys.all, "overview"] as const,
 };
 
@@ -248,6 +258,49 @@ export function useDeleteRoomImage() {
       });
       queryClient.invalidateQueries({ queryKey: dashboardKeys.rooms() });
     },
+  });
+}
+
+// ── Statistics ──
+
+export function useDashboardStats() {
+  return useQuery<DashboardStatsResponse["data"], Error>({
+    queryKey: dashboardKeys.stats(),
+    queryFn: async () => {
+      const response = await getDashboardStats();
+      return response.data;
+    },
+    staleTime: 60_000,
+    gcTime: 300_000,
+  });
+}
+
+export function useRevenueAnalytics(months = 12) {
+  return useQuery<RevenueDataPoint[], Error>({
+    queryKey: dashboardKeys.revenue(months),
+    queryFn: async () => {
+      const response = await getRevenueAnalytics(months);
+      return response.data;
+    },
+    staleTime: 60_000,
+    gcTime: 300_000,
+  });
+}
+
+// ── Payments (admin) ──
+
+export function usePayments(params?: PaymentsListParams) {
+  return useQuery<
+    { meta: { total: number; page: number; limit: number; totalPages: number }; data: PaymentRecord[] },
+    Error
+  >({
+    queryKey: [...dashboardKeys.payments(), params],
+    queryFn: async () => {
+      const response = await getPayments(params);
+      return response.data;
+    },
+    staleTime: 30_000,
+    gcTime: 300_000,
   });
 }
 

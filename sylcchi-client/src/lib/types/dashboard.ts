@@ -115,34 +115,52 @@ export interface RefundResponse {
 
 // ── Check-in ──
 export interface CheckinLookupPayload {
-  bookingCode?: string;
-  email?: string;
-}
-
-export interface CheckinLookupResult {
   bookingCode: string;
-  guestName: string;
-  roomName: string;
-  checkInDate: string;
-  checkOutDate: string;
-  guests: number;
-  bookingStatus: string;
-  paymentStatus: string;
+  identity: string;
 }
 
 export interface CheckinLookupResponse {
   success: boolean;
   message: string;
-  data: CheckinLookupResult;
+  data: {
+    bookingCode: string;
+    otpSent: boolean;
+    message: string;
+  };
 }
 
 export interface CheckinVerifyOtpPayload {
   bookingCode: string;
+  identity: string;
   otp: string;
 }
 
+export interface CheckinVerifyOtpResponse {
+  success: boolean;
+  message: string;
+  data: {
+    checkinToken: string;
+    booking: {
+      bookingCode: string;
+      checkInDate: string;
+      checkOutDate: string;
+      room: { id: string; name: string };
+      subtotal: number;
+      vat: number;
+      total: number;
+      paid: number;
+      due: number;
+      paymentStatus: string;
+      requiresPayment: boolean;
+    };
+  };
+}
+
 export interface CheckinCompletePayload {
-  bookingCode: string;
+  checkinToken: string;
+  identityType?: string;
+  identityNumber?: string;
+  arrivalTime?: string;
   notes?: string;
 }
 
@@ -150,11 +168,14 @@ export interface CheckinCompleteResponse {
   success: boolean;
   message: string;
   data: {
-    id: string;
-    reservationId: string;
-    roomId: string;
-    checkinTime: string;
-    status: string;
+    requiresPayment: boolean;
+    checkin?: {
+      id: string;
+      reservationId: string;
+      roomId: string;
+      checkinTime: string;
+      status: string;
+    };
   };
 }
 
@@ -193,6 +214,74 @@ export interface AllBookingsResponse {
     };
     data: AdminBookingData[];
   };
+}
+
+// ── Payments (admin) ──
+export interface PaymentRecord {
+  id: string;
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  paymentType: string;
+  status: string;
+  transactionId: string | null;
+  refundStatus: string;
+  refundAmount: number | null;
+  createdAt: string;
+  reservation: {
+    bookingCode: string;
+    checkInDate: string;
+    checkOutDate: string;
+    bookingStatus: string;
+    user: { name: string; email: string } | null;
+    room: { name: string } | null;
+  };
+}
+
+export interface PaymentsListParams {
+  page?: number;
+  limit?: number;
+  status?: string;
+  paymentMethod?: string;
+  search?: string;
+}
+
+export interface PaymentsListResponse {
+  success: boolean;
+  message: string;
+  data: {
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+    data: PaymentRecord[];
+  };
+}
+
+// ── Statistics ──
+export interface DashboardStatsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    totalRevenue: { amount: number; changePercent: number };
+    totalBookings: { count: number; confirmed: number; changePercent: number };
+    totalRooms: { count: number; available: number; types: number };
+    totalUsers: { count: number; changePercent: number };
+    roomOccupancy: { available: number; occupied: number };
+  };
+}
+
+export interface RevenueDataPoint {
+  month: string;
+  revenue: number;
+}
+
+export interface RevenueAnalyticsResponse {
+  success: boolean;
+  message: string;
+  data: RevenueDataPoint[];
 }
 
 // ── Dashboard overview stats (derived from existing endpoints) ──

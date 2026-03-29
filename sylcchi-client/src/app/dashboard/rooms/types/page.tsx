@@ -48,7 +48,7 @@ export default function RoomTypesPage() {
         actions={
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#5802f7] text-white text-sm font-medium shadow-lg shadow-[#5802f7]/30 hover:shadow-[#5802f7]/50 hover:-translate-y-0.5 transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all"
           >
             <Plus size={18} />
             Add Type
@@ -93,7 +93,7 @@ export default function RoomTypesPage() {
             <button
               type="submit"
               disabled={createRoomType.isPending}
-              className="px-5 py-2.5 rounded-lg bg-[#5802f7] text-white text-sm font-medium shadow-lg shadow-[#5802f7]/30 transition-all disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 transition-all disabled:opacity-50"
             >
               {createRoomType.isPending ? "Creating..." : "Create"}
             </button>

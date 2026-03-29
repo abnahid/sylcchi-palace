@@ -1,5 +1,6 @@
 export interface RoomFilters {
   page?: number;
+  limit?: number;
   search?: string;
   guests?: number;
   roomTypeId?: string;

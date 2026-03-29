@@ -4,7 +4,6 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { useSession, useSignOut } from "@/hooks/useAuth";
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -31,7 +30,7 @@ export default function DashboardLayout({
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
-          <Spinner className="h-8 w-8 text-[#5802f7]" />
+          <Spinner className="h-8 w-8 text-primary" />
           <p className="text-sm text-slate-400">Loading dashboard...</p>
         </div>
       </div>
@@ -60,10 +59,7 @@ export default function DashboardLayout({
       />
 
       <main className="flex-1 flex flex-col relative overflow-y-auto overflow-x-hidden scroll-smooth">
-        <DashboardHeader
-          user={user}
-          onMenuClick={() => setMobileOpen(true)}
-        />
+        <DashboardHeader user={user} onMenuClick={() => setMobileOpen(true)} />
         <div className="w-full max-w-7xl mx-auto px-6 py-6 md:px-10 md:py-10 space-y-8">
           {children}
         </div>

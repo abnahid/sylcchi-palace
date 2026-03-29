@@ -7,6 +7,7 @@ type BookingStaySectionProps = {
   checkOut: Date;
   nights: number;
   guests: number;
+  maxGuests: number;
   onGuestsChange: (nextGuests: number) => void;
 };
 
@@ -16,6 +17,7 @@ export default function BookingStaySection({
   checkOut,
   nights,
   guests,
+  maxGuests,
   onGuestsChange,
 }: BookingStaySectionProps) {
   return (
@@ -76,11 +78,13 @@ export default function BookingStaySection({
               onChange={(event) => onGuestsChange(Number(event.target.value))}
               className="w-full rounded-md border border-[#cfd9e3] bg-white px-2.5 py-1.5 font-open-sans text-sm text-[#2f3f4f] outline-none focus:border-primary"
             >
-              {[1, 2, 3, 4, 5, 6].map((count) => (
-                <option key={count} value={count}>
-                  {count} guest{count > 1 ? "s" : ""}
-                </option>
-              ))}
+              {Array.from({ length: maxGuests }, (_, i) => i + 1).map(
+                (count) => (
+                  <option key={count} value={count}>
+                    {count} guest{count > 1 ? "s" : ""}
+                  </option>
+                ),
+              )}
             </select>
           </div>
         </div>

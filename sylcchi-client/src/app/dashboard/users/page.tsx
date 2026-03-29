@@ -39,12 +39,13 @@ export default function UsersPage() {
       key: "user",
       header: "User",
       render: (row) => {
-        const initials = row.name
-          ?.split(" ")
-          .map((n) => n[0])
-          .join("")
-          .slice(0, 2)
-          .toUpperCase() ?? "U";
+        const initials =
+          row.name
+            ?.split(" ")
+            .map((n) => n[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase() ?? "U";
         const colors = [
           "bg-blue-100 text-blue-600",
           "bg-purple-100 text-purple-600",
@@ -114,7 +115,7 @@ export default function UsersPage() {
               e.stopPropagation();
               setEditUser(row);
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-[#5802f7] hover:bg-[#f3f0ff] transition-all"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-primary hover:bg-[#f3f0ff] transition-all"
           >
             <Edit size={16} />
           </button>
@@ -148,7 +149,7 @@ export default function UsersPage() {
               placeholder="Search users..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#5802f7]/50 transition-colors"
+              className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-primary/50 transition-colors"
             />
           </div>
         </div>
@@ -179,10 +180,20 @@ export default function UsersPage() {
 }
 
 function EditUserModal({
-  open, onClose, user, onUpdate, isPending,
+  open,
+  onClose,
+  user,
+  onUpdate,
+  isPending,
 }: {
-  open: boolean; onClose: () => void; user: UserProfile;
-  onUpdate: (payload: { name?: string; role?: "CUSTOMER" | "MANAGER" | "ADMIN"; phone?: string }) => Promise<void>;
+  open: boolean;
+  onClose: () => void;
+  user: UserProfile;
+  onUpdate: (payload: {
+    name?: string;
+    role?: "CUSTOMER" | "MANAGER" | "ADMIN";
+    phone?: string;
+  }) => Promise<void>;
   isPending: boolean;
 }) {
   const [form, setForm] = useState({
@@ -193,31 +204,68 @@ function EditUserModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onUpdate({ name: form.name, role: form.role, phone: form.phone || undefined });
+    await onUpdate({
+      name: form.name,
+      role: form.role,
+      phone: form.phone || undefined,
+    });
   };
 
   return (
     <Modal open={open} onClose={onClose} title={`Edit: ${user.name}`}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Name</label>
-          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Name
+          </label>
+          <Input
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Role</label>
-          <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as "CUSTOMER" | "MANAGER" | "ADMIN" })} className="flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm focus:outline-none focus:border-[#5802f7]/50">
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Role
+          </label>
+          <select
+            value={form.role}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                role: e.target.value as "CUSTOMER" | "MANAGER" | "ADMIN",
+              })
+            }
+            className="flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm focus:outline-none focus:border-primary/50"
+          >
             <option value="CUSTOMER">Customer</option>
             <option value="MANAGER">Manager</option>
             <option value="ADMIN">Admin</option>
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">Phone</label>
-          <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="Optional" />
+          <label className="mb-1 block text-sm font-medium text-[#1a1a1a]">
+            Phone
+          </label>
+          <Input
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            placeholder="Optional"
+          />
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">Cancel</button>
-          <button type="submit" disabled={isPending} className="px-5 py-2.5 rounded-lg bg-[#5802f7] text-white text-sm font-medium shadow-lg shadow-[#5802f7]/30 transition-all disabled:opacity-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2.5 rounded-lg border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 transition-all disabled:opacity-50"
+          >
             {isPending ? "Saving..." : "Save Changes"}
           </button>
         </div>
