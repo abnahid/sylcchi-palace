@@ -8,6 +8,11 @@ roomRouter.get("/types", routeAccess.public, RoomController.listRoomTypes);
 roomRouter.post("/types", ...routeAccess.admin, RoomController.createRoomType);
 
 roomRouter.get("/", routeAccess.public, RoomController.listRooms);
+roomRouter.get(
+  "/:roomId/booked-dates",
+  routeAccess.public,
+  RoomController.getBookedDates,
+);
 roomRouter.get("/:slug", routeAccess.public, RoomController.getSingleRoom);
 
 roomRouter.post("/", ...routeAccess.admin, RoomController.createRoom);

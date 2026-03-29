@@ -365,4 +365,38 @@ export const RoomService = {
 
     return null;
   },
+
+  getBookedDates: async (roomId: string) => {
+    const room = await prisma.room.findUnique({
+      where: { id: roomId },
+      select: { id: true },
+    });
+
+    if (!room) {
+      throw new AppError("Room not found", status.NOT_FOUND);
+    }
+
+    const now = new Date();
+    const reservations = await prisma.reservation.findMany({
+      where: {
+        roomId,
+        bookingStatus: {
+          in: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
+        },
+        checkOutDate: { gt: now },
+      },
+      select: {
+        checkInDate: true,
+        checkOutDate: true,
+        bookingStatus: true,
+      },
+      orderBy: { checkInDate: "asc" },
+    });
+
+    return reservations.map((r) => ({
+      checkInDate: r.checkInDate.toISOString().split("T")[0],
+      checkOutDate: r.checkOutDate.toISOString().split("T")[0],
+      status: r.bookingStatus,
+    }));
+  },
 };

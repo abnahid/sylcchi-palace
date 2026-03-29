@@ -318,6 +318,7 @@ export const RoomController = {
     const checkOutDate = parseQueryDate(req.query.checkOutDate, "checkOutDate");
     const guests = parseQueryPositiveInt(req.query.guests, "guests");
     const page = parseQueryPositiveInt(req.query.page, "page") ?? 1;
+    const limit = parseQueryPositiveInt(req.query.limit, "limit") ?? ROOMS_PER_PAGE;
     const priceSort = parseQueryPriceSort(req.query.priceSort);
 
     if ((checkInDate && !checkOutDate) || (!checkInDate && checkOutDate)) {
@@ -342,7 +343,7 @@ export const RoomController = {
       checkOutDate,
       guests,
       page,
-      limit: ROOMS_PER_PAGE,
+      limit,
       priceSort,
     });
 
@@ -463,6 +464,22 @@ export const RoomController = {
     res.status(status.OK).json({
       success: true,
       message: "Room deleted successfully",
+    });
+  },
+
+  getBookedDates: async (req: Request, res: Response) => {
+    const roomId = req.params.roomId;
+
+    if (!roomId || roomId.trim() === "") {
+      throw new AppError("Room ID is required", status.BAD_REQUEST);
+    }
+
+    const result = await RoomService.getBookedDates(roomId.trim());
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Booked dates retrieved successfully",
+      data: result,
     });
   },
 };
