@@ -12,18 +12,23 @@ import { stripeConfig } from "../../config/stripe.config";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 
+type StripeEventObject = {
+  id?: string;
+  payment_intent?: string;
+  client_reference_id?: string;
+  status?: string;
+  amount_total?: number;
+  currency?: string;
+  metadata?: {
+    bookingId?: string;
+  };
+};
+
 type StripeEvent = {
   id: string;
   type: string;
   data: {
-    object: {
-      id?: string;
-      payment_intent?: string;
-      status?: string;
-      metadata?: {
-        bookingId?: string;
-      };
-    };
+    object: StripeEventObject;
   };
 };
 
@@ -139,9 +144,119 @@ export const WebhookService = {
 
     const event = body as unknown as StripeEvent;
 
+    console.log(`[Stripe Webhook] Event: ${event.type}, ID: ${event.id}`);
+
+    // ── checkout.session.completed — primary handler for Checkout flow ──
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const bookingId =
+        session.metadata?.bookingId ?? session.client_reference_id;
+      const sessionId = session.id; // cs_test_...
+      const paymentIntentId =
+        typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : undefined;
+
+      console.log(
+        `[Stripe Webhook] checkout.session.completed — bookingId: ${bookingId}, sessionId: ${sessionId}, paymentIntentId: ${paymentIntentId}`,
+      );
+
+      if (!bookingId) {
+        console.warn("[Stripe Webhook] No bookingId found in session");
+        return;
+      }
+
+      await prisma.$transaction(
+        async (tx) => {
+          // Find payment by sessionId (stored as transactionId) or by reservationId
+          const payment =
+            (await tx.payment.findFirst({
+              where: { transactionId: sessionId },
+            })) ??
+            (await tx.payment.findFirst({
+              where: { reservationId: bookingId },
+            }));
+
+          if (!payment) {
+            console.warn(
+              `[Stripe Webhook] No payment found for bookingId: ${bookingId}`,
+            );
+            return;
+          }
+
+          if (payment.status === PaymentStatus.SUCCESS) {
+            console.log(
+              `[Stripe Webhook] Payment already SUCCESS for ${bookingId}`,
+            );
+            return;
+          }
+
+          // Update payment — store the PaymentIntent ID for future reference
+          await tx.payment.update({
+            where: { id: payment.id },
+            data: {
+              status: PaymentStatus.SUCCESS,
+              transactionId: paymentIntentId ?? sessionId,
+            },
+          });
+
+          // Update reservation
+          const booking = await tx.reservation.findUnique({
+            where: { id: payment.reservationId },
+            select: { id: true, totalPrice: true, paidAmount: true },
+          });
+
+          if (!booking) return;
+
+          const chargedAmount = Number(payment.amount);
+          const totalAmount = Number(booking.totalPrice);
+          const newPaidAmount = Number(
+            Math.min(
+              Number(booking.paidAmount) + chargedAmount,
+              totalAmount,
+            ).toFixed(2),
+          );
+          const newRemainingAmount = Number(
+            Math.max(totalAmount - newPaidAmount, 0).toFixed(2),
+          );
+
+          const updateData: Record<string, unknown> = {
+            paidAmount: newPaidAmount,
+            remainingAmount: newRemainingAmount,
+            paymentStatus:
+              newRemainingAmount <= 0
+                ? BookingPaymentStatus.PAID
+                : BookingPaymentStatus.PARTIAL,
+            bookingStatus: BookingStatus.CONFIRMED,
+          };
+
+          if (newRemainingAmount <= 0) {
+            updateData.expiresAt = null;
+          }
+
+          await tx.reservation.update({
+            where: { id: payment.reservationId },
+            data: updateData,
+          });
+
+          console.log(
+            `[Stripe Webhook] ✓ Updated booking ${bookingId}: paid=${newPaidAmount}, status=${newRemainingAmount <= 0 ? "PAID" : "PARTIAL"}`,
+          );
+        },
+        { isolationLevel: "Serializable" },
+      );
+
+      return;
+    }
+
+    // ── payment_intent.succeeded — fallback handler ──
     if (event.type === "payment_intent.succeeded") {
       const paymentIntentId = event.data.object.id;
       const bookingId = event.data.object.metadata?.bookingId;
+
+      console.log(
+        `[Stripe Webhook] payment_intent.succeeded — piId: ${paymentIntentId}, bookingId: ${bookingId}`,
+      );
 
       if (!paymentIntentId) {
         return;

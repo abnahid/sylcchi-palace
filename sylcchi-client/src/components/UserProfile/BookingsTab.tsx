@@ -231,18 +231,44 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                     >
                       View Details <ChevronRight size={13} />
                     </Link>
-                    {statusKey === "CONFIRMED" && (
-                      <Link
-                        href={`/checkin?code=${booking.bookingCode}`}
-                        className="flex items-center gap-1 rounded-md bg-[#235784] px-3 py-1 text-[12px] text-white transition-colors hover:bg-[#1a4a6d]"
-                        style={{
-                          fontFamily: "Mulish, sans-serif",
-                          fontWeight: 700,
-                        }}
-                      >
-                        <ClipboardCheck size={12} /> Check-in
-                      </Link>
-                    )}
+                    {statusKey === "CONFIRMED" &&
+                      booking.checkin?.status === "CHECKED_IN" && (
+                        <span
+                          className="flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-3 py-1 text-[12px] text-emerald-700"
+                          style={{
+                            fontFamily: "Mulish, sans-serif",
+                            fontWeight: 700,
+                          }}
+                        >
+                          <CheckCircle size={12} /> Checked In
+                        </span>
+                      )}
+                    {statusKey === "CONFIRMED" &&
+                      booking.checkin?.status === "CHECKED_OUT" && (
+                        <span
+                          className="flex items-center gap-1 rounded-md bg-slate-50 border border-slate-200 px-3 py-1 text-[12px] text-slate-500"
+                          style={{
+                            fontFamily: "Mulish, sans-serif",
+                            fontWeight: 700,
+                          }}
+                        >
+                          <CheckCircle size={12} /> Checked Out
+                        </span>
+                      )}
+                    {statusKey === "CONFIRMED" &&
+                      (!booking.checkin ||
+                        booking.checkin.status === "PENDING") && (
+                        <Link
+                          href={`/checkin?code=${booking.bookingCode}`}
+                          className="flex items-center gap-1 rounded-md bg-[#235784] px-3 py-1 text-[12px] text-white transition-colors hover:bg-[#1a4a6d]"
+                          style={{
+                            fontFamily: "Mulish, sans-serif",
+                            fontWeight: 700,
+                          }}
+                        >
+                          <ClipboardCheck size={12} /> Check-in
+                        </Link>
+                      )}
                     {canCancel && (
                       <button
                         onClick={() => handleCancel(booking)}

@@ -20,5 +20,9 @@ reservationRouter.post(
   ...routeAccess.admin,
   ReservationController.markRefundCompleted,
 );
+reservationRouter.post(
+  "/verify-payment",
+  ReservationController.verifyStripePayment,
+);
 reservationRouter.get("/:id", ReservationController.getBookingById);
 reservationRouter.post("/cancel", ReservationController.cancelBooking);

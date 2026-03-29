@@ -424,6 +424,22 @@ export const ReservationController = {
     });
   },
 
+  verifyStripePayment: async (req: Request, res: Response) => {
+    const body = asBodyObject(req.body);
+    const sessionId = getRequiredString(body, "sessionId");
+
+    const result =
+      await ReservationService.verifyStripePayment(sessionId);
+
+    res.status(status.OK).json({
+      success: true,
+      message: result.updated
+        ? "Payment verified and booking updated"
+        : "Payment status unchanged",
+      data: result,
+    });
+  },
+
   listMyBookings: async (req: Request, res: Response) => {
     if (!req.user?.id) {
       throw new AppError("Authentication required", status.UNAUTHORIZED);

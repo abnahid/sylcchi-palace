@@ -79,5 +79,11 @@ export type BookingData = {
   paymentStatus: string;
   bookingStatus: string;
   payment?: BookingPaymentData;
+  checkin?: {
+    id: string;
+    status: string;
+    checkinTime: string | null;
+    checkoutTime: string | null;
+  } | null;
   expiresAt?: string | null;
 };

@@ -1,12 +1,13 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRooms } from "@/hooks/useRooms";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
 export default function GalleryClient() {
-  const { data: rooms = [] } = useRooms();
+  const { data: rooms = [], isLoading } = useRooms();
 
   const galleryItems = useMemo(
     () =>
@@ -74,6 +75,22 @@ export default function GalleryClient() {
           </div>
         </div>
 
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm"
+              >
+                <Skeleton className="h-64 w-full" />
+                <div className="p-4 space-y-2">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredItems.map((item) => (
             <article
@@ -110,6 +127,7 @@ export default function GalleryClient() {
             </article>
           ))}
         </div>
+        )}
       </div>
 
       {selectedImage && (

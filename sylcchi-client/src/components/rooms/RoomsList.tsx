@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { usePaginatedRooms, useRoomTypes } from "@/hooks/useRooms";
 import type { RoomFilters } from "@/lib/types/rooms";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ChevronLeft,
   ChevronRight,
@@ -347,9 +348,33 @@ function RoomsListContent() {
 
       {/* Loading state */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-7 w-7 animate-spin text-primary" />
-        </div>
+        <ul className="space-y-7">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <li key={i}>
+              <div className="overflow-hidden rounded-md bg-white shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)]">
+                <div className="flex flex-col md:flex-row">
+                  <Skeleton className="h-52 w-full md:w-72 lg:w-80" />
+                  <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="min-w-0 flex-1 space-y-4">
+                      <Skeleton className="h-7 w-48" />
+                      <Skeleton className="mt-4 h-4 w-full max-w-xl" />
+                      <Skeleton className="h-4 w-3/4 max-w-md" />
+                      <div className="mt-6 flex gap-5">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-28" />
+                      </div>
+                    </div>
+                    <div className="flex min-w-44 flex-col items-start gap-4 lg:items-end">
+                      <Skeleton className="h-10 w-32" />
+                      <Skeleton className="h-6 w-28" />
+                      <Skeleton className="h-10 w-24 rounded-md" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       ) : rooms.length === 0 ? (
         <div className="rounded-md border border-dashed border-[#d7dfe8] px-4 py-16 text-center">
           <p className="font-mulish text-base font-bold text-[#101b25]">
@@ -429,15 +454,53 @@ function RoomsListContent() {
   );
 }
 
+function RoomsListSkeleton() {
+  return (
+    <section className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Skeleton className="h-9 w-52" />
+          <Skeleton className="mt-2 h-4 w-32" />
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-10 w-48 rounded-md sm:w-56" />
+          <Skeleton className="h-10 w-24 rounded-md" />
+        </div>
+      </div>
+      <ul className="space-y-7">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <li key={i}>
+            <div className="overflow-hidden rounded-md bg-white shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)]">
+              <div className="flex flex-col md:flex-row">
+                <Skeleton className="h-52 w-full md:w-72 lg:w-80" />
+                <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="min-w-0 flex-1 space-y-4">
+                    <Skeleton className="h-7 w-48" />
+                    <Skeleton className="mt-4 h-4 w-full max-w-xl" />
+                    <Skeleton className="h-4 w-3/4 max-w-md" />
+                    <div className="mt-6 flex gap-5">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-28" />
+                    </div>
+                  </div>
+                  <div className="flex min-w-44 flex-col items-start gap-4 lg:items-end">
+                    <Skeleton className="h-10 w-32" />
+                    <Skeleton className="h-6 w-28" />
+                    <Skeleton className="h-10 w-24 rounded-md" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export default function RoomsList() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-7 w-7 animate-spin text-primary" />
-        </div>
-      }
-    >
+    <Suspense fallback={<RoomsListSkeleton />}>
       <RoomsListContent />
     </Suspense>
   );

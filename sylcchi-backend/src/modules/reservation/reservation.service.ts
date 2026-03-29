@@ -1038,12 +1038,144 @@ export const ReservationService = {
     });
   },
 
+  verifyStripePayment: async (sessionId: string) => {
+    if (!envVars.STRIPE_SECRET_KEY) {
+      throw new AppError("Stripe is not configured", status.BAD_REQUEST);
+    }
+
+    // Retrieve the checkout session from Stripe to check its actual status
+    const stripeRes = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${envVars.STRIPE_SECRET_KEY}`,
+        },
+      },
+    );
+
+    if (!stripeRes.ok) {
+      throw new AppError("Failed to retrieve Stripe session", status.BAD_GATEWAY);
+    }
+
+    const session = (await stripeRes.json()) as {
+      id: string;
+      payment_status: string;
+      status: string;
+      payment_intent: string | null;
+      metadata?: { bookingId?: string };
+      client_reference_id?: string;
+      amount_total?: number;
+    };
+
+    console.log(
+      `[Stripe Verify] Session ${sessionId}: payment_status=${session.payment_status}, status=${session.status}, pi=${session.payment_intent}`,
+    );
+
+    const bookingId =
+      session.metadata?.bookingId ?? session.client_reference_id;
+
+    if (!bookingId) {
+      throw new AppError("No booking ID found in session", status.BAD_REQUEST);
+    }
+
+    if (session.payment_status !== "paid") {
+      return { updated: false, paymentStatus: session.payment_status };
+    }
+
+    // Payment is confirmed by Stripe — update DB if not already done
+    const result = await prisma.$transaction(
+      async (tx) => {
+        const payment =
+          (await tx.payment.findFirst({
+            where: { transactionId: sessionId },
+          })) ??
+          (await tx.payment.findFirst({
+            where: { reservationId: bookingId },
+          }));
+
+        if (!payment) {
+          return { updated: false, reason: "no_payment_record" };
+        }
+
+        if (payment.status === PaymentStatus.SUCCESS) {
+          return { updated: false, reason: "already_success" };
+        }
+
+        await tx.payment.update({
+          where: { id: payment.id },
+          data: {
+            status: PaymentStatus.SUCCESS,
+            transactionId: session.payment_intent ?? sessionId,
+          },
+        });
+
+        const booking = await tx.reservation.findUnique({
+          where: { id: payment.reservationId },
+          select: { id: true, totalPrice: true, paidAmount: true },
+        });
+
+        if (!booking) {
+          return { updated: false, reason: "no_booking" };
+        }
+
+        const chargedAmount = Number(payment.amount);
+        const totalAmount = Number(booking.totalPrice);
+        const newPaidAmount = Number(
+          Math.min(
+            Number(booking.paidAmount) + chargedAmount,
+            totalAmount,
+          ).toFixed(2),
+        );
+        const newRemainingAmount = Number(
+          Math.max(totalAmount - newPaidAmount, 0).toFixed(2),
+        );
+
+        const updateData: {
+          paidAmount: number;
+          remainingAmount: number;
+          paymentStatus: BookingPaymentStatus;
+          bookingStatus: BookingStatus;
+          expiresAt?: Date | null;
+        } = {
+          paidAmount: newPaidAmount,
+          remainingAmount: newRemainingAmount,
+          paymentStatus:
+            newRemainingAmount <= 0
+              ? BookingPaymentStatus.PAID
+              : BookingPaymentStatus.PARTIAL,
+          bookingStatus: BookingStatus.CONFIRMED,
+        };
+
+        if (newRemainingAmount <= 0) {
+          updateData.expiresAt = null;
+        }
+
+        await tx.reservation.update({
+          where: { id: payment.reservationId },
+          data: updateData,
+        });
+
+        console.log(
+          `[Stripe Verify] ✓ Updated booking ${bookingId}: paid=${newPaidAmount}`,
+        );
+
+        return { updated: true, paidAmount: newPaidAmount };
+      },
+      { isolationLevel: "Serializable" as const },
+    );
+
+    return result;
+  },
+
   listMyBookings: async (userId: string) => {
     return prisma.reservation.findMany({
       where: { userId },
       include: {
         room: { select: { id: true, name: true, images: { take: 1 } } },
         payment: true,
+        checkin: {
+          select: { id: true, status: true, checkinTime: true, checkoutTime: true },
+        },
       },
       orderBy: { createdAt: "desc" },
     });

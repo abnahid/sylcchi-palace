@@ -61,6 +61,20 @@ export async function getBookingById(
   }
 }
 
+export async function verifyStripePayment(
+  sessionId: string,
+): Promise<BookingResponse<{ updated: boolean }>> {
+  try {
+    const response = await api.post<BookingResponse<{ updated: boolean }>>(
+      "/bookings/verify-payment",
+      { sessionId },
+    );
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
 export async function cancelBooking(
   payload: CancelBookingPayload,
 ): Promise<BookingResponse<BookingData>> {
