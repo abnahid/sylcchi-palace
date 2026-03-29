@@ -199,6 +199,34 @@ export const CheckinController = {
     });
   },
 
+  checkoutGuest: async (req: Request, res: Response) => {
+    const body = asBodyObject(req.body);
+    const reservationId = getRequiredString(body, "reservationId");
+
+    const result = await CheckinService.checkoutGuest(reservationId);
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Guest checked out successfully",
+      data: result,
+    });
+  },
+
+  getCheckinStatus: async (req: Request, res: Response) => {
+    const reservationId = req.params.reservationId;
+    if (!reservationId) {
+      throw new AppError("reservationId is required", status.BAD_REQUEST);
+    }
+
+    const result = await CheckinService.getCheckinByReservation(reservationId);
+
+    res.status(status.OK).json({
+      success: true,
+      message: result ? "Check-in record found" : "No check-in record",
+      data: result,
+    });
+  },
+
   completeCheckin: async (req: Request, res: Response) => {
     const body = asBodyObject(req.body);
 

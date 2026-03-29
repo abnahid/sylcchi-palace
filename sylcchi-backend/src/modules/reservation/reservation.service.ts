@@ -1049,6 +1049,69 @@ export const ReservationService = {
     });
   },
 
+  listAllBookings: async (params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    paymentStatus?: string;
+    search?: string;
+  }) => {
+    const page = params.page ?? 1;
+    const limit = params.limit ?? 20;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.ReservationWhereInput = {};
+
+    if (params.status) {
+      where.bookingStatus = params.status as BookingStatus;
+    }
+
+    if (params.paymentStatus) {
+      where.paymentStatus = params.paymentStatus as BookingPaymentStatus;
+    }
+
+    if (params.search) {
+      where.OR = [
+        { bookingCode: { contains: params.search, mode: "insensitive" } },
+        {
+          room: { name: { contains: params.search, mode: "insensitive" } },
+        },
+        {
+          user: { name: { contains: params.search, mode: "insensitive" } },
+        },
+        {
+          user: { email: { contains: params.search, mode: "insensitive" } },
+        },
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      prisma.reservation.findMany({
+        where,
+        include: {
+          room: { select: { id: true, name: true, images: { take: 1 } } },
+          user: { select: { id: true, name: true, email: true } },
+          payment: true,
+          checkin: true,
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.reservation.count({ where }),
+    ]);
+
+    return {
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+      data,
+    };
+  },
+
   cancelExpiredBookings: async () => {
     // Use direct query execution for scheduler sweeps to avoid transaction-start timeouts under pool pressure.
     return cancelExpiredBookingsTx(prisma);

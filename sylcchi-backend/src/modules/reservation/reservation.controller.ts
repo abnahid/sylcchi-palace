@@ -437,4 +437,31 @@ export const ReservationController = {
       data: result,
     });
   },
+
+  listAllBookings: async (req: Request, res: Response) => {
+    const page = req.query.page ? Number(req.query.page) : undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+    const statusFilter =
+      typeof req.query.status === "string" ? req.query.status : undefined;
+    const paymentStatus =
+      typeof req.query.paymentStatus === "string"
+        ? req.query.paymentStatus
+        : undefined;
+    const search =
+      typeof req.query.search === "string" ? req.query.search : undefined;
+
+    const result = await ReservationService.listAllBookings({
+      page,
+      limit,
+      status: statusFilter,
+      paymentStatus,
+      search,
+    });
+
+    res.status(status.OK).json({
+      success: true,
+      message: "All bookings retrieved successfully",
+      data: result,
+    });
+  },
 };

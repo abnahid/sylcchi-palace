@@ -7,6 +7,11 @@ export const reservationRouter = Router();
 reservationRouter.use(optionalAuth);
 
 reservationRouter.get("/my", requireAuth, ReservationController.listMyBookings);
+reservationRouter.get(
+  "/all",
+  ...routeAccess.admin,
+  ReservationController.listAllBookings,
+);
 reservationRouter.post("/create", ReservationController.createBooking);
 reservationRouter.post("/pay", ReservationController.payBooking);
 reservationRouter.get("/pay", ReservationController.payBooking);

@@ -121,7 +121,12 @@ export const AuthController = {
     const session = await AuthService.getSession(toWebHeaders(req));
 
     if (!session) {
-      throw new AppError("Not authenticated", status.UNAUTHORIZED);
+      res.status(200).json({
+        success: true,
+        message: "No active session",
+        data: null,
+      });
+      return;
     }
 
     res.status(200).json({

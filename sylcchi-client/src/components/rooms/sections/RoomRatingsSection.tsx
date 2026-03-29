@@ -54,23 +54,28 @@ const RoomRatingsSection = ({ roomId }: RoomRatingsSectionProps) => {
   const { stats, reviews } = data;
 
   // Calculate average per category from all reviews
-  const categoryAverages = reviews.length > 0
-    ? {
-        location:
-          reviews.reduce((sum, r) => sum + r.locationRating, 0) / reviews.length,
-        comfort:
-          reviews.reduce((sum, r) => sum + r.comfortRating, 0) / reviews.length,
-        service:
-          reviews.reduce((sum, r) => sum + r.serviceRating, 0) / reviews.length,
-        pricing:
-          reviews.reduce((sum, r) => sum + r.pricingRating, 0) / reviews.length,
-      }
-    : { location: 0, comfort: 0, service: 0, pricing: 0 };
+  const categoryAverages =
+    reviews.length > 0
+      ? {
+          location:
+            reviews.reduce((sum, r) => sum + r.locationRating, 0) /
+            reviews.length,
+          comfort:
+            reviews.reduce((sum, r) => sum + r.comfortRating, 0) /
+            reviews.length,
+          service:
+            reviews.reduce((sum, r) => sum + r.serviceRating, 0) /
+            reviews.length,
+          pricing:
+            reviews.reduce((sum, r) => sum + r.pricingRating, 0) /
+            reviews.length,
+        }
+      : { location: 0, comfort: 0, service: 0, pricing: 0 };
 
   return (
     <section className="bg-[#f7fafd] py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl rounded-lg bg-white p-6 shadow-[0_2px_24px_0_rgba(30,49,66,0.08)]">
+        <div className="max-w-3xl rounded-lg bg-white p-12 shadow-[0_2px_24px_0_rgba(30,49,66,0.08)]">
           <div className="flex items-end gap-3">
             <p className="font-mulish text-5xl font-extrabold text-[#101b25]">
               {stats.averageRating.toFixed(1)}
@@ -81,7 +86,7 @@ const RoomRatingsSection = ({ roomId }: RoomRatingsSectionProps) => {
             </p>
           </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {Object.entries(categoryAverages).map(([key, value]) => (
               <div
                 key={key}

@@ -1,5 +1,4 @@
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import AppShell from "@/components/AppShell";
 import { HotelJsonLd } from "@/components/StructuredData";
 import { mulish, openSans } from "@/font/fonts";
 import { cn } from "@/lib/utils";
@@ -60,9 +59,7 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-foreground font-open-sans">
         <QueryProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <AppShell>{children}</AppShell>
         </QueryProvider>
       </body>
     </html>

@@ -48,14 +48,16 @@ function StarRating({
           type="button"
           disabled={readonly}
           onClick={() => onChange?.(star)}
-          className={readonly ? "cursor-default" : "cursor-pointer transition-transform hover:scale-110"}
+          className={
+            readonly
+              ? "cursor-default"
+              : "cursor-pointer transition-transform hover:scale-110"
+          }
         >
           <Star
             size={16}
             className={
-              star <= value
-                ? "fill-amber-400 text-amber-400"
-                : "text-gray-200"
+              star <= value ? "fill-amber-400 text-amber-400" : "text-gray-200"
             }
           />
         </button>
@@ -143,7 +145,7 @@ const RoomCommentsSection = ({ roomId }: RoomCommentsSectionProps) => {
             {reviews.map((review) => (
               <article
                 key={review.id}
-                className="border-l-2 border-[#d7e4f1] bg-white p-5 shadow-[0_1px_14px_0_rgba(30,49,66,0.08)]"
+                className="border-l-2 border-[#d7e4f1] bg-white p-8 shadow-[0_1px_14px_0_rgba(30,49,66,0.08)]"
               >
                 <div className="flex gap-4">
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md bg-[#DDEAF6]">
@@ -228,10 +230,7 @@ const RoomCommentsSection = ({ roomId }: RoomCommentsSectionProps) => {
         )}
 
         {eligibility?.canSubmit && !submitted && (
-          <form
-            onSubmit={handleSubmit}
-            className="mt-5 max-w-3xl space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="mt-5 max-w-3xl space-y-5">
             {/* Rating categories */}
             <div className="grid grid-cols-1 gap-4 rounded-lg border border-[#e8edf2] bg-[#f7fafd] p-4 sm:grid-cols-2">
               {RATING_CATEGORIES.map(({ key, label }) => (

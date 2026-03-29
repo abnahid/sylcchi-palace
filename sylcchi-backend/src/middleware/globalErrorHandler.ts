@@ -47,8 +47,15 @@ export const globalErrorHandler = async (
   res: Response,
   next: NextFunction,
 ) => {
-  // Only log non-auth errors in development (auth errors are expected/handled)
-  if (envVars.NODE_ENV === "development" && !isBetterAuthError(err)) {
+  const isExpectedClientError =
+    err instanceof AppError && err.statusCode >= 400 && err.statusCode < 500;
+
+  // In development, avoid log noise from expected auth/client errors.
+  if (
+    envVars.NODE_ENV === "development" &&
+    !isBetterAuthError(err) &&
+    !isExpectedClientError
+  ) {
     console.log("Error from Global Error Handler", err);
   }
 

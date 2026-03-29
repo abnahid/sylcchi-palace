@@ -854,4 +854,58 @@ export const CheckinService = {
       checkin,
     };
   },
+
+  checkoutGuest: async (reservationId: string) => {
+    const checkin = await prisma.checkin.findUnique({
+      where: { reservationId },
+      include: {
+        reservation: {
+          select: {
+            bookingCode: true,
+            bookingStatus: true,
+            room: { select: { id: true, name: true } },
+          },
+        },
+      },
+    });
+
+    if (!checkin) {
+      throw new AppError("No check-in record found for this booking", status.NOT_FOUND);
+    }
+
+    if (checkin.status === CheckinStatus.CHECKED_OUT) {
+      throw new AppError("Guest is already checked out", status.BAD_REQUEST);
+    }
+
+    if (checkin.status !== CheckinStatus.CHECKED_IN) {
+      throw new AppError("Guest must be checked in before checking out", status.BAD_REQUEST);
+    }
+
+    const updated = await prisma.checkin.update({
+      where: { id: checkin.id },
+      data: {
+        status: CheckinStatus.CHECKED_OUT,
+        checkoutTime: new Date(),
+      },
+    });
+
+    return updated;
+  },
+
+  getCheckinByReservation: async (reservationId: string) => {
+    const checkin = await prisma.checkin.findUnique({
+      where: { reservationId },
+      include: {
+        reservation: {
+          include: {
+            room: { select: { id: true, name: true, images: { take: 1 } } },
+            user: { select: { id: true, name: true, email: true, phone: true } },
+            payment: true,
+          },
+        },
+      },
+    });
+
+    return checkin;
+  },
 };
