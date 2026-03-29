@@ -4,13 +4,22 @@ import {
   createRoom,
   deleteRoom,
   getRoomBySlug,
+  getRoomTypes,
   getRooms,
   patchRoom,
   updateRoom,
 } from "@/lib/api/rooms";
 import { mapApiRoomsToPrimaryRooms } from "@/lib/mappers/rooms";
-import { roomsResponseSchema } from "@/lib/schemas/room";
-import type { PrimaryRoom } from "@/lib/types/rooms";
+import {
+  paginatedRoomsResponseSchema,
+  roomsResponseSchema,
+} from "@/lib/schemas/room";
+import type {
+  PaginatedRoomsResponse,
+  PrimaryRoom,
+  RoomFilters,
+  RoomType,
+} from "@/lib/types/rooms";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -19,15 +28,41 @@ const API_ENABLED =
 
 export const roomQueryKeys = {
   all: ["rooms"] as const,
-  list: () => [...roomQueryKeys.all, "list"] as const,
+  list: (filters?: RoomFilters) =>
+    [...roomQueryKeys.all, "list", filters ?? {}] as const,
   detail: (slug: string) => [...roomQueryKeys.all, "detail", slug] as const,
+  types: () => [...roomQueryKeys.all, "types"] as const,
 };
 
-type UseRoomsOptions = {
-  enabled?: boolean;
-};
+// Server-side paginated rooms — used by RoomsList page
+export function usePaginatedRooms(filters: RoomFilters) {
+  return useQuery<PaginatedRoomsResponse, Error>({
+    queryKey: roomQueryKeys.list(filters),
+    queryFn: async () => {
+      if (!API_ENABLED) {
+        throw new Error("Rooms API is not configured");
+      }
 
-export function useRooms(options?: UseRoomsOptions) {
+      const raw = await getRooms(filters);
+      const parsed = paginatedRoomsResponseSchema.safeParse(raw);
+
+      if (!parsed.success) {
+        throw new Error("Invalid rooms response from API");
+      }
+
+      return {
+        meta: parsed.data.meta,
+        data: mapApiRoomsToPrimaryRooms(parsed.data.data),
+      };
+    },
+    staleTime: 30_000,
+    gcTime: 300_000,
+    placeholderData: (prev) => prev,
+  });
+}
+
+// Flat list — used by home page, room detail page, booking form
+export function useRooms(options?: { enabled?: boolean }) {
   return useQuery<PrimaryRoom[], Error>({
     queryKey: roomQueryKeys.list(),
     queryFn: async () => {
@@ -49,20 +84,25 @@ export function useRooms(options?: UseRoomsOptions) {
     gcTime: 300_000,
     refetchOnMount: "always",
     retry: (failureCount, error) => {
-      if (!API_ENABLED) {
+      if (!API_ENABLED) return false;
+      if (error.message.toLowerCase().includes("invalid rooms response"))
         return false;
-      }
-
-      if (error.message.toLowerCase().includes("invalid rooms response")) {
-        return false;
-      }
-
       return failureCount < 2;
     },
   });
 }
 
-export function useRoom(slug: string, options?: UseRoomsOptions) {
+export function useRoomTypes() {
+  return useQuery<RoomType[], Error>({
+    queryKey: roomQueryKeys.types(),
+    queryFn: getRoomTypes,
+    staleTime: 5 * 60_000,
+    gcTime: 10 * 60_000,
+    enabled: API_ENABLED,
+  });
+}
+
+export function useRoom(slug: string, options?: { enabled?: boolean }) {
   return useQuery<unknown, Error>({
     queryKey: roomQueryKeys.detail(slug),
     queryFn: async () => getRoomBySlug(slug),

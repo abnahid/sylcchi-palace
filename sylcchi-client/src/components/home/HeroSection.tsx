@@ -4,6 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarDays, UserRound } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const heroContent = {
@@ -16,16 +17,33 @@ const heroContent = {
 const guestOptions = ["1 guest", "2 guests", "3 guests", "4+ guests"];
 
 export default function HeroSection() {
+  const router = useRouter();
   const [checkInDate, setCheckInDate] = useState<Date | undefined>();
   const [checkOutDate, setCheckOutDate] = useState<Date | undefined>();
+  const [guests, setGuests] = useState("1");
   const [openCalendar, setOpenCalendar] = useState<
     "checkIn" | "checkOut" | null
   >(null);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const addOneDay = (date: Date) => {
     const nextDate = new Date(date);
     nextDate.setDate(nextDate.getDate() + 1);
     return nextDate;
+  };
+
+  const toDateString = (date: Date) => format(date, "yyyy-MM-dd");
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (checkInDate) params.set("checkIn", toDateString(checkInDate));
+    if (checkOutDate) params.set("checkOut", toDateString(checkOutDate));
+    const guestNum = Number.parseInt(guests, 10);
+    if (guestNum > 1) params.set("guests", String(guestNum));
+    const qs = params.toString();
+    router.push(qs ? `/rooms?${qs}` : "/rooms");
   };
 
   return (
@@ -72,6 +90,7 @@ export default function HeroSection() {
                       <Calendar
                         mode="single"
                         selected={checkInDate}
+                        disabled={(date) => date < today}
                         onSelect={(date) => {
                           if (!date) {
                             setCheckInDate(undefined);
@@ -80,8 +99,6 @@ export default function HeroSection() {
 
                           setCheckInDate(date);
 
-                          // Rule 1: check-out cannot be before check-in.
-                          // Rule 2: auto-set check-out to next day when needed.
                           if (!checkOutDate || checkOutDate <= date) {
                             setCheckOutDate(addOneDay(date));
                           }
@@ -119,9 +136,10 @@ export default function HeroSection() {
                       <Calendar
                         mode="single"
                         selected={checkOutDate}
-                        disabled={(date) =>
-                          checkInDate ? date <= checkInDate : false
-                        }
+                        disabled={(date) => {
+                          const minDate = checkInDate ?? today;
+                          return date <= minDate;
+                        }}
                         onSelect={(date) => {
                           setCheckOutDate(date);
                           setOpenCalendar(null);
@@ -137,15 +155,25 @@ export default function HeroSection() {
                   </p>
                   <div className="mt-1 flex items-center gap-2 text-[#7e8894]">
                     <UserRound className="h-3.5 w-3.5" />
-                    <select className="w-full bg-transparent font-open-sans text-[13px] outline-none">
-                      {guestOptions.map((option) => (
-                        <option key={option}>{option}</option>
+                    <select
+                      value={guests}
+                      onChange={(e) => setGuests(e.target.value)}
+                      className="w-full bg-transparent font-open-sans text-[13px] outline-none"
+                    >
+                      {guestOptions.map((option, i) => (
+                        <option key={option} value={String(i + 1)}>
+                          {option}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                <button className="col-span-1 rounded-b-md bg-primary px-4 py-4 text-center font-mulish text-[15px] font-semibold text-white transition-colors hover:bg-[#1f4f79] md:col-span-2 md:text-left lg:col-span-1 lg:rounded-b-none lg:rounded-r-md lg:px-6">
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="col-span-1 rounded-b-md bg-primary px-4 py-4 text-center font-mulish text-[15px] font-semibold text-white transition-colors hover:bg-[#1f4f79] md:col-span-2 md:text-left lg:col-span-1 lg:rounded-b-none lg:rounded-r-md lg:px-6"
+                >
                   Search
                 </button>
               </div>

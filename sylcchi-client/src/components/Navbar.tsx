@@ -40,10 +40,15 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { data: user, isLoading: isSessionLoading } = useSession();
+  const {
+    data: user,
+    isLoading: isSessionLoading,
+    isFetching: isSessionFetching,
+  } = useSession();
   const signOutMutation = useSignOut();
 
   const isLoggedIn = Boolean(user);
+  const isSessionPending = isSessionLoading || isSessionFetching;
   const isActive = (href: string) => pathname === href;
 
   const handleSignOut = async () => {
@@ -59,6 +64,17 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (isSessionPending) return;
+
+    const isProtectedRoute =
+      pathname.startsWith("/profile") || pathname.startsWith("/dashboard");
+
+    if (!isLoggedIn && isProtectedRoute) {
+      router.replace("/login");
+    }
+  }, [isSessionPending, isLoggedIn, pathname, router]);
 
   return (
     <header
@@ -105,7 +121,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
-            {isSessionLoading ? (
+            {isSessionPending ? (
               <div className="flex items-center gap-2">
                 <div className="h-9 w-9 animate-pulse rounded-full bg-gray-100" />
                 <div className="h-4 w-16 animate-pulse rounded bg-gray-100" />
@@ -176,14 +192,20 @@ export default function Navbar() {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
-                    <Link href="/wishlist" className="cursor-pointer gap-2">
+                    <Link
+                      href="/profile?tab=wishlist"
+                      className="cursor-pointer gap-2"
+                    >
                       <Heart size={15} />
                       Wishlist
                     </Link>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
-                    <Link href="/settings" className="cursor-pointer gap-2">
+                    <Link
+                      href="/profile?tab=settings"
+                      className="cursor-pointer gap-2"
+                    >
                       <Settings size={15} />
                       Settings
                     </Link>
@@ -257,7 +279,7 @@ export default function Navbar() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-3 pt-6 border-t">
-                  {isSessionLoading ? null : isLoggedIn ? (
+                  {isSessionPending ? null : isLoggedIn ? (
                     <>
                       <div className="flex items-center gap-3 px-1 pb-3">
                         <Avatar className="h-10 w-10">
@@ -293,7 +315,7 @@ export default function Navbar() {
                       </Link>
 
                       <Link
-                        href="/wishlist"
+                        href="/profile?tab=wishlist"
                         className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                         onClick={() => setOpen(false)}
                       >
@@ -301,15 +323,14 @@ export default function Navbar() {
                       </Link>
 
                       <Link
-                        href="/settings"
+                        href="/profile?tab=settings"
                         className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                         onClick={() => setOpen(false)}
                       >
                         <Settings size={16} /> Settings
                       </Link>
 
-                      {(user?.role === "ADMIN" ||
-                        user?.role === "MANAGER") && (
+                      {(user?.role === "ADMIN" || user?.role === "MANAGER") && (
                         <Link
                           href="/dashboard"
                           className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"

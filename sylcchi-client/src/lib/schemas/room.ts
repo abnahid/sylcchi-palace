@@ -14,6 +14,7 @@ export const roomSchema = z
     price: z.coerce.number().optional(),
     capacity: z.coerce.number().int().positive(),
     bedType: z.string().optional(),
+    roomTypeId: z.string().optional(),
     roomType: z
       .object({
         id: z.string().optional(),
@@ -36,6 +37,26 @@ export const roomSchema = z
     images: room.images,
   }));
 
+const paginationMetaSchema = z.object({
+  total: z.number(),
+  page: z.number(),
+  limit: z.number(),
+  totalPages: z.number(),
+});
+
+// Handles the paginated response: { success, message, data: { meta, data: Room[] } }
+export const paginatedRoomsResponseSchema = z
+  .object({
+    success: z.boolean().optional(),
+    message: z.string().optional(),
+    data: z.object({
+      meta: paginationMetaSchema,
+      data: z.array(roomSchema),
+    }),
+  })
+  .transform((value) => value.data);
+
+// Legacy: handles flat array responses for backward compatibility
 export const roomsResponseSchema = z
   .union([
     z.array(roomSchema),
@@ -44,7 +65,13 @@ export const roomsResponseSchema = z
     z.object({
       success: z.boolean(),
       message: z.string().optional(),
-      data: z.array(roomSchema),
+      data: z.union([
+        z.array(roomSchema),
+        z.object({
+          meta: paginationMetaSchema,
+          data: z.array(roomSchema),
+        }),
+      ]),
     }),
   ])
   .transform((value) => {
@@ -53,11 +80,24 @@ export const roomsResponseSchema = z
     }
 
     if ("data" in value) {
-      return value.data;
+      const inner = value.data;
+      if (Array.isArray(inner)) {
+        return inner;
+      }
+      if ("data" in inner) {
+        return inner.data;
+      }
     }
 
-    return value.rooms;
+    if ("rooms" in value) {
+      return value.rooms;
+    }
+
+    return [];
   });
 
 export type Room = z.infer<typeof roomSchema>;
 export type RoomsResponse = z.infer<typeof roomsResponseSchema>;
+export type PaginatedRoomsResult = z.infer<
+  typeof paginatedRoomsResponseSchema
+>;

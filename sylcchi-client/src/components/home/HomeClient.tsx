@@ -2,7 +2,7 @@
 
 import Accommodation from "@/components/home/Accommodation";
 import ContactSection from "@/components/home/ContactSection";
-import HeroSection from "@/components/home/heroSection";
+import HeroSection from "@/components/home/HeroSection";
 import HostelRooms from "@/components/home/hostelRooms";
 import Newspage from "@/components/home/Newspage";
 import PhotoRooms from "@/components/home/PhotoRooms";

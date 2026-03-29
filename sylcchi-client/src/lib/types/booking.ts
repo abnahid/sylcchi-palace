@@ -60,6 +60,7 @@ export type BookingData = {
   room?: {
     id: string;
     name: string;
+    images?: { imageUrl: string }[];
   };
   checkInDate: string;
   checkOutDate: string;

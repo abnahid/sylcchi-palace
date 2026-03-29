@@ -8,7 +8,6 @@ import RoomGallerySection from "@/components/rooms/sections/RoomGallerySection";
 import RoomInfoSection from "@/components/rooms/sections/RoomInfoSection";
 import RoomOtherRoomsSection from "@/components/rooms/sections/RoomOtherRoomsSection";
 import RoomRatingsSection from "@/components/rooms/sections/RoomRatingsSection";
-import { ratingCategories } from "@/components/rooms/sections/room-detail-data";
 import type { PrimaryRoom } from "@/lib/types/rooms";
 import { useEffect, useMemo, useState } from "react";
 
@@ -70,10 +69,6 @@ export default function RoomDetailClient({
     price: Number.parseFloat(item.price),
   }));
 
-  const overallRating =
-    ratingCategories.reduce((acc, current) => acc + current.value, 0) /
-    ratingCategories.length;
-
   return (
     <main>
       <Breadcrumb
@@ -93,7 +88,7 @@ export default function RoomDetailClient({
             onImageError={handleGalleryImageError}
           />
 
-          <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_400px]">
             <RoomInfoSection room={room} />
             <RoomBookingSidebar
               roomId={room.id}
@@ -104,8 +99,8 @@ export default function RoomDetailClient({
           </div>
         </div>
       </section>
-      <RoomRatingsSection categories={ratingCategories} />
-      <RoomCommentsSection />
+      <RoomRatingsSection roomId={room.id} />
+      <RoomCommentsSection roomId={room.id} />
       <RoomOtherRoomsSection roomCards={roomCards} />
       <RoomBookingStepsSection
         imageSrc={gallery[2]}

@@ -27,6 +27,9 @@ const RoomBookingSidebar = ({
   >(null);
   const [dateError, setDateError] = useState<string | null>(null);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const addOneDay = (date: Date) => {
     const nextDate = new Date(date);
     nextDate.setDate(nextDate.getDate() + 1);
@@ -92,6 +95,7 @@ const RoomBookingSidebar = ({
                 <Calendar
                   mode="single"
                   selected={checkInDate}
+                  disabled={(date) => date < today}
                   onSelect={(date) => {
                     if (!date) {
                       setCheckInDate(undefined);
@@ -141,9 +145,10 @@ const RoomBookingSidebar = ({
                 <Calendar
                   mode="single"
                   selected={checkOutDate}
-                  disabled={(date) =>
-                    checkInDate ? date <= checkInDate : false
-                  }
+                  disabled={(date) => {
+                    const minDate = checkInDate ?? today;
+                    return date <= minDate;
+                  }}
                   onSelect={(date) => {
                     setCheckOutDate(date);
                     setDateError(null);

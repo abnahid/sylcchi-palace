@@ -1,7 +1,10 @@
 import RoomDetailClient from "@/components/rooms/RoomDetailClient";
-import { getRooms } from "@/lib/api/rooms";
-import { mapApiRoomsToPrimaryRooms } from "@/lib/mappers/rooms";
-import { roomsResponseSchema } from "@/lib/schemas/room";
+import { getRoomBySlug, getRooms } from "@/lib/api/rooms";
+import {
+  mapApiRoomToPrimaryRoom,
+  mapApiRoomsToPrimaryRooms,
+} from "@/lib/mappers/rooms";
+import { roomSchema, roomsResponseSchema } from "@/lib/schemas/room";
 import type { PrimaryRoom } from "@/lib/types/rooms";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -81,6 +84,39 @@ const getSourceRooms = async (): Promise<PrimaryRoom[]> => {
   return fallbackRooms;
 };
 
+const tryParseSingleRoom = (raw: unknown) => {
+  const candidates = [
+    raw,
+    (raw as { data?: unknown } | null)?.data,
+    (raw as { data?: { data?: unknown } } | null)?.data?.data,
+  ];
+
+  for (const candidate of candidates) {
+    const parsed = roomSchema.safeParse(candidate);
+    if (parsed.success) {
+      return parsed.data;
+    }
+  }
+
+  return null;
+};
+
+const getSingleRoom = async (value: string): Promise<PrimaryRoom | null> => {
+  try {
+    const raw = await getRoomBySlug(value);
+    const parsed = tryParseSingleRoom(raw);
+
+    if (!parsed) return null;
+    return mapApiRoomToPrimaryRoom(parsed);
+  } catch {
+    return null;
+  }
+};
+
+const findRoomBySlugOrId = (rooms: PrimaryRoom[], value: string) => {
+  return rooms.find((item) => item.slug === value || item.id === value);
+};
+
 export async function generateStaticParams() {
   const sourceRooms = await getSourceRooms();
   return sourceRooms.map((room) => ({ slug: room.slug }));
@@ -90,8 +126,11 @@ export async function generateMetadata({
   params,
 }: RoomDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const sourceRooms = await getSourceRooms();
-  const room = sourceRooms.find((item) => item.slug === slug);
+  const identifier = decodeURIComponent(slug);
+
+  const room =
+    (await getSingleRoom(identifier)) ??
+    findRoomBySlugOrId(await getSourceRooms(), identifier);
 
   if (!room) {
     return { title: "Room Not Found" };
@@ -113,9 +152,12 @@ export async function generateMetadata({
 
 export default async function Page({ params }: RoomDetailPageProps) {
   const { slug } = await params;
+  const identifier = decodeURIComponent(slug);
   const sourceRooms = await getSourceRooms();
 
-  const room = sourceRooms.find((item) => item.slug === slug);
+  const room =
+    (await getSingleRoom(identifier)) ??
+    findRoomBySlugOrId(sourceRooms, identifier);
 
   if (!room) {
     notFound();

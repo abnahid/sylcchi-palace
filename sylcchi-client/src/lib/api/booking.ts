@@ -37,6 +37,17 @@ export async function payBooking(
   }
 }
 
+export async function getMyBookings(): Promise<BookingResponse<BookingData[]>> {
+  try {
+    const response = await api.get<BookingResponse<BookingData[]>>(
+      "/bookings/my",
+    );
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
 export async function getBookingById(
   bookingId: string,
 ): Promise<BookingResponse<BookingData>> {

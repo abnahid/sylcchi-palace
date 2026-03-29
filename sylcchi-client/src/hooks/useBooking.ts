@@ -4,6 +4,7 @@ import {
   cancelBooking,
   createBooking,
   getBookingById,
+  getMyBookings,
   payBooking,
 } from "@/lib/api/booking";
 import type {
@@ -17,9 +18,23 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const bookingQueryKeys = {
   all: ["booking"] as const,
+  myList: () => [...bookingQueryKeys.all, "my"] as const,
   details: (bookingId: string) =>
     [...bookingQueryKeys.all, "details", bookingId] as const,
 };
+
+export function useMyBookings() {
+  return useQuery<BookingData[], Error>({
+    queryKey: bookingQueryKeys.myList(),
+    queryFn: async () => {
+      const response = await getMyBookings();
+      return response.data;
+    },
+    staleTime: 30_000,
+    gcTime: 300_000,
+    retry: 1,
+  });
+}
 
 export function useBookingById(bookingId?: string) {
   return useQuery<BookingData, Error>({

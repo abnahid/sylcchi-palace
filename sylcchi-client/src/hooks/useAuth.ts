@@ -1,5 +1,6 @@
 "use client";
 
+import type { AuthResponse, AuthUser } from "@/lib/api/auth";
 import {
   forgotPassword,
   getSession,
@@ -11,7 +12,6 @@ import {
   socialSignIn,
   verifyOtp,
 } from "@/lib/api/auth";
-import type { AuthResponse, AuthUser } from "@/lib/api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const authQueryKeys = {
@@ -30,9 +30,12 @@ export function useSession() {
         return null;
       }
     },
-    staleTime: 60_000,
+    staleTime: 0,
     gcTime: 300_000,
     retry: false,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 }
 
