@@ -24,6 +24,11 @@ function VerifyOtpContent() {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode") ?? "register";
   const email = searchParams.get("email") ?? "";
+  const nextParam = searchParams.get("next");
+  const safeNextPath =
+    nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : null;
   const [generalError, setGeneralError] = useState<string | null>(null);
   const verifyOtpMutation = useVerifyOtp();
 
@@ -52,7 +57,7 @@ function VerifyOtpContent() {
         email,
         otp: values.code,
       });
-      router.push("/login");
+      router.push(safeNextPath ?? "/login");
     } catch (error) {
       setGeneralError(
         error instanceof Error ? error.message : "Verification failed",

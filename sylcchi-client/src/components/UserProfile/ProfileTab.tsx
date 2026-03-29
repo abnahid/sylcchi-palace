@@ -1,14 +1,19 @@
 "use client";
 
+import { useRequestOtp } from "@/hooks/useAuth";
 import type { UserProfile } from "@/lib/types/user";
 import {
+  AlertCircle,
   BedDouble,
   Calendar,
   CheckCircle,
   Clock,
   Edit3,
   Heart,
+  Loader2,
+  MailCheck,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import {
   FaEnvelope,
   FaGlobe,
@@ -61,8 +66,67 @@ export function ProfileTabContent({
   onEditClick,
   stats,
 }: ProfileTabContentProps) {
+  const router = useRouter();
+  const requestOtpMutation = useRequestOtp();
+
+  const handleVerifyNow = async () => {
+    try {
+      await requestOtpMutation.mutateAsync({
+        email: user.email,
+        type: "email-verification",
+      });
+
+      router.push(
+        `/verify-otp?mode=register&email=${encodeURIComponent(user.email)}&next=${encodeURIComponent("/profile?tab=profile")}`,
+      );
+    } catch {
+      // The API error message is surfaced in the inline alert below.
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {!user.emailVerified && (
+        <div className="rounded-[16px] border border-amber-200 bg-amber-50 p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p
+                className="flex items-center gap-2 text-[15px] text-amber-900"
+                style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
+              >
+                <MailCheck size={17} /> Verify your email to secure your account
+              </p>
+              <p className="mt-1 text-[13px] text-amber-800">
+                We will send a one-time OTP code to {user.email}.
+              </p>
+            </div>
+
+            <button
+              onClick={handleVerifyNow}
+              disabled={requestOtpMutation.isPending}
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-[#235784] px-4 py-2.5 text-[13px] text-white transition-colors hover:bg-[#1a4a6d] disabled:cursor-not-allowed disabled:opacity-70"
+              style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
+            >
+              {requestOtpMutation.isPending ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" /> Sending OTP...
+                </>
+              ) : (
+                "Verify Now"
+              )}
+            </button>
+          </div>
+
+          {requestOtpMutation.isError && (
+            <p className="mt-3 flex items-center gap-1.5 text-[12px] text-red-600">
+              <AlertCircle size={13} />
+              {requestOtpMutation.error?.message ??
+                "Could not send verification OTP. Please try again."}
+            </p>
+          )}
+        </div>
+      )}
+
       <div className="bg-white border border-[#e8edf2] rounded-[16px] p-6">
         <div className="flex items-center justify-between mb-4">
           <h3

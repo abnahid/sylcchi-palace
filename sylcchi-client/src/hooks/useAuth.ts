@@ -92,6 +92,7 @@ export function useVerifyOtp() {
     mutationFn: (body) => verifyOtp(body),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: authQueryKeys.all });
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
 }

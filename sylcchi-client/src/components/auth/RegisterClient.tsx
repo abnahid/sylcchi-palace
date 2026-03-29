@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { useRequestOtp, useSignUp } from "@/hooks/useAuth";
+import { useRequestOtp, useSession, useSignUp } from "@/hooks/useAuth";
 import { getPasswordStrength, registerSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -49,6 +49,14 @@ function GeneralError({ msg }: { msg: string | null }) {
 
 export default function RegisterClient() {
   const router = useRouter();
+  const { data: sessionUser, isLoading: sessionLoading } = useSession();
+
+  useEffect(() => {
+    if (!sessionLoading && sessionUser) {
+      router.replace("/");
+    }
+  }, [router, sessionLoading, sessionUser]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -327,7 +335,7 @@ export default function RegisterClient() {
               }}
             />
             <span
-              className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-[4px] border-2 transition-all ${
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border-2 transition-all ${
                 agree
                   ? "border-[#235784] bg-[#235784]"
                   : errors.agree

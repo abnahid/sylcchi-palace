@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { useSignIn, useSocialSignIn } from "@/hooks/useAuth";
+import { useSession, useSignIn, useSocialSignIn } from "@/hooks/useAuth";
 import { loginSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -14,8 +14,8 @@ import {
   Mail,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -35,6 +35,21 @@ function FieldError({ msg }: { msg?: string }) {
 
 export default function LoginClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: sessionUser, isLoading: sessionLoading } = useSession();
+
+  const nextParam = searchParams.get("next");
+  const safeNextPath =
+    nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : "/";
+
+  useEffect(() => {
+    if (!sessionLoading && sessionUser) {
+      router.replace(safeNextPath);
+    }
+  }, [router, safeNextPath, sessionLoading, sessionUser]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -76,7 +91,7 @@ export default function LoginClient() {
         email: values.email,
         password: values.password,
       });
-      router.push("/");
+      router.push(safeNextPath);
     } catch (error) {
       setGeneralError(
         error instanceof Error ? error.message : "Sign in failed",
