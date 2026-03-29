@@ -1,3 +1,4 @@
+import WishlistButton from "@/components/rooms/WishlistButton";
 import type { PrimaryRoom } from "@/lib/types/rooms";
 import { BedDouble, UserRound } from "lucide-react";
 import Image from "next/image";
@@ -11,21 +12,32 @@ export default function RoomPageCard({ room }: RoomPageCardProps) {
   const nightlyPrice = Number.parseFloat(room.price) || 0;
   const weeklyPrice = Math.round(nightlyPrice * 7);
   const primaryImage = room.images[0]?.imageUrl ?? "/Gallery/room-1.webp";
+  const roomDetailsHref = `/rooms/${room.slug}`;
 
   return (
-    <article className="overflow-hidden rounded-md bg-white shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)]">
+    <article className="group relative overflow-hidden rounded-md bg-white shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)] transition-shadow hover:shadow-[0px_10px_35px_0px_rgba(47,76,88,0.14)]">
+      <Link
+        href={roomDetailsHref}
+        aria-label={`View details for ${room.name}`}
+        className="absolute inset-0 z-10 rounded-md"
+      />
+
       <div className="flex flex-col md:flex-row">
         <div className="relative h-52 w-full  md:w-72 lg:w-80">
           <Image
             src={primaryImage}
             alt={room.name}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 320px"
+          />
+          <WishlistButton
+            roomId={room.id}
+            className="absolute top-3 right-3 z-20 shadow-sm"
           />
         </div>
 
-        <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="relative z-20 flex flex-1 flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0 flex-1">
             <h3 className="font-mulish text-2xl font-extrabold leading-tight text-[#101b25]">
               {room.name}
@@ -62,7 +74,7 @@ export default function RoomPageCard({ room }: RoomPageCardProps) {
             </div>
 
             <Link
-              href={`/rooms/${room.slug}`}
+              href={roomDetailsHref}
               className="rounded-md bg-primary px-5 py-2.5 font-mulish text-sm font-semibold text-white transition-colors hover:bg-[#1f4f79]"
             >
               Book now

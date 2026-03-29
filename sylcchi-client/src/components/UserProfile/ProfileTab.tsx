@@ -20,6 +20,12 @@ import { RiVerifiedBadgeFill } from "react-icons/ri";
 interface ProfileTabContentProps {
   user: UserProfile;
   onEditClick: () => void;
+  stats: {
+    totalBookings: number;
+    completedStays: number;
+    savedRooms: number;
+    nightsStayed: number;
+  };
 }
 
 function StatCard({
@@ -53,6 +59,7 @@ function StatCard({
 export function ProfileTabContent({
   user,
   onEditClick,
+  stats,
 }: ProfileTabContentProps) {
   return (
     <div className="space-y-6">
@@ -134,18 +141,22 @@ export function ProfileTabContent({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <StatCard
             icon={<BedDouble size={20} />}
-            value="-"
+            value={stats.totalBookings}
             label="Total Bookings"
           />
           <StatCard
             icon={<CheckCircle size={20} />}
-            value="-"
+            value={stats.completedStays}
             label="Stays Completed"
           />
-          <StatCard icon={<Heart size={20} />} value="-" label="Saved Rooms" />
+          <StatCard
+            icon={<Heart size={20} />}
+            value={stats.savedRooms}
+            label="Saved Rooms"
+          />
           <StatCard
             icon={<Calendar size={20} />}
-            value="-"
+            value={stats.nightsStayed}
             label="Nights Stayed"
           />
         </div>

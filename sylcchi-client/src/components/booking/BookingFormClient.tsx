@@ -33,8 +33,8 @@ function BookingFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const roomIdParam = searchParams.get("roomId") ?? "";
-  const roomSlugParam = searchParams.get("slug") ?? "";
+  const roomSlugParam =
+    searchParams.get("slug") ?? searchParams.get("roomId") ?? "";
   const checkInParam = searchParams.get("checkIn") ?? "";
   const checkOutParam = searchParams.get("checkOut") ?? "";
 
@@ -47,9 +47,9 @@ function BookingFormContent() {
   const room = useMemo(
     () =>
       rooms.find(
-        (item) => item.id === roomIdParam || item.slug === roomSlugParam,
+        (item) => item.slug === roomSlugParam || item.id === roomSlugParam,
       ),
-    [roomIdParam, roomSlugParam, rooms],
+    [roomSlugParam, rooms],
   );
 
   const checkInDate = useMemo(() => {
@@ -134,7 +134,7 @@ function BookingFormContent() {
     });
   };
 
-  const bookingPath = `/booking?roomId=${encodeURIComponent(roomIdParam)}&slug=${encodeURIComponent(roomSlugParam)}&checkIn=${encodeURIComponent(checkInParam)}&checkOut=${encodeURIComponent(checkOutParam)}`;
+  const bookingPath = `/booking?slug=${encodeURIComponent(roomSlugParam)}&checkIn=${encodeURIComponent(checkInParam)}&checkOut=${encodeURIComponent(checkOutParam)}`;
 
   const handleSubmit = async () => {
     setSubmitError(null);

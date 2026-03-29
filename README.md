@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏰 Sylcchi Palace
+![Sylcchi Palace Logo](./sylcchi-client/public/assets/images/sylcchi-palace.png)
 
 **Modern full-stack hotel booking and hospitality management platform**
 

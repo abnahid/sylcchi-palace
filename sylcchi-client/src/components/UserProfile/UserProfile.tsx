@@ -67,6 +67,25 @@ function UserProfileContent() {
   const bookingsList = myBookings ?? [];
   const totalNights = bookingsList.reduce((sum, b) => sum + (b.nights ?? 0), 0);
 
+  const isCompletedBooking = (status: string) => {
+    const normalized = status.trim().toUpperCase();
+    return normalized === "COMPLETED" || normalized === "CHECKED_OUT";
+  };
+
+  const completedBookings = bookingsList.filter((booking) =>
+    isCompletedBooking(booking.bookingStatus),
+  );
+
+  const profileStats = {
+    totalBookings: bookingsList.length,
+    completedStays: completedBookings.length,
+    savedRooms: wishlistItems.length,
+    nightsStayed: completedBookings.reduce(
+      (sum, booking) => sum + (booking.nights ?? 0),
+      0,
+    ),
+  };
+
   const TABS: TabConfig[] = [
     { id: "profile", label: "Profile", icon: <TabIcon id="profile" /> },
     { id: "bookings", label: "My Bookings", icon: <TabIcon id="bookings" /> },
@@ -288,7 +307,7 @@ function UserProfileContent() {
                     <button
                       key={tab.id}
                       onClick={() => switchTab(tab.id)}
-                      className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-3.5 border-b-2 text-[13px] transition-all whitespace-nowrap ${
+                      className={`shrink-0 flex items-center gap-1.5 px-4 py-3.5 border-b-2 text-[13px] transition-all whitespace-nowrap ${
                         isActive
                           ? "border-[#235784] text-[#235784] bg-[#f7fafd]"
                           : "border-transparent text-[#808385] hover:text-[#235784]"
@@ -311,6 +330,7 @@ function UserProfileContent() {
               <ProfileTabContent
                 user={user}
                 onEditClick={() => switchTab("settings")}
+                stats={profileStats}
               />
             )}
             {activeTab === "bookings" && user && (

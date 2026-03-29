@@ -7,14 +7,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type RoomBookingSidebarProps = {
-  roomId: string;
   roomSlug: string;
   roomName: string;
   nightlyPrice: number;
 };
 
 const RoomBookingSidebar = ({
-  roomId,
   roomSlug,
   roomName,
   nightlyPrice,
@@ -45,7 +43,6 @@ const RoomBookingSidebar = ({
     setDateError(null);
 
     const query = new URLSearchParams({
-      roomId,
       slug: roomSlug,
       roomName,
       checkIn: format(checkInDate, "yyyy-MM-dd"),

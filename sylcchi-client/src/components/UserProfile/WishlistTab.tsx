@@ -10,12 +10,39 @@ export function WishlistTabContent() {
 
   const list = wishlistResponse?.data || [];
 
+  const resolveRoomId = (room: (typeof list)[number]) =>
+    room.roomId || room.room?.id || "";
+
+  const resolveRoomSlug = (room: (typeof list)[number]) =>
+    room.roomSlug || room.slug || room.room?.slug || "";
+
+  const resolveRoomName = (room: (typeof list)[number]) =>
+    room.roomName || room.room?.name || "Room";
+
+  const resolveRoomImage = (room: (typeof list)[number]) =>
+    room.roomImage || room.room?.images?.[0]?.imageUrl || "";
+
+  const resolveRoomTag = (room: (typeof list)[number]) =>
+    room.tag || room.room?.roomType?.name || "";
+
+  const resolveRoomRating = (room: (typeof list)[number]) =>
+    room.rating || room.room?.averageRating;
+
+  const resolveRoomReviews = (room: (typeof list)[number]) =>
+    room.reviews || room.room?.reviewCount;
+
+  const resolveRoomPrice = (room: (typeof list)[number]) => {
+    const price = room.price ?? room.room?.price ?? room.room?.pricePerNight;
+    const numericPrice = Number(price);
+    return Number.isFinite(numericPrice) ? numericPrice : 0;
+  };
+
   const handleRemove = (roomId: string) => {
     removeFromWishlist.mutate(roomId);
   };
 
   const getRoomDetailPath = (room: (typeof list)[number]) => {
-    const identifier = room.roomSlug || room.slug || room.roomId;
+    const identifier = resolveRoomSlug(room) || resolveRoomId(room);
     return `/rooms/${encodeURIComponent(identifier)}`;
   };
 
@@ -55,10 +82,10 @@ export function WishlistTabContent() {
             className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden group hover:shadow-lg transition-shadow"
           >
             <div className="relative h-40 overflow-hidden bg-[#DDEAF6]">
-              {room.roomImage ? (
+              {resolveRoomImage(room) ? (
                 <img
-                  src={room.roomImage}
-                  alt={room.roomName}
+                  src={resolveRoomImage(room)}
+                  alt={resolveRoomName(room)}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               ) : (
@@ -66,19 +93,19 @@ export function WishlistTabContent() {
                   <Heart size={32} className="text-[#235784]" />
                 </div>
               )}
-              {room.tag && (
+              {resolveRoomTag(room) && (
                 <span
                   className="absolute top-3 left-3 bg-white/90 text-[#235784] text-[11px] px-2.5 py-1 rounded-full"
                   style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
                 >
-                  {room.tag}
+                  {resolveRoomTag(room)}
                 </span>
               )}
               <button
-                onClick={() => handleRemove(room.roomId)}
+                onClick={() => handleRemove(resolveRoomId(room))}
                 className="absolute top-3 right-3 w-8 h-8 bg-white/90 hover:bg-red-50 rounded-full flex items-center justify-center transition-colors"
                 title="Remove from wishlist"
-                disabled={removeFromWishlist.isPending}
+                disabled={removeFromWishlist.isPending || !resolveRoomId(room)}
               >
                 <Heart
                   size={15}
@@ -92,7 +119,7 @@ export function WishlistTabContent() {
                 className="text-[#040b11] text-[15px] leading-snug mb-2"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
-                {room.roomName}
+                {resolveRoomName(room)}
               </p>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-1">
@@ -101,7 +128,7 @@ export function WishlistTabContent() {
                     className="text-yellow-400"
                     style={{ fill: "#facc15" }}
                   />
-                  {room.rating && (
+                  {resolveRoomRating(room) && (
                     <>
                       <span
                         className="text-[#2c3c4a] text-[13px]"
@@ -110,10 +137,10 @@ export function WishlistTabContent() {
                           fontWeight: 600,
                         }}
                       >
-                        {room.rating}
+                        {resolveRoomRating(room)}
                       </span>
                       <span className="text-[#808385] text-[12px]">
-                        ({room.reviews})
+                        ({resolveRoomReviews(room) ?? 0})
                       </span>
                     </>
                   )}
@@ -122,7 +149,7 @@ export function WishlistTabContent() {
                   className="text-[#235784] text-[16px]"
                   style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
                 >
-                  ${room.price}
+                  ${resolveRoomPrice(room)}
                   <span
                     className="text-[#808385] text-[12px]"
                     style={{ fontWeight: 400 }}

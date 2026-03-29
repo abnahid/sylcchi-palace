@@ -1,6 +1,7 @@
 "use client";
 
 import Breadcrumb from "@/components/Breadcrumb";
+import WishlistButton from "@/components/rooms/WishlistButton";
 import RoomBookingSidebar from "@/components/rooms/sections/RoomBookingSidebar";
 import RoomBookingStepsSection from "@/components/rooms/sections/RoomBookingStepsSection";
 import RoomCommentsSection from "@/components/rooms/sections/RoomCommentsSection";
@@ -82,16 +83,21 @@ export default function RoomDetailClient({
 
       <section className="bg-white py-8 lg:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <RoomGallerySection
-            roomName={room.name}
-            gallery={gallery}
-            onImageError={handleGalleryImageError}
-          />
+          <div className="relative">
+            <RoomGallerySection
+              roomName={room.name}
+              gallery={gallery}
+              onImageError={handleGalleryImageError}
+            />
+            <WishlistButton
+              roomId={room.id}
+              className="absolute top-4 right-4 z-10 shadow-md"
+            />
+          </div>
 
           <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_400px]">
             <RoomInfoSection room={room} />
             <RoomBookingSidebar
-              roomId={room.id}
               roomSlug={room.slug}
               roomName={room.name}
               nightlyPrice={nightlyPrice}
