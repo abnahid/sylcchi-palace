@@ -27,3 +27,19 @@ export async function updateUserProfile(
     throw toApiError(error);
   }
 }
+
+export async function uploadProfileImage(
+  formData: FormData,
+): Promise<{ success: boolean; data: { image: string } }> {
+  try {
+    const response = await api.patch<{
+      success: boolean;
+      data: { image: string };
+    }>("/users/profile/image", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}

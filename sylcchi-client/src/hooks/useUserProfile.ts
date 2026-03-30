@@ -1,6 +1,11 @@
 "use client";
 
-import { getUserProfile, updateUserProfile } from "@/lib/api/user";
+import type { AuthUser } from "@/lib/api/auth";
+import {
+  getUserProfile,
+  updateUserProfile,
+  uploadProfileImage,
+} from "@/lib/api/user";
 import {
   addToWishlist,
   getWishlist,
@@ -33,6 +38,28 @@ export function useUpdateProfile() {
     mutationFn: updateUserProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userQueryKeys.profile() });
+    },
+  });
+}
+
+export function useUploadProfileImage() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formData: FormData) => uploadProfileImage(formData),
+    onSuccess: (res) => {
+      const newImageUrl = res.data?.image;
+
+      // Immediately update session cache so Navbar avatar refreshes instantly
+      if (newImageUrl) {
+        queryClient.setQueryData<AuthUser | null>(
+          ["auth", "session"],
+          (old) => (old ? { ...old, image: newImageUrl } : old),
+        );
+      }
+
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.profile() });
+      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
     },
   });
 }

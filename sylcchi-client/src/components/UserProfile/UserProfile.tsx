@@ -1,7 +1,11 @@
 "use client";
 
 import { useMyBookings } from "@/hooks/useBooking";
-import { useUserProfile, useWishlist } from "@/hooks/useUserProfile";
+import {
+  useUploadProfileImage,
+  useUserProfile,
+  useWishlist,
+} from "@/hooks/useUserProfile";
 import {
   AlertCircle,
   BedDouble,
@@ -16,7 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { BookingsTabContent } from "./BookingsTab";
 import { ProfileTabContent } from "./ProfileTab";
@@ -49,6 +53,19 @@ function UserProfileContent() {
   const { data: userResponse, isLoading: userLoading } = useUserProfile();
   const { data: wishlistResponse } = useWishlist();
   const { data: myBookings } = useMyBookings();
+  const uploadImage = useUploadProfileImage();
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+    if (file.size > 1024 * 1024) return;
+    const formData = new FormData();
+    formData.append("image", file);
+    await uploadImage.mutateAsync(formData);
+    e.target.value = "";
+  };
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -152,9 +169,26 @@ function UserProfileContent() {
                       <User size={48} className="text-[#235784]" />
                     </div>
                   )}
+                  {uploadImage.isPending && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full">
+                      <Loader2
+                        size={24}
+                        className="animate-spin text-white"
+                      />
+                    </div>
+                  )}
                 </div>
+                <input
+                  ref={avatarInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
                 <button
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-[#235784] hover:bg-[#1a4a6d] rounded-full flex items-center justify-center shadow-md transition-colors"
+                  onClick={() => avatarInputRef.current?.click()}
+                  disabled={uploadImage.isPending}
+                  className="absolute bottom-0 right-0 w-8 h-8 bg-[#235784] hover:bg-[#1a4a6d] rounded-full flex items-center justify-center shadow-md transition-colors disabled:opacity-60"
                   title="Change photo"
                 >
                   <Camera size={14} className="text-white" />

@@ -9,6 +9,8 @@ import type { PrimaryRoom } from "@/lib/types/rooms";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+export const revalidate = 60;
+
 type RoomDetailPageProps = {
   params: Promise<{ slug: string }>;
 };

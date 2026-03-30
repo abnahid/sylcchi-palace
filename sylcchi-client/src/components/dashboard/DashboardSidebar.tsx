@@ -140,7 +140,7 @@ export default function DashboardSidebar({
       {/* Navigation */}
       <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
         {!collapsed && (
-          <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
+          <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3.5">
             Overview
           </p>
         )}
@@ -152,7 +152,7 @@ export default function DashboardSidebar({
               href={item.href}
               onClick={onMobileClose}
               className={cn(
-                "group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                "group flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200",
                 active
                   ? "text-primary font-medium"
                   : "text-slate-500 hover:bg-slate-50 hover:text-primary",
@@ -169,7 +169,7 @@ export default function DashboardSidebar({
         {managementItems.length > 0 && (
           <>
             {!collapsed && (
-              <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-8">
+              <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3.5 mt-3.5">
                 Management
               </p>
             )}
@@ -182,7 +182,7 @@ export default function DashboardSidebar({
                   href={item.href}
                   onClick={onMobileClose}
                   className={cn(
-                    "group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                    "group flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200",
                     active
                       ? "text-primary font-medium"
                       : "text-slate-500 hover:bg-slate-50 hover:text-primary",
@@ -200,7 +200,7 @@ export default function DashboardSidebar({
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-4 border-t border-slate-50">
+      <div className="p-3 border-t border-slate-50">
         <Link
           href="/dashboard/settings"
           onClick={onMobileClose}

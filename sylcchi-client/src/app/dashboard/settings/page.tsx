@@ -5,14 +5,32 @@ import RoleGuard from "@/components/dashboard/RoleGuard";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/hooks/useAuth";
-import { useUpdateProfile, useUserProfile } from "@/hooks/useUserProfile";
+import {
+  useUpdateProfile,
+  useUploadProfileImage,
+  useUserProfile,
+} from "@/hooks/useUserProfile";
 import type { UserProfile } from "@/lib/types/user";
-import { useEffect, useMemo, useState } from "react";
+import { Camera, Loader2, User } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function SettingsPage() {
   const { data: user } = useSession();
   const { data: profileRes, isLoading, isError, error } = useUserProfile();
   const updateProfile = useUpdateProfile();
+  const uploadImage = useUploadProfileImage();
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+    if (file.size > 1024 * 1024) return;
+    const formData = new FormData();
+    formData.append("image", file);
+    await uploadImage.mutateAsync(formData);
+    e.target.value = "";
+  };
 
   const profile: UserProfile | undefined = useMemo(() => {
     if (!profileRes) return undefined;
@@ -110,6 +128,68 @@ export default function SettingsPage() {
       />
 
       <div className="mx-auto max-w-2xl space-y-6">
+        {/* Avatar */}
+        <div className="bg-white rounded-2xl p-6 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-slate-50">
+          <h3 className="text-[#1a1a1a] text-lg font-semibold font-mulish mb-4">
+            Profile Photo
+          </h3>
+          <div className="flex items-center gap-5">
+            <div className="relative shrink-0">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-slate-100 bg-slate-50">
+                {profile?.image ? (
+                  <img
+                    src={profile.image}
+                    alt={profile.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <User size={32} className="text-slate-300" />
+                  </div>
+                )}
+                {uploadImage.isPending && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full">
+                    <Loader2 size={20} className="animate-spin text-white" />
+                  </div>
+                )}
+              </div>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+              <button
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={uploadImage.isPending}
+                className="absolute -bottom-0.5 -right-0.5 w-7 h-7 bg-primary hover:bg-primary/90 rounded-full flex items-center justify-center shadow-md transition-colors disabled:opacity-60"
+                title="Change photo"
+              >
+                <Camera size={12} className="text-white" />
+              </button>
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-[#1a1a1a] truncate">
+                {profile?.name ?? user?.name}
+              </p>
+              <p className="text-xs text-slate-400 mt-0.5">
+                JPEG, PNG, or WebP — max 1MB
+              </p>
+              {uploadImage.isSuccess && (
+                <p className="text-xs text-emerald-600 mt-1">
+                  Photo updated successfully.
+                </p>
+              )}
+              {uploadImage.isError && (
+                <p className="text-xs text-rose-600 mt-1">
+                  {uploadImage.error.message}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Profile */}
         <div className="bg-white rounded-2xl p-6 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-slate-50">
           <h3 className="text-[#1a1a1a] text-lg font-semibold font-mulish mb-4">

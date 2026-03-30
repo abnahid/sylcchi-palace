@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "@/hooks/useAuth";
 import {
+  dashboardKeys,
   useCreateRoom,
   useDashboardRoomTypes,
   useDashboardRooms,
@@ -18,15 +19,27 @@ import {
   useUpdateRoom,
   useUploadRoomImages,
 } from "@/hooks/useDashboard";
+import { useQueryClient } from "@tanstack/react-query";
 import type { PrimaryRoom } from "@/lib/types/dashboard";
-import { Edit, ImagePlus, Plus, Search, Trash2 } from "lucide-react";
+import {
+  CheckCircle,
+  Edit,
+  ImagePlus,
+  Plus,
+  RefreshCw,
+  Search,
+  Trash2,
+  UploadCloud,
+  X,
+} from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 const ITEMS_PER_PAGE = 6;
 
 export default function RoomsPage() {
   const { data: user } = useSession();
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -210,6 +223,17 @@ export default function RoomsPage() {
               Clear
             </button>
           )}
+          <button
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: dashboardKeys.rooms(),
+              })
+            }
+            className="p-2 rounded-lg text-slate-400 hover:text-primary hover:bg-[#f3f0ff] transition-all"
+            title="Refresh rooms"
+          >
+            <RefreshCw size={16} />
+          </button>
         </div>
 
         <DataTable
@@ -690,38 +714,157 @@ function RoomImagesModal({
   isAdmin: boolean;
 }) {
   const { data: images, isLoading } = useRoomImages(room.id);
+  const [stagedFiles, setStagedFiles] = useState<File[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadDone, setUploadDone] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files?.length) return;
-    const formData = new FormData();
-    Array.from(files).forEach((file) => formData.append("images", file));
-    await onUpload(formData);
+  const addFiles = useCallback((files: FileList | File[]) => {
+    const imageFiles = Array.from(files).filter((f) =>
+      f.type.startsWith("image/"),
+    );
+    setStagedFiles((prev) => [...prev, ...imageFiles].slice(0, 3));
+    setUploadDone(false);
+  }, []);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+    },
+    [addFiles],
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) addFiles(e.target.files);
     e.target.value = "";
+  };
+
+  const removeStagedFile = (index: number) => {
+    setStagedFiles((prev) => prev.filter((_, i) => i !== index));
+    setUploadDone(false);
+  };
+
+  const handleConfirmUpload = async () => {
+    if (!stagedFiles.length) return;
+    const formData = new FormData();
+    stagedFiles.forEach((file) => formData.append("images", file));
+    await onUpload(formData);
+    setStagedFiles([]);
+    setUploadDone(true);
+  };
+
+  const handleClose = () => {
+    setStagedFiles([]);
+    setUploadDone(false);
+    onClose();
   };
 
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       title={`Images: ${room.name}`}
-      description="Upload up to 3 images at a time."
+      description="Drag & drop or browse to add up to 3 images at a time."
       className="max-w-2xl"
     >
       <div className="space-y-4">
-        <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-500 transition-all hover:border-primary hover:text-primary hover:bg-[#f3f0ff]">
-          <ImagePlus size={18} />
-          {isUploading ? "Uploading..." : "Upload Images"}
+        {/* Drag & drop zone */}
+        <div
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onClick={() => fileInputRef.current?.click()}
+          className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-4 py-6 text-sm transition-all ${
+            isDragging
+              ? "border-primary bg-[#f3f0ff] text-primary"
+              : "border-slate-200 text-slate-400 hover:border-primary hover:text-primary hover:bg-[#f3f0ff]/50"
+          }`}
+        >
+          <UploadCloud size={28} />
+          <p>
+            <span className="font-medium">Drag & drop images here</span> or
+            click to browse
+          </p>
+          <p className="text-xs text-slate-400">Max 3 images per upload</p>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             multiple
-            onChange={handleFileUpload}
-            disabled={isUploading}
+            onChange={handleFileSelect}
             className="hidden"
           />
-        </label>
+        </div>
 
+        {/* Staged files preview */}
+        {stagedFiles.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-slate-500">
+              Selected ({stagedFiles.length}/3)
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              {stagedFiles.map((file, i) => (
+                <div key={`${file.name}-${i}`} className="group relative">
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt={file.name}
+                    width={200}
+                    height={150}
+                    className="aspect-video w-full rounded-xl object-cover"
+                  />
+                  <button
+                    onClick={() => removeStagedFile(i)}
+                    className="absolute -right-1.5 -top-1.5 rounded-full bg-slate-600 p-0.5 text-white shadow-sm hover:bg-rose-500 transition-colors"
+                  >
+                    <X size={12} />
+                  </button>
+                  <p className="mt-1 truncate text-[10px] text-slate-400">
+                    {file.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={handleConfirmUpload}
+              disabled={isUploading}
+              className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all disabled:opacity-50"
+            >
+              {isUploading ? (
+                <>
+                  <UploadCloud size={16} className="animate-pulse" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <UploadCloud size={16} />
+                  Confirm Upload
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Upload success */}
+        {uploadDone && stagedFiles.length === 0 && (
+          <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            <CheckCircle size={16} />
+            Images uploaded successfully!
+          </div>
+        )}
+
+        {/* Existing images */}
         {isLoading ? (
           <div className="grid grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
@@ -732,34 +875,49 @@ function RoomImagesModal({
             ))}
           </div>
         ) : images?.length ? (
-          <div className="grid grid-cols-3 gap-3">
-            {images.map((img) => (
-              <div key={img.id} className="group relative">
-                <Image
-                  src={img.imageUrl}
-                  alt="Room"
-                  width={200}
-                  height={150}
-                  className="aspect-video w-full rounded-xl object-cover"
-                />
-                {isAdmin && (
-                  <button
-                    onClick={() => {
-                      if (confirm("Delete?")) onDeleteImage(img.id);
-                    }}
-                    className="absolute right-1 top-1 hidden rounded-lg bg-rose-500/90 p-1 text-white group-hover:block"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
+          <>
+            <p className="text-xs font-medium text-slate-500">
+              Uploaded images ({images.length})
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              {images.map((img) => (
+                <div key={img.id} className="group relative">
+                  <Image
+                    src={img.imageUrl}
+                    alt="Room"
+                    width={200}
+                    height={150}
+                    className="aspect-video w-full rounded-xl object-cover"
+                  />
+                  {isAdmin && (
+                    <button
+                      onClick={() => {
+                        if (confirm("Delete?")) onDeleteImage(img.id);
+                      }}
+                      className="absolute right-1 top-1 hidden rounded-lg bg-rose-500/90 p-1 text-white group-hover:block"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
         ) : (
           <p className="text-center text-sm text-slate-400 py-8">
             No images uploaded yet.
           </p>
         )}
+
+        {/* Done button */}
+        <div className="flex justify-end border-t border-slate-100 pt-4">
+          <button
+            onClick={handleClose}
+            className="px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-medium shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all"
+          >
+            Done
+          </button>
+        </div>
       </div>
     </Modal>
   );

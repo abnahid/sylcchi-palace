@@ -1,12 +1,13 @@
 "use client";
 
 import { useSignOut } from "@/hooks/useAuth";
-import { useUpdateProfile } from "@/hooks/useUserProfile";
+import { useUpdateProfile, useUploadProfileImage } from "@/hooks/useUserProfile";
 import { updateProfileSchema } from "@/lib/schemas/user";
 import type { UserProfile } from "@/lib/types/user";
 import {
   AlertCircle,
   Bell,
+  Camera,
   CheckCircle,
   Globe,
   Loader2,
@@ -20,7 +21,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface SettingsTabContentProps {
   user: UserProfile;
@@ -92,7 +93,20 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
 
   // Mutations
   const updateProfile = useUpdateProfile();
+  const uploadImage = useUploadProfileImage();
   const signOutMutation = useSignOut();
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+    if (file.size > 1024 * 1024) return;
+    const formData = new FormData();
+    formData.append("image", file);
+    await uploadImage.mutateAsync(formData);
+    e.target.value = "";
+  };
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
@@ -149,6 +163,81 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
 
   return (
     <div className="space-y-6">
+      {/* Profile Photo */}
+      <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
+          <Camera size={16} className="text-[#235784]" />
+          <h3
+            className="text-[#040b11] text-[16px]"
+            style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
+          >
+            Profile Photo
+          </h3>
+        </div>
+        <div className="p-6">
+          <div className="flex items-center gap-5">
+            <div className="relative shrink-0">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-3 border-white shadow-lg bg-[#DDEAF6]">
+                {user.image ? (
+                  <img
+                    src={user.image}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <User size={36} className="text-[#235784]" />
+                  </div>
+                )}
+                {uploadImage.isPending && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full">
+                    <Loader2 size={20} className="animate-spin text-white" />
+                  </div>
+                )}
+              </div>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p
+                className="text-[#040b11] text-[15px] mb-1"
+                style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
+              >
+                {user.name}
+              </p>
+              <button
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={uploadImage.isPending}
+                className="flex items-center gap-2 border-2 border-[#e0e0e0] hover:border-[#235784] hover:text-[#235784] text-[#5f6c79] px-4 py-2 rounded-[8px] text-[13px] transition-all disabled:opacity-50"
+                style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
+              >
+                <Camera size={13} />
+                {uploadImage.isPending ? "Uploading..." : "Change Photo"}
+              </button>
+              <p className="text-[#808385] text-[11px] mt-2">
+                JPEG, PNG, or WebP — max 1MB. Image will be auto-cropped to
+                square.
+              </p>
+              {uploadImage.isSuccess && (
+                <p className="flex items-center gap-1.5 text-green-600 text-[12px] mt-1.5">
+                  <CheckCircle size={12} /> Photo updated successfully!
+                </p>
+              )}
+              {uploadImage.isError && (
+                <p className="flex items-center gap-1.5 text-red-500 text-[12px] mt-1.5">
+                  <AlertCircle size={12} /> {uploadImage.error.message}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Personal Information */}
       <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
         <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
