@@ -44,10 +44,7 @@ export default function DataTable<T>({
             </thead>
             <tbody className="text-sm">
               {Array.from({ length: 5 }).map((_, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-slate-50 last:border-0"
-                >
+                <tr key={i} className="border-b border-slate-50 last:border-0">
                   {columns.map((col) => (
                     <td key={col.key} className="px-6 py-4">
                       <div className="h-4 w-24 animate-pulse rounded bg-slate-100" />
@@ -64,7 +61,7 @@ export default function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-slate-50 flex min-h-[200px] items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-[0_2px_20px_-4px_rgba(0,0,0,0.04)] border border-slate-50 flex min-h-50 items-center justify-center">
         <p className="text-sm text-slate-400">{emptyMessage}</p>
       </div>
     );
@@ -94,15 +91,10 @@ export default function DataTable<T>({
                 )}
               >
                 {columns.map((col) => (
-                  <td
-                    key={col.key}
-                    className={cn("px-6 py-4", col.className)}
-                  >
+                  <td key={col.key} className={cn("px-6 py-4", col.className)}>
                     {col.render
                       ? col.render(row)
-                      : String(
-                          (row as Record<string, unknown>)[col.key] ?? "",
-                        )}
+                      : String((row as Record<string, unknown>)[col.key] ?? "")}
                   </td>
                 ))}
               </tr>

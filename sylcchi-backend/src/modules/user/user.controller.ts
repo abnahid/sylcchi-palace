@@ -207,6 +207,25 @@ export const UserController = {
     });
   },
 
+  uploadProfileImage: async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      throw new AppError("Authentication required", status.UNAUTHORIZED);
+    }
+
+    const file = req.file;
+    if (!file) {
+      throw new AppError("Profile image is required", status.BAD_REQUEST);
+    }
+
+    const result = await UserService.updateProfileImage(req.user.id, file);
+
+    res.status(status.OK).json({
+      success: true,
+      message: "Profile image updated successfully",
+      data: result,
+    });
+  },
+
   updateMyProfile: async (req: Request, res: Response) => {
     if (!req.user?.id) {
       throw new AppError("Authentication required", status.UNAUTHORIZED);

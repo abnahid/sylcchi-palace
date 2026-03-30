@@ -19,7 +19,7 @@ export default function PromuteVideo() {
               We have everything you need
             </h2>
 
-            <p className="mb-8 max-w-[520px] font-open-sans text-base leading-relaxed text-muted-foreground">
+            <p className="mb-8 max-w-130 font-open-sans text-base leading-relaxed text-muted-foreground">
               Posuere morbi leo urna molestie at elementum eu facilisis sed.
               Diam phasellus vestibulum lorem sed risus ultricies tristique.
             </p>

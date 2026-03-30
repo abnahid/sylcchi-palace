@@ -1,6 +1,5 @@
 "use client";
 
-import type { AuthUser } from "@/lib/api/auth";
 import {
   getUserProfile,
   updateUserProfile,
@@ -47,19 +46,10 @@ export function useUploadProfileImage() {
 
   return useMutation({
     mutationFn: (formData: FormData) => uploadProfileImage(formData),
-    onSuccess: (res) => {
-      const newImageUrl = res.data?.image;
-
-      // Immediately update session cache so Navbar avatar refreshes instantly
-      if (newImageUrl) {
-        queryClient.setQueryData<AuthUser | null>(
-          ["auth", "session"],
-          (old) => (old ? { ...old, image: newImageUrl } : old),
-        );
-      }
-
+    onSuccess: () => {
+      // Invalidate profile query — Navbar reads the image from here (DB-fresh),
+      // not from the session endpoint which may cache the old JWT image.
       queryClient.invalidateQueries({ queryKey: userQueryKeys.profile() });
-      queryClient.invalidateQueries({ queryKey: ["auth", "session"] });
     },
   });
 }

@@ -9,7 +9,7 @@ reservationRouter.use(optionalAuth);
 reservationRouter.get("/my", requireAuth, ReservationController.listMyBookings);
 reservationRouter.get(
   "/all",
-  ...routeAccess.admin,
+  ...routeAccess.adminOrManager,
   ReservationController.listAllBookings,
 );
 reservationRouter.post("/create", ReservationController.createBooking);

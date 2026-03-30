@@ -111,7 +111,7 @@ export default function DashboardHeader({
                 (user.role ?? "user").slice(1).toLowerCase()}
             </p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-indigo-400 p-[2px]">
+          <div className="w-10 h-10 rounded-full bg-linear-to-tr from-primary to-indigo-400 p-0.5">
             <Avatar className="w-full h-full border-2 border-white">
               <AvatarImage src={user.image ?? undefined} alt={user.name} />
               <AvatarFallback className="bg-primary text-xs font-bold text-white">

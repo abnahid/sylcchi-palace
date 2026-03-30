@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSession, useSignOut } from "@/hooks/useAuth";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import {
   ChevronDown,
   ClipboardCheck,
@@ -41,15 +42,17 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const {
-    data: user,
-    isLoading: isSessionLoading,
-    isFetching: isSessionFetching,
-  } = useSession();
+  const { data: user, isLoading: isSessionLoading } = useSession();
+  const { data: profileRes } = useUserProfile();
   const signOutMutation = useSignOut();
 
   const isLoggedIn = Boolean(user);
-  const isSessionPending = isSessionLoading || isSessionFetching;
+  const isSessionPending = isSessionLoading;
+
+  // Profile query reads from DB — always has the latest image.
+  // Session may return a stale image from the JWT/cookie token.
+  const profile = (profileRes as { data?: { image?: string | null } })?.data;
+  const avatarUrl = profile?.image ?? user?.image ?? undefined;
   const isActive = (href: string) => pathname === href;
 
   const handleSignOut = async () => {
@@ -133,7 +136,7 @@ export default function Navbar() {
                   <button className="flex items-center gap-2.5 rounded-full border border-gray-200 py-1.5 pr-3 pl-1.5 transition-colors hover:bg-gray-50 focus:outline-none">
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={user?.image ?? undefined}
+                        src={avatarUrl}
                         alt={user?.name ?? "User"}
                       />
                       <AvatarFallback className="bg-[#235784] text-xs font-bold text-white">
@@ -161,7 +164,7 @@ export default function Navbar() {
                   <DropdownMenuLabel className="flex items-center gap-2.5 pb-2">
                     <Avatar className="h-9 w-9">
                       <AvatarImage
-                        src={user?.image ?? undefined}
+                        src={avatarUrl}
                         alt={user?.name ?? "User"}
                       />
                       <AvatarFallback className="bg-[#235784] text-xs font-bold text-white">
@@ -292,7 +295,7 @@ export default function Navbar() {
                       <div className="flex items-center gap-3 px-1 pb-3">
                         <Avatar className="h-10 w-10">
                           <AvatarImage
-                            src={user?.image ?? undefined}
+                            src={avatarUrl}
                             alt={user?.name ?? "User"}
                           />
                           <AvatarFallback className="bg-[#235784] text-sm font-bold text-white">

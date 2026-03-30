@@ -1,4 +1,9 @@
 import status from "http-status";
+import {
+  deleteFileFromCloudinary,
+  uploadProfileImage,
+} from "../../config/cloudinary.config";
+import { buildUniqueFileName } from "../../config/multer.config";
 import { AppError } from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 
@@ -192,6 +197,51 @@ export const UserService = {
         updatedAt: true,
       },
     });
+  },
+
+  updateProfileImage: async (userId: string, file: Express.Multer.File) => {
+    const existing = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, image: true },
+    });
+
+    if (!existing) {
+      throw new AppError("User not found", status.NOT_FOUND);
+    }
+
+    const filename = buildUniqueFileName(file.originalname);
+
+    const { secureUrl } = await uploadProfileImage(file.buffer, {
+      userId,
+      filename,
+    });
+
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: { image: secureUrl },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        emailVerified: true,
+        image: true,
+        location: true,
+        website: true,
+        nationality: true,
+        bio: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    // Clean up old image after successful DB update
+    if (existing.image) {
+      await deleteFileFromCloudinary(existing.image);
+    }
+
+    return updated;
   },
 
   deleteUser: async (userId: string, actorId?: string) => {

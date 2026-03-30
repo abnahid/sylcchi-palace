@@ -60,64 +60,67 @@ export default function Accommodation() {
 
           {/* Right side - Image with floating cards */}
           <div className="relative flex justify-center lg:justify-end">
-            {/* Main image container */}
-            <div className="relative h-100 w-[320px] sm:h-120 sm:w-137.5">
-              {/* Main image - clipped top and bottom */}
-              <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                <Image
-                  src="/Gallery/room-4.webp"
-                  alt="Accommodation"
-                  fill
-                  className="object-cover"
-                  sizes="380px"
-                />
-              </div>
-
-              {/* Room price card - bottom left, overlapping */}
-              <div className="absolute -left-8 bottom-12 z-10 w-56 rounded-xl bg-white p-4 shadow-lg sm:-left-20 sm:bottom-16 sm:w-64 sm:p-5">
-                <h4 className="mb-1 font-mulish text-sm font-bold text-[#101b25] sm:text-base">
-                  Deluxe King Suite
-                </h4>
-                <div className="mb-3 flex items-baseline gap-1">
-                  <span className="font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl">
-                    $249
-                  </span>
-                  <span className="font-open-sans text-sm text-gray-500">
-                    / 1 night
-                  </span>
+            {/* Wrapper with padding to contain the overflow from floating cards */}
+            <div className="relative px-4 py-6 sm:px-10 sm:py-8 lg:px-12 lg:py-10">
+              {/* Main image container */}
+              <div className="relative h-80 w-64 sm:h-105 sm:w-85 lg:h-120 lg:w-130">
+                {/* Main image */}
+                <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                  <Image
+                    src="/Gallery/room-4.webp"
+                    alt="Accommodation"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 256px, (max-width: 1024px) 340px, 380px"
+                  />
                 </div>
-                <button className="rounded-md bg-primary px-4 py-2 font-mulish text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90 sm:text-sm">
-                  See availability
-                </button>
-              </div>
 
-              {/* Review card - top right, overlapping */}
-              <div className="absolute -right-4 -top-4 z-10 w-52 rounded-xl bg-white p-4 shadow-lg sm:-right-20 sm:top-10 sm:w-60 sm:p-5">
-                <p className="mb-2 font-mulish text-sm font-bold leading-snug text-[#101b25] sm:text-base">
-                  Perfect stay in Sylhet with excellent rooms and service.
-                </p>
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-200">
-                    <Image
-                      src="/Gallery/room-1.webp"
-                      alt="Esmond Ward"
-                      width={32}
-                      height={32}
-                      className="h-full w-full object-cover"
-                    />
+                {/* Room price card - bottom left, overlapping */}
+                <div className="absolute -left-3 bottom-8 z-10 w-48 rounded-xl bg-white p-3.5 shadow-lg sm:-left-8 sm:bottom-12 sm:w-56 sm:p-4 lg:-left-10 lg:bottom-14 lg:w-60 lg:p-5">
+                  <h4 className="mb-1 font-mulish text-sm font-bold text-[#101b25] lg:text-base">
+                    Deluxe King Suite
+                  </h4>
+                  <div className="mb-2.5 flex items-baseline gap-1 sm:mb-3">
+                    <span className="font-mulish text-xl font-extrabold text-[#101b25] sm:text-2xl lg:text-3xl">
+                      $249
+                    </span>
+                    <span className="font-open-sans text-xs text-gray-500 sm:text-sm">
+                      / 1 night
+                    </span>
                   </div>
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-4 w-4 fill-amber-400 text-amber-400"
+                  <button className="rounded-md bg-primary px-3.5 py-1.5 font-mulish text-xs font-bold text-primary-foreground transition-colors hover:bg-primary/90 sm:px-4 sm:py-2 sm:text-sm">
+                    See availability
+                  </button>
+                </div>
+
+                {/* Review card - top right, overlapping */}
+                <div className="absolute -right-3 -top-4 z-10 w-44 rounded-xl bg-white p-3 shadow-lg sm:-right-8 sm:-top-2 sm:w-52 sm:p-4 lg:-right-10 lg:top-4 lg:w-56 lg:p-5">
+                  <p className="mb-2 font-mulish text-xs font-bold leading-snug text-[#101b25] sm:text-sm lg:text-base">
+                    Perfect stay in Sylhet with excellent rooms and service.
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:h-8 sm:w-8">
+                      <Image
+                        src="/Gallery/room-1.webp"
+                        alt="Esmond Ward"
+                        width={32}
+                        height={32}
+                        className="h-full w-full object-cover"
                       />
-                    ))}
+                    </div>
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-3.5 w-3.5 fill-amber-400 text-amber-400 sm:h-4 sm:w-4"
+                        />
+                      ))}
+                    </div>
                   </div>
+                  <p className="mt-1 font-mulish text-[11px] font-semibold text-[#101b25] sm:text-xs lg:text-sm">
+                    Guest Review
+                  </p>
                 </div>
-                <p className="mt-1 font-mulish text-xs font-semibold text-[#101b25] sm:text-sm">
-                  Guest Review
-                </p>
               </div>
             </div>
           </div>

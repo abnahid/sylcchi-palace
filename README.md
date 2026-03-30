@@ -24,9 +24,9 @@
 
 Sylcchi Palace is a monorepo hotel reservation and hospitality management system built with **Next.js 16**, **Express 5**, **Prisma 7**, and **PostgreSQL**. It delivers an end-to-end guest experience from room browsing and online booking through secure payment processing, OTP-verified check-in, and multi-dimensional reviews - all managed through a role-based admin dashboard.
 
-| Module | Description |
-|--------|-------------|
-| `sylcchi-client` | Next.js App Router frontend for guests, customers, managers, and admins |
+| Module            | Description                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------------------- |
+| `sylcchi-client`  | Next.js App Router frontend for guests, customers, managers, and admins                              |
 | `sylcchi-backend` | Express + Prisma REST API handling auth, rooms, bookings, payments, check-in, reviews, and analytics |
 
 > **Note:** This project is under active development. The features listed below reflect the current implementation - some modules may serve partial functionality as work continues toward full production coverage.
@@ -35,11 +35,11 @@ Sylcchi Palace is a monorepo hotel reservation and hospitality management system
 
 ## Live URLs
 
-| Environment | URL |
-|-------------|-----|
-| Frontend | [https://sylcchipalace.com](https://sylcchipalace.com) |
-| API Base | `https://sylcchipalace.com/api/v1` |
-| Repository | [github.com/abnahid/sylcchi-palace](https://github.com/abnahid/sylcchi-palace) |
+| Environment | URL                                                                            |
+| ----------- | ------------------------------------------------------------------------------ |
+| Frontend    | [https://sylcchi-palace.vercel.app/](https://sylcchi-palace.vercel.app/)       |
+| API Base    | `https://sylcchi-backend.vercel.app/api/v1`                                             |
+| Repository  | [github.com/abnahid/sylcchi-palace](https://github.com/abnahid/sylcchi-palace) |
 
 ---
 
@@ -119,11 +119,11 @@ Complete a Stay --> Eligibility Check (must have a completed booking)
 - **Forgot/reset password** flow via email
 - **Role-based access control**:
 
-| Role | Access Scope |
-|------|-------------|
-| `CUSTOMER` | Browse rooms, book, pay, review, manage wishlist and profile |
-| `MANAGER` | Room & image management, booking tracking, check-in/check-out operations |
-| `ADMIN` | Full system access including user management, payments, refunds, and analytics |
+| Role       | Access Scope                                                                   |
+| ---------- | ------------------------------------------------------------------------------ |
+| `CUSTOMER` | Browse rooms, book, pay, review, manage wishlist and profile                   |
+| `MANAGER`  | Room & image management, booking tracking, check-in/check-out operations       |
+| `ADMIN`    | Full system access including user management, payments, refunds, and analytics |
 
 ### Admin Dashboard & Analytics
 
@@ -140,34 +140,34 @@ Complete a Stay --> Eligibility Check (must have a completed booking)
 
 ### Frontend (`sylcchi-client`)
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Framework | Next.js 16 (App Router) | Server/client rendering, routing, SSR |
-| UI Library | React 19 | Component architecture |
-| Language | TypeScript 5.9 | Type safety |
-| Styling | Tailwind CSS 4 | Utility-first CSS |
-| Data Fetching | TanStack Query 5 | Server state, caching, mutations |
-| Forms | React Hook Form + Zod 4 | Form state management and validation |
-| UI Components | Radix UI / shadcn | Accessible, composable primitives |
-| Charts | Recharts 3 | Dashboard analytics visualizations |
-| Date Picker | React Day Picker 9 | Calendar date selection |
-| Icons | Lucide React, React Icons | Icon sets |
-| HTTP | Axios | API client |
+| Layer         | Technology                | Purpose                               |
+| ------------- | ------------------------- | ------------------------------------- |
+| Framework     | Next.js 16 (App Router)   | Server/client rendering, routing, SSR |
+| UI Library    | React 19                  | Component architecture                |
+| Language      | TypeScript 5.9            | Type safety                           |
+| Styling       | Tailwind CSS 4            | Utility-first CSS                     |
+| Data Fetching | TanStack Query 5          | Server state, caching, mutations      |
+| Forms         | React Hook Form + Zod 4   | Form state management and validation  |
+| UI Components | Radix UI / shadcn         | Accessible, composable primitives     |
+| Charts        | Recharts 3                | Dashboard analytics visualizations    |
+| Date Picker   | React Day Picker 9        | Calendar date selection               |
+| Icons         | Lucide React, React Icons | Icon sets                             |
+| HTTP          | Axios                     | API client                            |
 
 ### Backend (`sylcchi-backend`)
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Runtime | Node.js + TypeScript 5.9 | Server runtime |
-| Framework | Express 5 | HTTP routing and middleware |
-| ORM | Prisma 7 | Database access and migrations |
-| Database | PostgreSQL 15+ (Supabase) | Relational data storage |
-| Auth | Better Auth 1.5 + JWT | Session and token management |
-| Payments | Stripe + SSLCommerz | International + local payment gateways |
-| File Storage | Cloudinary + Multer | Image upload and CDN delivery |
-| Email | Nodemailer (SMTP) | Transactional emails and OTP delivery |
-| Validation | Zod 4 | Request schema validation |
-| Deployment | Vercel Serverless | Production hosting |
+| Layer        | Technology                | Purpose                                |
+| ------------ | ------------------------- | -------------------------------------- |
+| Runtime      | Node.js + TypeScript 5.9  | Server runtime                         |
+| Framework    | Express 5                 | HTTP routing and middleware            |
+| ORM          | Prisma 7                  | Database access and migrations         |
+| Database     | PostgreSQL 15+ (Supabase) | Relational data storage                |
+| Auth         | Better Auth 1.5 + JWT     | Session and token management           |
+| Payments     | Stripe + SSLCommerz       | International + local payment gateways |
+| File Storage | Cloudinary + Multer       | Image upload and CDN delivery          |
+| Email        | Nodemailer (SMTP)         | Transactional emails and OTP delivery  |
+| Validation   | Zod 4                     | Request schema validation              |
+| Deployment   | Vercel Serverless         | Production hosting                     |
 
 ---
 
@@ -346,48 +346,48 @@ This forwards Stripe events to your local API endpoint.
 
 ### Backend (`sylcchi-backend/.env.local`)
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| **Database** ||||
-| `DATABASE_URL` | Yes | - | PostgreSQL connection string |
-| `DIRECT_URL` | No | `DATABASE_URL` | Direct DB connection (for migrations) |
-| **Authentication** ||||
-| `BETTER_AUTH_URL` | Yes | - | Better Auth base URL |
-| `BETTER_AUTH_SECRET` | Yes | - | Signing secret (min 32 chars) |
-| `FRONTEND_URL` | Yes | - | Frontend origin for CORS |
-| `JWT_SECRET` | No | `dev-secret-change-me` | JWT signing secret |
-| `ACCESS_TOKEN_EXPIRES_IN` | No | `15m` | Access token TTL |
-| `REFRESH_TOKEN_EXPIRES_IN` | No | `30d` | Refresh token TTL |
-| **OAuth** ||||
-| `GOOGLE_CLIENT_ID` | No | - | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | No | - | Google OAuth client secret |
-| **Email / SMTP** ||||
-| `SMTP_HOST` | No | `smtp.gmail.com` | SMTP server hostname |
-| `SMTP_PORT` | No | `587` | SMTP server port |
-| `SMTP_USER` | No | - | SMTP username |
-| `SMTP_PASS` | No | - | SMTP password (app password) |
-| `SMTP_FROM` | No | `no-reply@sylcchi.local` | Sender email address |
-| **File Upload** ||||
-| `CLOUDINARY_CLOUD_NAME` | No | - | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | No | - | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | No | - | Cloudinary API secret |
-| **Stripe** ||||
-| `STRIPE_PUBLIC_KEY` | No | - | Stripe publishable key |
-| `STRIPE_SECRET_KEY` | No | - | Stripe secret key |
-| `STRIPE_WEBHOOK_SECRET` | No | - | Webhook signing secret |
-| `STRIPE_CURRENCY` | No | `usd` | Default currency |
-| **SSLCommerz** ||||
-| `SSLCOMMERZ_STORE_ID` | No | - | SSLCommerz store ID |
-| `SSLCOMMERZ_STORE_PASSWORD` | No | - | SSLCommerz store password |
-| `SSLCOMMERZ_API_URL` | No | Sandbox URL | SSLCommerz API endpoint |
-| **Booking** ||||
-| `BOOKING_MAX_STAY_NIGHTS` | No | `11` | Maximum stay duration |
+| Variable                    | Required | Default                  | Description                           |
+| --------------------------- | -------- | ------------------------ | ------------------------------------- |
+| **Database**                |          |                          |                                       |
+| `DATABASE_URL`              | Yes      | -                        | PostgreSQL connection string          |
+| `DIRECT_URL`                | No       | `DATABASE_URL`           | Direct DB connection (for migrations) |
+| **Authentication**          |          |                          |                                       |
+| `BETTER_AUTH_URL`           | Yes      | -                        | Better Auth base URL                  |
+| `BETTER_AUTH_SECRET`        | Yes      | -                        | Signing secret (min 32 chars)         |
+| `FRONTEND_URL`              | Yes      | -                        | Frontend origin for CORS              |
+| `JWT_SECRET`                | No       | `dev-secret-change-me`   | JWT signing secret                    |
+| `ACCESS_TOKEN_EXPIRES_IN`   | No       | `15m`                    | Access token TTL                      |
+| `REFRESH_TOKEN_EXPIRES_IN`  | No       | `30d`                    | Refresh token TTL                     |
+| **OAuth**                   |          |                          |                                       |
+| `GOOGLE_CLIENT_ID`          | No       | -                        | Google OAuth client ID                |
+| `GOOGLE_CLIENT_SECRET`      | No       | -                        | Google OAuth client secret            |
+| **Email / SMTP**            |          |                          |                                       |
+| `SMTP_HOST`                 | No       | `smtp.gmail.com`         | SMTP server hostname                  |
+| `SMTP_PORT`                 | No       | `587`                    | SMTP server port                      |
+| `SMTP_USER`                 | No       | -                        | SMTP username                         |
+| `SMTP_PASS`                 | No       | -                        | SMTP password (app password)          |
+| `SMTP_FROM`                 | No       | `no-reply@sylcchi.local` | Sender email address                  |
+| **File Upload**             |          |                          |                                       |
+| `CLOUDINARY_CLOUD_NAME`     | No       | -                        | Cloudinary cloud name                 |
+| `CLOUDINARY_API_KEY`        | No       | -                        | Cloudinary API key                    |
+| `CLOUDINARY_API_SECRET`     | No       | -                        | Cloudinary API secret                 |
+| **Stripe**                  |          |                          |                                       |
+| `STRIPE_PUBLIC_KEY`         | No       | -                        | Stripe publishable key                |
+| `STRIPE_SECRET_KEY`         | No       | -                        | Stripe secret key                     |
+| `STRIPE_WEBHOOK_SECRET`     | No       | -                        | Webhook signing secret                |
+| `STRIPE_CURRENCY`           | No       | `usd`                    | Default currency                      |
+| **SSLCommerz**              |          |                          |                                       |
+| `SSLCOMMERZ_STORE_ID`       | No       | -                        | SSLCommerz store ID                   |
+| `SSLCOMMERZ_STORE_PASSWORD` | No       | -                        | SSLCommerz store password             |
+| `SSLCOMMERZ_API_URL`        | No       | Sandbox URL              | SSLCommerz API endpoint               |
+| **Booking**                 |          |                          |                                       |
+| `BOOKING_MAX_STAY_NIGHTS`   | No       | `11`                     | Maximum stay duration                 |
 
 ### Frontend (`sylcchi-client/.env.local`)
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `NEXT_PUBLIC_API_URL` | Yes | - | Backend API base URL |
+| Variable              | Required | Default | Description          |
+| --------------------- | -------- | ------- | -------------------- |
+| `NEXT_PUBLIC_API_URL` | Yes      | -       | Backend API base URL |
 
 ---
 
@@ -395,25 +395,25 @@ This forwards Stripe events to your local API endpoint.
 
 **Base URL:** `http://localhost:5000/api/v1`
 
-| Route Group | Endpoints | Description |
-|-------------|-----------|-------------|
-| `/auth` | `sign-up`, `sign-in`, `sign-out`, `session`, `verify-otp`, `forgot-password`, `reset-password` | Authentication and account management |
-| `/rooms` | CRUD, `/types`, `/:roomId/images`, `/:roomId/reviews`, `/:roomId/booked-dates` | Room catalog, images, reviews, availability |
-| `/bookings` | `create`, `pay`, `verify-payment`, `cancel`, `refund/complete`, `/my`, `/all` | Reservation lifecycle and payment |
-| `/checkin` | `lookup`, `upload-documents`, `verify-otp`, `complete`, `checkout`, `status` | Guest check-in/check-out process |
-| `/users` | `profile`, CRUD (admin) | User profile and admin management |
-| `/wishlist` | GET, POST, DELETE | Wishlist operations |
-| `/statistics` | Dashboard stats | Analytics and revenue metrics |
+| Route Group   | Endpoints                                                                                      | Description                                 |
+| ------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `/auth`       | `sign-up`, `sign-in`, `sign-out`, `session`, `verify-otp`, `forgot-password`, `reset-password` | Authentication and account management       |
+| `/rooms`      | CRUD, `/types`, `/:roomId/images`, `/:roomId/reviews`, `/:roomId/booked-dates`                 | Room catalog, images, reviews, availability |
+| `/bookings`   | `create`, `pay`, `verify-payment`, `cancel`, `refund/complete`, `/my`, `/all`                  | Reservation lifecycle and payment           |
+| `/checkin`    | `lookup`, `upload-documents`, `verify-otp`, `complete`, `checkout`, `status`                   | Guest check-in/check-out process            |
+| `/users`      | `profile`, CRUD (admin)                                                                        | User profile and admin management           |
+| `/wishlist`   | GET, POST, DELETE                                                                              | Wishlist operations                         |
+| `/statistics` | Dashboard stats                                                                                | Analytics and revenue metrics               |
 
 **Webhooks:** `http://localhost:5000/api/webhooks`
 
-| Endpoint | Provider |
-|----------|----------|
-| `/stripe` | Stripe checkout events |
+| Endpoint              | Provider                    |
+| --------------------- | --------------------------- |
+| `/stripe`             | Stripe checkout events      |
 | `/sslcommerz/success` | SSLCommerz success callback |
-| `/sslcommerz/fail` | SSLCommerz failure callback |
-| `/sslcommerz/cancel` | SSLCommerz cancellation |
-| `/sslcommerz/ipn` | SSLCommerz IPN notification |
+| `/sslcommerz/fail`    | SSLCommerz failure callback |
+| `/sslcommerz/cancel`  | SSLCommerz cancellation     |
+| `/sslcommerz/ipn`     | SSLCommerz IPN notification |
 
 ---
 
@@ -421,23 +421,23 @@ This forwards Stripe events to your local API endpoint.
 
 ### Backend
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start API server in watch mode |
-| `npm run build` | Generate Prisma client |
-| `npm run prisma:validate` | Validate Prisma schema |
-| `npm run prisma:generate` | Regenerate Prisma client |
-| `npm run prisma:migrate:dev` | Run database migrations |
-| `npm run stripe:webhook` | Forward Stripe events locally |
+| Command                      | Description                    |
+| ---------------------------- | ------------------------------ |
+| `npm run dev`                | Start API server in watch mode |
+| `npm run build`              | Generate Prisma client         |
+| `npm run prisma:validate`    | Validate Prisma schema         |
+| `npm run prisma:generate`    | Regenerate Prisma client       |
+| `npm run prisma:migrate:dev` | Run database migrations        |
+| `npm run stripe:webhook`     | Forward Stripe events locally  |
 
 ### Frontend
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Next.js dev server |
-| `npm run build` | Production build |
-| `npm run start` | Serve production build |
-| `npm run lint` | Run ESLint checks |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start Next.js dev server |
+| `npm run build` | Production build         |
+| `npm run start` | Serve production build   |
+| `npm run lint`  | Run ESLint checks        |
 
 ---
 
@@ -455,14 +455,14 @@ Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) befo
 
 ## Quick Links
 
-| Resource | Link |
-|----------|------|
-| Contributing Guidelines | [CONTRIBUTING.md](./CONTRIBUTING.md) |
-| Security Policy | [SECURITY.md](./SECURITY.md) |
-| Code of Conduct | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) |
-| License | [LICENSE](./LICENSE) |
-| Backend Docs | [sylcchi-backend/README.md](./sylcchi-backend/README.md) |
-| Frontend Docs | [sylcchi-client/README.md](./sylcchi-client/README.md) |
+| Resource                | Link                                                     |
+| ----------------------- | -------------------------------------------------------- |
+| Contributing Guidelines | [CONTRIBUTING.md](./CONTRIBUTING.md)                     |
+| Security Policy         | [SECURITY.md](./SECURITY.md)                             |
+| Code of Conduct         | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)               |
+| License                 | [LICENSE](./LICENSE)                                     |
+| Backend Docs            | [sylcchi-backend/README.md](./sylcchi-backend/README.md) |
+| Frontend Docs           | [sylcchi-client/README.md](./sylcchi-client/README.md)   |
 
 ---
 

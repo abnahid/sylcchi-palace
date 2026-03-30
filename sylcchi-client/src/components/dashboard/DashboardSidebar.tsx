@@ -252,7 +252,7 @@ export default function DashboardSidebar({
           mobileOpen ? "translate-x-0 w-64" : "-translate-x-full w-64",
           // Desktop: always visible
           "md:relative md:translate-x-0",
-          collapsed ? "md:w-[72px]" : "md:w-64",
+          collapsed ? "md:w-18" : "md:w-64",
         )}
       >
         {sidebarContent}

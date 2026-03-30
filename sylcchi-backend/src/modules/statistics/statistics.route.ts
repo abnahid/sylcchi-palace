@@ -4,6 +4,6 @@ import { StatisticsController } from "./statistics.controller";
 
 export const statisticsRouter = Router();
 
-// Admin-only routes
-statisticsRouter.get("/dashboard", ...routeAccess.admin, StatisticsController.getDashboardStats);
-statisticsRouter.get("/revenue", ...routeAccess.admin, StatisticsController.getRevenueAnalytics);
+// Admin and Manager routes
+statisticsRouter.get("/dashboard", ...routeAccess.adminOrManager, StatisticsController.getDashboardStats);
+statisticsRouter.get("/revenue", ...routeAccess.adminOrManager, StatisticsController.getRevenueAnalytics);

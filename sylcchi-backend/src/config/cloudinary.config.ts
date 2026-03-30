@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
 import { envVars } from "./env";
 
 const cloudName = envVars.CLOUDINARY_CLOUD_NAME;
@@ -66,6 +67,59 @@ export const uploadBufferToCloudinary = async (
     );
 
     uploadStream.end(buffer);
+  });
+};
+
+type ProfileImageUploadOptions = {
+  userId: string;
+  filename?: string;
+};
+
+export const uploadProfileImage = async (
+  buffer: Buffer,
+  options: ProfileImageUploadOptions,
+): Promise<UploadedCloudinaryFile> => {
+  if (!cloudName || !apiKey || !apiSecret) {
+    throw new Error(
+      "Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.",
+    );
+  }
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "image",
+        folder: `users/profile/${options.userId}`,
+        use_filename: Boolean(options.filename),
+        unique_filename: true,
+        ...(options.filename ? { filename_override: options.filename } : {}),
+        transformation: [
+          {
+            width: 300,
+            height: 300,
+            crop: "fill",
+            gravity: "face",
+          },
+          {
+            fetch_format: "auto",
+            quality: "auto",
+          },
+        ],
+      },
+      (error, result) => {
+        if (error || !result?.secure_url || !result.public_id) {
+          reject(error ?? new Error("Profile image upload failed"));
+          return;
+        }
+
+        resolve({
+          secureUrl: result.secure_url,
+          publicId: result.public_id,
+        });
+      },
+    );
+
+    streamifier.createReadStream(buffer).pipe(uploadStream);
   });
 };
 

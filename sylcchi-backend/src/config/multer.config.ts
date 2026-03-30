@@ -103,3 +103,16 @@ export const checkinDocumentUpload = createUpload({
   allowedMimeTypes: CHECKIN_DOCUMENT_MIME_TYPES,
   label: "PDF or image",
 });
+
+const PROFILE_IMAGE_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
+
+export const profileImageUpload = createUpload({
+  maxFiles: 1,
+  maxFileSizeMb: 1,
+  allowedMimeTypes: PROFILE_IMAGE_MIME_TYPES,
+  label: "image (JPEG, PNG, or WebP)",
+});
