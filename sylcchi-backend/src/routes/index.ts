@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authRouter } from "../modules/auth/auth.route";
+import { chatbotRouter } from "../modules/chatbot/chatbot.route";
 import { checkinRouter } from "../modules/checkin/checkin.route";
 import { paymentRouter } from "../modules/payment/payment.route";
 import { reservationRouter } from "../modules/reservation/reservation.route";
@@ -14,6 +15,7 @@ import { wishlistRouter } from "../modules/wishlist/wishlist.route";
 export const appRouter = Router();
 
 appRouter.use("/api/v1/auth", authRouter);
+appRouter.use("/api/v1/chatbot", chatbotRouter);
 appRouter.use("/api/v1/bookings", reservationRouter);
 appRouter.use("/api/v1/checkin", checkinRouter);
 appRouter.use("/api/v1/payments", paymentRouter);

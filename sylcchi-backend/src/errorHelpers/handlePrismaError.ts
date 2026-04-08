@@ -163,7 +163,8 @@ export function handlePrismaError(err: PrismaError): AppError {
 export function isPrismaError(err: unknown): err is PrismaError {
   return (
     err instanceof Error &&
-    ((err as PrismaError).code?.startsWith("P") ||
+    ((typeof (err as PrismaError).code === "string" &&
+      (err as PrismaError).code.startsWith("P")) ||
       err.name === "PrismaClientKnownRequestError" ||
       err.name === "PrismaClientValidationError" ||
       err.name === "PrismaClientRustPanicError")

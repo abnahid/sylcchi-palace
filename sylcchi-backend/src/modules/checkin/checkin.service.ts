@@ -485,6 +485,7 @@ export const CheckinService = {
         id: true,
         bookingCode: true,
         bookingStatus: true,
+        checkInDate: true,
         guestDetails: true,
         user: {
           select: {
@@ -500,6 +501,15 @@ export const CheckinService = {
 
     if (booking.bookingStatus === BookingStatus.CANCELLED) {
       throw new AppError("Booking is cancelled", status.BAD_REQUEST);
+    }
+
+    // Check the 48-hour check-in window early so guests don't waste time on OTP
+    const windowStart = addHours(booking.checkInDate, -48);
+    if (new Date() < windowStart) {
+      throw new AppError(
+        "Online check-in will open 48 hours before check-in",
+        status.BAD_REQUEST,
+      );
     }
 
     const primaryGuest = getPrimaryGuest(booking.guestDetails);

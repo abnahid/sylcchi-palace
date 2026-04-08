@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import ChatbotWidget from "./ChatbotWidget";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
@@ -17,6 +18,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Navbar />
       {children}
       <Footer />
+      <ChatbotWidget />
     </>
   );
 }
