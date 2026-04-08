@@ -15,6 +15,12 @@ const quickLinks = [
   { label: "News", href: "/news" },
 ];
 
+const supportLinks = [
+  { label: "Help / Support", href: "/support" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms & Conditions", href: "/terms" },
+];
+
 const socialLinks = [
   { label: "Facebook", href: "#", icon: FaFacebookF },
   { label: "Instagram", href: "#", icon: FaInstagram },
@@ -126,6 +132,18 @@ export default function Footer() {
           <p className="text-sm text-slate-700 font-open-sans">
             © {new Date().getFullYear()} Sylcchi Palace. All rights reserved.
           </p>
+          <ul className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 lg:mt-0">
+            {supportLinks.map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className="font-open-sans text-sm text-slate-600 transition-colors hover:text-[#245b8d]"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
           <p className="text-sm text-slate-500 mt-2">
             Designed and developed by
             <Link

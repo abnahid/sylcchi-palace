@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import ChatbotWidget from "./ChatbotWidget";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import SmoothScrollProvider from "./SmoothScrollProvider";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <SmoothScrollProvider />
       <Navbar />
       {children}
       <Footer />

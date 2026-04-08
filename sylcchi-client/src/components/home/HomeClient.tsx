@@ -2,6 +2,7 @@
 
 import Accommodation from "@/components/home/Accommodation";
 import ContactSection from "@/components/home/ContactSection";
+import FaqSection from "@/components/home/FaqSection";
 import HeroSection from "@/components/home/HeroSection";
 import HostelRooms from "@/components/home/hostelRooms";
 import Newspage from "@/components/home/Newspage";
@@ -21,6 +22,7 @@ export function HomeClient() {
       <Accommodation />
       <PhotoRooms />
       <Newspage />
+      <FaqSection />
       <ContactSection />
     </main>
   );
