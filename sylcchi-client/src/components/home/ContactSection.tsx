@@ -35,10 +35,10 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 overflow-hidden lg:grid-cols-2">
           {/* Left side - Contact info */}
           <div className=" p-8 sm:p-10 lg:p-12">
-            <h2 className="mb-3 font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
+            <h2 className="mb-3 font-mulish text-2xl font-extrabold text-[#101b25] dark:text-[#e8edf2] sm:text-3xl lg:text-4xl">
               Contact Sylcchi Palace
             </h2>
-            <p className="mb-8 max-w-md font-open-sans text-sm leading-relaxed text-gray-500 sm:text-base">
+            <p className="mb-8 max-w-md font-open-sans text-sm leading-relaxed text-gray-500 dark:text-[#7d8a96] sm:text-base">
               Our team is ready to help with reservations, group bookings, and
               personalized stay requests in Sylhet.
             </p>
@@ -50,13 +50,13 @@ export default function ContactSection() {
                     <item.icon className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <h3 className="mb-1 font-mulish text-sm font-bold text-[#101b25] sm:text-base">
+                    <h3 className="mb-1 font-mulish text-sm font-bold text-[#101b25] dark:text-[#e8edf2] sm:text-base">
                       {item.title}
                     </h3>
                     {item.lines.map((line, i) => (
                       <p
                         key={i}
-                        className="font-open-sans text-xs text-gray-500 sm:text-sm"
+                        className="font-open-sans text-xs text-gray-500 dark:text-[#7d8a96] sm:text-sm"
                       >
                         {line}
                       </p>

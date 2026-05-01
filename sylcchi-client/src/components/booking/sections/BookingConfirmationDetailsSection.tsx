@@ -27,16 +27,16 @@ function PriceRow({
 }) {
   return (
     <div
-      className={`flex items-center justify-between font-open-sans text-sm text-[#5f6c79] ${bold ? "mt-3 border-t border-[#e1e8ef] pt-3" : "mt-2"}`}
+      className={`flex items-center justify-between font-open-sans text-sm text-[#5f6c79] dark:text-[#9aa5b0] ${bold ? "mt-3 border-t border-[#e1e8ef] dark:border-[#243443] pt-3" : "mt-2"}`}
     >
-      <span className={bold ? "font-mulish text-base font-extrabold text-[#101b25]" : ""}>
+      <span className={bold ? "font-mulish text-base font-extrabold text-[#101b25] dark:text-white" : ""}>
         {label}
       </span>
       <span
         className={
           bold
             ? "font-mulish text-2xl font-extrabold text-primary"
-            : valueClass ?? "text-[#101b25]"
+            : valueClass ?? "text-[#101b25] dark:text-white"
         }
       >
         {value}
@@ -58,63 +58,63 @@ export default function BookingConfirmationDetailsSection({
   const refundAmount = booking.payment?.refundAmount;
 
   return (
-    <section className="rounded-2xl border border-[#dbe5ef] bg-white p-6 sm:p-8">
-      <h2 className="font-mulish text-xl font-extrabold text-[#101b25]">
+    <section className="rounded-2xl border border-[#dbe5ef] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-6 sm:p-8">
+      <h2 className="font-mulish text-xl font-extrabold text-[#101b25] dark:text-white">
         Booking details
       </h2>
 
       {/* Stay info grid */}
       <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-[#dbe5ef] bg-[#f7fafd] px-4 py-3">
-          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1]">
+        <div className="rounded-lg border border-[#dbe5ef] dark:border-[#243443] bg-[#f7fafd] dark:bg-[#0a1622] px-4 py-3">
+          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1] dark:text-[#7d8a96]">
             Room
           </p>
-          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25]">
+          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             {booking.room?.name ?? "Selected room"}
           </p>
         </div>
 
-        <div className="rounded-lg border border-[#dbe5ef] bg-[#f7fafd] px-4 py-3">
-          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1]">
+        <div className="rounded-lg border border-[#dbe5ef] dark:border-[#243443] bg-[#f7fafd] dark:bg-[#0a1622] px-4 py-3">
+          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1] dark:text-[#7d8a96]">
             Guests
           </p>
-          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25]">
+          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             {booking.guests} guest{booking.guests > 1 ? "s" : ""}
           </p>
         </div>
 
-        <div className="rounded-lg border border-[#dbe5ef] bg-[#f7fafd] px-4 py-3">
-          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1]">
+        <div className="rounded-lg border border-[#dbe5ef] dark:border-[#243443] bg-[#f7fafd] dark:bg-[#0a1622] px-4 py-3">
+          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1] dark:text-[#7d8a96]">
             Check-in
           </p>
-          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25]">
+          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             {formatDate(booking.checkInDate)}
           </p>
         </div>
 
-        <div className="rounded-lg border border-[#dbe5ef] bg-[#f7fafd] px-4 py-3">
-          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1]">
+        <div className="rounded-lg border border-[#dbe5ef] dark:border-[#243443] bg-[#f7fafd] dark:bg-[#0a1622] px-4 py-3">
+          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1] dark:text-[#7d8a96]">
             Check-out
           </p>
-          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25]">
+          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             {formatDate(booking.checkOutDate)}
           </p>
         </div>
 
-        <div className="rounded-lg border border-[#dbe5ef] bg-[#f7fafd] px-4 py-3">
-          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1]">
+        <div className="rounded-lg border border-[#dbe5ef] dark:border-[#243443] bg-[#f7fafd] dark:bg-[#0a1622] px-4 py-3">
+          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1] dark:text-[#7d8a96]">
             Duration
           </p>
-          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25]">
+          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             {booking.nights} night{booking.nights > 1 ? "s" : ""}
           </p>
         </div>
 
-        <div className="rounded-lg border border-[#dbe5ef] bg-[#f7fafd] px-4 py-3">
-          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1]">
+        <div className="rounded-lg border border-[#dbe5ef] dark:border-[#243443] bg-[#f7fafd] dark:bg-[#0a1622] px-4 py-3">
+          <p className="font-open-sans text-xs uppercase tracking-wide text-[#8593a1] dark:text-[#7d8a96]">
             Payment method
           </p>
-          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25]">
+          <p className="mt-1 font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             {booking.paymentMethod === "STRIPE"
               ? "Card (Stripe)"
               : booking.paymentMethod === "SSLCOMMERZ"
@@ -125,8 +125,8 @@ export default function BookingConfirmationDetailsSection({
       </div>
 
       {/* Price breakdown */}
-      <div className="mt-5 border-t border-[#e1e8ef] pt-4">
-        <h3 className="mb-2 font-mulish text-sm font-extrabold text-[#101b25]">
+      <div className="mt-5 border-t border-[#e1e8ef] dark:border-[#243443] pt-4">
+        <h3 className="mb-2 font-mulish text-sm font-extrabold text-[#101b25] dark:text-white">
           Price breakdown
         </h3>
 
@@ -140,14 +140,14 @@ export default function BookingConfirmationDetailsSection({
           <PriceRow
             label={`Deposit (${depositPercent}%)`}
             value={`$${Number(booking.depositAmount).toFixed(2)}`}
-            valueClass="text-blue-700"
+            valueClass="text-blue-700 dark:text-blue-300"
           />
         )}
 
         <PriceRow
           label={`Paid (${paidPercent}%)`}
           value={`$${Number(booking.paidAmount).toFixed(2)}`}
-          valueClass="font-bold text-emerald-700"
+          valueClass="font-bold text-emerald-700 dark:text-emerald-400"
         />
 
         {booking.remainingAmount > 0 &&
@@ -155,20 +155,20 @@ export default function BookingConfirmationDetailsSection({
             <PriceRow
               label="Remaining due"
               value={`$${Number(booking.remainingAmount).toFixed(2)}`}
-              valueClass="font-bold text-amber-700"
+              valueClass="font-bold text-amber-700 dark:text-amber-300"
             />
           )}
 
         {/* Refund info */}
         {refundStatus && refundStatus !== "NONE" && (
-          <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
-            <p className="font-open-sans text-xs uppercase tracking-wide text-blue-500">
+          <div className="mt-3 rounded-lg border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 px-4 py-3">
+            <p className="font-open-sans text-xs uppercase tracking-wide text-blue-500 dark:text-blue-400">
               Refund status
             </p>
-            <p className="mt-1 font-mulish text-sm font-bold text-blue-700">
+            <p className="mt-1 font-mulish text-sm font-bold text-blue-700 dark:text-blue-300">
               {refundStatus === "COMPLETED" ? "Refund completed" : "Refund pending"}
               {refundAmount != null && refundAmount > 0 && (
-                <span className="ml-1 font-open-sans font-normal text-blue-600">
+                <span className="ml-1 font-open-sans font-normal text-blue-600 dark:text-blue-400">
                   — ${Number(refundAmount).toFixed(2)}
                 </span>
               )}

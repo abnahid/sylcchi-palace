@@ -124,11 +124,11 @@ function RoomsListContent() {
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
-        <p className="font-mulish text-base font-bold text-red-800">
+      <div className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-6 text-center">
+        <p className="font-mulish text-base font-bold text-red-800 dark:text-red-300">
           Failed to load rooms
         </p>
-        <p className="mt-1 font-open-sans text-sm text-red-600">
+        <p className="mt-1 font-open-sans text-sm text-red-600 dark:text-red-400">
           {error.message}
         </p>
       </div>
@@ -140,11 +140,11 @@ function RoomsListContent() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-mulish text-3xl font-extrabold text-[#101b25]">
+          <h2 className="font-mulish text-3xl font-extrabold text-[#101b25] dark:text-white">
             Available Rooms
           </h2>
           {meta && !isLoading && (
-            <p className="mt-1 font-open-sans text-sm text-[#5b6774]">
+            <p className="mt-1 font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
               {meta.total} room{meta.total !== 1 ? "s" : ""} found
               {activeFilterCount > 0 && (
                 <button
@@ -162,7 +162,7 @@ function RoomsListContent() {
         {/* Inline search + filter button */}
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#808385]" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#808385] dark:text-[#7d8a96]" />
             <input
               type="text"
               value={filters.search ?? ""}
@@ -181,7 +181,7 @@ function RoomsListContent() {
                 }
               }}
               placeholder="Search rooms..."
-              className="w-48 rounded-md border border-[#d7dfe8] py-2.5 pl-9 pr-3 text-sm outline-none focus:border-primary sm:w-56"
+              className="w-48 rounded-md border border-[#d7dfe8] dark:border-[#243443] dark:bg-[#101e2e] dark:text-[#e8edf2] py-2.5 pl-9 pr-3 text-sm outline-none focus:border-primary sm:w-56"
             />
           </div>
 
@@ -216,7 +216,7 @@ function RoomsListContent() {
                 {/* Dates */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="mb-1 block font-open-sans text-sm text-[#5b6774]">
+                    <label className="mb-1 block font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                       Check-in
                     </label>
                     <input
@@ -229,11 +229,11 @@ function RoomsListContent() {
                           checkInDate: e.target.value,
                         }))
                       }
-                      className="w-full rounded-md border border-[#d7dfe8] px-3 py-2 text-sm outline-none focus:border-primary"
+                      className="w-full rounded-md border border-[#d7dfe8] dark:border-[#243443] dark:bg-[#101e2e] dark:text-[#e8edf2] px-3 py-2 text-sm outline-none focus:border-primary"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block font-open-sans text-sm text-[#5b6774]">
+                    <label className="mb-1 block font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                       Check-out
                     </label>
                     <input
@@ -246,14 +246,14 @@ function RoomsListContent() {
                           checkOutDate: e.target.value,
                         }))
                       }
-                      className="w-full rounded-md border border-[#d7dfe8] px-3 py-2 text-sm outline-none focus:border-primary"
+                      className="w-full rounded-md border border-[#d7dfe8] dark:border-[#243443] dark:bg-[#101e2e] dark:text-[#e8edf2] px-3 py-2 text-sm outline-none focus:border-primary"
                     />
                   </div>
                 </div>
 
                 {/* Guests */}
                 <div>
-                  <label className="mb-1 block font-open-sans text-sm text-[#5b6774]">
+                  <label className="mb-1 block font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                     Guests
                   </label>
                   <select
@@ -264,7 +264,7 @@ function RoomsListContent() {
                         guests: Number(e.target.value) || undefined,
                       }))
                     }
-                    className="w-full rounded-md border border-[#d7dfe8] bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+                    className="w-full rounded-md border border-[#d7dfe8] dark:border-[#243443] bg-white dark:bg-[#101e2e] dark:text-[#e8edf2] px-3 py-2 text-sm outline-none focus:border-primary"
                   >
                     <option value="">Any</option>
                     <option value="1">1 guest</option>
@@ -278,7 +278,7 @@ function RoomsListContent() {
                 {/* Room type */}
                 {roomTypes.length > 0 && (
                   <div>
-                    <label className="mb-1 block font-open-sans text-sm text-[#5b6774]">
+                    <label className="mb-1 block font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                       Room type
                     </label>
                     <select
@@ -289,7 +289,7 @@ function RoomsListContent() {
                           roomTypeId: e.target.value || undefined,
                         }))
                       }
-                      className="w-full rounded-md border border-[#d7dfe8] bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+                      className="w-full rounded-md border border-[#d7dfe8] dark:border-[#243443] bg-white dark:bg-[#101e2e] dark:text-[#e8edf2] px-3 py-2 text-sm outline-none focus:border-primary"
                     >
                       <option value="">All types</option>
                       {roomTypes.map((t) => (
@@ -303,7 +303,7 @@ function RoomsListContent() {
 
                 {/* Price sort */}
                 <div>
-                  <label className="mb-1 block font-open-sans text-sm text-[#5b6774]">
+                  <label className="mb-1 block font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                     Price sort
                   </label>
                   <select
@@ -315,7 +315,7 @@ function RoomsListContent() {
                           (e.target.value as "asc" | "desc") || undefined,
                       }))
                     }
-                    className="w-full rounded-md border border-[#d7dfe8] bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+                    className="w-full rounded-md border border-[#d7dfe8] dark:border-[#243443] bg-white dark:bg-[#101e2e] dark:text-[#e8edf2] px-3 py-2 text-sm outline-none focus:border-primary"
                   >
                     <option value="">Default</option>
                     <option value="asc">Low to High</option>
@@ -328,7 +328,7 @@ function RoomsListContent() {
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="rounded-md border border-[#d7dfe8] px-4 py-2 text-sm font-semibold text-[#5b6774] transition-colors hover:bg-[#f3f7fb]"
+                    className="rounded-md border border-[#d7dfe8] dark:border-[#243443] px-4 py-2 text-sm font-semibold text-[#5b6774] dark:text-[#9aa5b0] transition-colors hover:bg-[#f3f7fb] dark:hover:bg-[#1a2b3d]"
                   >
                     Reset
                   </button>
@@ -351,7 +351,7 @@ function RoomsListContent() {
         <ul className="space-y-7">
           {Array.from({ length: 4 }).map((_, i) => (
             <li key={i}>
-              <div className="overflow-hidden rounded-md bg-white shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)]">
+              <div className="overflow-hidden rounded-md bg-white dark:bg-[#101e2e] shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)]">
                 <div className="flex flex-col md:flex-row">
                   <Skeleton className="h-52 w-full md:w-72 lg:w-80" />
                   <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
@@ -376,11 +376,11 @@ function RoomsListContent() {
           ))}
         </ul>
       ) : rooms.length === 0 ? (
-        <div className="rounded-md border border-dashed border-[#d7dfe8] px-4 py-16 text-center">
-          <p className="font-mulish text-base font-bold text-[#101b25]">
+        <div className="rounded-md border border-dashed border-[#d7dfe8] dark:border-[#243443] px-4 py-16 text-center">
+          <p className="font-mulish text-base font-bold text-[#101b25] dark:text-white">
             No rooms match your filters
           </p>
-          <p className="mt-1 font-open-sans text-sm text-[#5b6774]">
+          <p className="mt-1 font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
             Try adjusting your dates, guest count, or search term.
           </p>
           <button
@@ -395,7 +395,7 @@ function RoomsListContent() {
         <>
           {/* Fetching indicator */}
           {isFetching && !isLoading && (
-            <div className="flex items-center gap-2 text-sm text-[#808385]">
+            <div className="flex items-center gap-2 text-sm text-[#808385] dark:text-[#7d8a96]">
               <Loader2 className="h-4 w-4 animate-spin" /> Updating...
             </div>
           )}
@@ -416,7 +416,7 @@ function RoomsListContent() {
                 type="button"
                 onClick={() => goToPage(meta.page - 1)}
                 disabled={meta.page <= 1}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[#d7dfe8] text-[#5b6774] transition-colors hover:bg-[#f3f7fb] disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[#d7dfe8] dark:border-[#243443] text-[#5b6774] dark:text-[#9aa5b0] transition-colors hover:bg-[#f3f7fb] dark:hover:bg-[#1a2b3d] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -430,7 +430,7 @@ function RoomsListContent() {
                     className={`inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-bold transition-colors ${
                       page === meta.page
                         ? "bg-primary text-white"
-                        : "border border-[#d7dfe8] text-[#5b6774] hover:bg-[#f3f7fb]"
+                        : "border border-[#d7dfe8] dark:border-[#243443] text-[#5b6774] dark:text-[#9aa5b0] hover:bg-[#f3f7fb] dark:hover:bg-[#1a2b3d]"
                     }`}
                   >
                     {page}
@@ -442,7 +442,7 @@ function RoomsListContent() {
                 type="button"
                 onClick={() => goToPage(meta.page + 1)}
                 disabled={meta.page >= meta.totalPages}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[#d7dfe8] text-[#5b6774] transition-colors hover:bg-[#f3f7fb] disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[#d7dfe8] dark:border-[#243443] text-[#5b6774] dark:text-[#9aa5b0] transition-colors hover:bg-[#f3f7fb] dark:hover:bg-[#1a2b3d] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

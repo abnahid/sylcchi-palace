@@ -2,6 +2,7 @@
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { useSession, useSignIn, useSocialSignIn } from "@/hooks/useAuth";
+import { api, toApiError } from "@/lib/api";
 import { loginSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -59,6 +60,7 @@ export default function LoginClient() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
     clearErrors,
   } = useForm<LoginFormValues>({
@@ -68,6 +70,41 @@ export default function LoginClient() {
       password: "",
     },
   });
+
+  type DemoAccount = { role: string; email: string; password: string };
+  const [demoAccounts, setDemoAccounts] = useState<DemoAccount[] | null>(null);
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDemoLoading(true);
+    api
+      .get<{ data: { accounts: DemoAccount[] } }>("/auth/demo-credentials")
+      .then((res) => {
+        if (!cancelled) setDemoAccounts(res.data?.data?.accounts ?? []);
+      })
+      .catch((err) => {
+        // 404 = demo mode off; just hide the panel silently.
+        const message = toApiError(err).message;
+        if (!cancelled && !/disabled|not found/i.test(message)) {
+          setDemoError(message);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setDemoLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const fillDemo = (account: DemoAccount) => {
+    setGeneralError(null);
+    clearErrors();
+    setValue("email", account.email, { shouldValidate: true });
+    setValue("password", account.password, { shouldValidate: true });
+  };
 
   const handleGoogleSignIn = async () => {
     setGeneralError(null);
@@ -107,7 +144,7 @@ export default function LoginClient() {
           Don&apos;t have an account?{" "}
           <Link
             href="/register"
-            className="font-semibold text-[#235784] hover:underline"
+            className="font-semibold text-[#235784] hover:underline dark:text-[#7fb3df]"
           >
             Create one free
           </Link>
@@ -118,8 +155,44 @@ export default function LoginClient() {
       quoteAuthor="Sylcchi Palace"
     >
       {generalError && (
-        <div className="mb-4 flex items-center gap-2 rounded-[8px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600">
+        <div className="mb-4 flex items-center gap-2 rounded-[8px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400">
           <AlertCircle size={15} /> {generalError}
+        </div>
+      )}
+
+      {demoAccounts && demoAccounts.length > 0 && (
+        <div className="mb-5 rounded-[10px] border border-amber-200 bg-amber-50/60 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold tracking-wide text-white uppercase">
+              Demo
+            </span>
+            <p className="text-[13px] font-bold text-[#040b11] dark:text-white">
+              Try the dashboard with a demo account
+            </p>
+          </div>
+          <p className="mb-3 text-[12px] text-[#5b6770] dark:text-[#9aa5b0]">
+            Click a role to autofill the form, then press Sign In.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {demoAccounts.map((acc) => (
+              <button
+                key={acc.role}
+                type="button"
+                onClick={() => fillDemo(acc)}
+                className="rounded-full border border-amber-300 bg-white px-3.5 py-1.5 text-[12px] font-semibold text-[#235784] transition hover:border-[#235784] hover:bg-[#235784] hover:text-white dark:border-amber-500/40 dark:bg-[#1a2632] dark:text-[#7fb3df] dark:hover:border-[#7fb3df] dark:hover:bg-[#235784] dark:hover:text-white"
+              >
+                Use {acc.role} demo
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {demoLoading && !demoAccounts && (
+        <div className="mb-5 h-[88px] animate-pulse rounded-[10px] bg-gray-100 dark:bg-[#1a2632]" />
+      )}
+      {demoError && (
+        <div className="mb-4 rounded-[8px] border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+          {demoError}
         </div>
       )}
 
@@ -127,14 +200,14 @@ export default function LoginClient() {
         <div>
           <label
             htmlFor="login-email"
-            className="mb-1.5 block text-[14px] font-bold text-[#040b11]"
+            className="mb-1.5 block text-[14px] font-bold text-[#040b11] dark:text-white"
           >
             Email address
           </label>
           <div className="relative">
             <Mail
               size={16}
-              className="absolute top-1/2 left-3.5 -translate-y-1/2 text-[#808385]"
+              className="absolute top-1/2 left-3.5 -translate-y-1/2 text-[#808385] dark:text-[#6b7785]"
             />
             <input
               id="login-email"
@@ -147,10 +220,10 @@ export default function LoginClient() {
                   setGeneralError(null);
                 },
               })}
-              className={`w-full rounded-[8px] border-2 py-3 pr-4 pl-10 text-[15px] text-[#2c3c4a] outline-none transition-colors ${
+              className={`w-full rounded-[8px] border-2 py-3 pr-4 pl-10 text-[15px] text-[#2c3c4a] outline-none transition-colors dark:bg-[#0e1820] dark:text-white dark:placeholder:text-[#5a6775] ${
                 errors.email
-                  ? "border-red-400 bg-red-50/30"
-                  : "border-[#e0e0e0] focus:border-[#235784]"
+                  ? "border-red-400 bg-red-50/30 dark:border-red-500/50 dark:bg-red-500/10"
+                  : "border-[#e0e0e0] focus:border-[#235784] dark:border-[#243443] dark:focus:border-[#7fb3df]"
               }`}
             />
           </div>
@@ -161,13 +234,13 @@ export default function LoginClient() {
           <div className="mb-1.5 flex items-center justify-between">
             <label
               htmlFor="login-password"
-              className="text-[14px] font-bold text-[#040b11]"
+              className="text-[14px] font-bold text-[#040b11] dark:text-white"
             >
               Password
             </label>
             <Link
               href="/forgot-password"
-              className="text-[13px] font-semibold text-[#235784] hover:underline"
+              className="text-[13px] font-semibold text-[#235784] hover:underline dark:text-[#7fb3df]"
             >
               Forgot password?
             </Link>
@@ -175,7 +248,7 @@ export default function LoginClient() {
           <div className="relative">
             <Lock
               size={16}
-              className="absolute top-1/2 left-3.5 -translate-y-1/2 text-[#808385]"
+              className="absolute top-1/2 left-3.5 -translate-y-1/2 text-[#808385] dark:text-[#6b7785]"
             />
             <input
               id="login-password"
@@ -188,16 +261,16 @@ export default function LoginClient() {
                   setGeneralError(null);
                 },
               })}
-              className={`w-full rounded-[8px] border-2 py-3 pr-11 pl-10 text-[15px] text-[#2c3c4a] outline-none transition-colors ${
+              className={`w-full rounded-[8px] border-2 py-3 pr-11 pl-10 text-[15px] text-[#2c3c4a] outline-none transition-colors dark:bg-[#0e1820] dark:text-white dark:placeholder:text-[#5a6775] ${
                 errors.password
-                  ? "border-red-400 bg-red-50/30"
-                  : "border-[#e0e0e0] focus:border-[#235784]"
+                  ? "border-red-400 bg-red-50/30 dark:border-red-500/50 dark:bg-red-500/10"
+                  : "border-[#e0e0e0] focus:border-[#235784] dark:border-[#243443] dark:focus:border-[#7fb3df]"
               }`}
             />
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
-              className="absolute top-1/2 right-3.5 -translate-y-1/2 text-[#808385] transition-colors hover:text-[#235784]"
+              className="absolute top-1/2 right-3.5 -translate-y-1/2 text-[#808385] transition-colors hover:text-[#235784] dark:text-[#6b7785] dark:hover:text-[#7fb3df]"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -216,8 +289,8 @@ export default function LoginClient() {
           <span
             className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border-2 transition-all ${
               remember
-                ? "border-[#235784] bg-[#235784]"
-                : "border-[#c0cdd6] bg-white"
+                ? "border-[#235784] bg-[#235784] dark:border-[#7fb3df] dark:bg-[#235784]"
+                : "border-[#c0cdd6] bg-white dark:border-[#3a4a5a] dark:bg-[#0e1820]"
             }`}
           >
             {remember && (
@@ -238,7 +311,7 @@ export default function LoginClient() {
               </svg>
             )}
           </span>
-          <span className="text-[14px] text-[#2c3c4a]">
+          <span className="text-[14px] text-[#2c3c4a] dark:text-[#cbd2da]">
             Remember me for 30 days
           </span>
         </label>
@@ -246,7 +319,7 @@ export default function LoginClient() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-[8px] bg-[#235784] py-3.5 text-[15px] font-extrabold text-white transition-all hover:bg-[#1a4a6d] disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2 rounded-[8px] bg-[#235784] py-3.5 text-[15px] font-extrabold text-white transition-all hover:bg-[#1a4a6d] disabled:cursor-not-allowed disabled:opacity-70 dark:bg-[#3a7eb8] dark:hover:bg-[#4a8ec8]"
         >
           {isSubmitting ? (
             <>
@@ -260,16 +333,16 @@ export default function LoginClient() {
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="flex-1 border-t border-[#f0f0f0]" />
-          <span className="text-[12px] text-[#c0cdd6]">or continue with</span>
-          <div className="flex-1 border-t border-[#f0f0f0]" />
+          <div className="flex-1 border-t border-[#f0f0f0] dark:border-[#243443]" />
+          <span className="text-[12px] text-[#c0cdd6] dark:text-[#5a6775]">or continue with</span>
+          <div className="flex-1 border-t border-[#f0f0f0] dark:border-[#243443]" />
         </div>
 
         <button
           type="button"
           onClick={handleGoogleSignIn}
           disabled={socialSignInMutation.isPending}
-          className="flex w-full items-center justify-center gap-2.5 rounded-[8px] border-2 border-[#e0e0e0] py-3 text-[14px] font-semibold text-[#2c3c4a] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2.5 rounded-[8px] border-2 border-[#e0e0e0] py-3 text-[14px] font-semibold text-[#2c3c4a] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70 dark:border-[#243443] dark:text-white dark:hover:bg-[#1a2632]"
         >
           {socialSignInMutation.isPending ? (
             <Loader2 size={17} className="animate-spin" />
@@ -297,11 +370,11 @@ export default function LoginClient() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-[13px] text-[#808385]">
+      <p className="mt-6 text-center text-[13px] text-[#808385] dark:text-[#9aa5b0]">
         New to Sylcchi Palace?{" "}
         <Link
           href="/register"
-          className="font-semibold text-[#235784] hover:underline"
+          className="font-semibold text-[#235784] hover:underline dark:text-[#7fb3df]"
         >
           Create a free account
         </Link>

@@ -30,17 +30,17 @@ export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="bg-white py-12 lg:py-24">
+    <section className="bg-white dark:bg-[#101e2e] py-12 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p className="font-mulish text-primary mb-3 text-sm font-bold tracking-widest uppercase">
+            <p className="font-mulish text-primary dark:text-[#7fb3df] mb-3 text-sm font-bold tracking-widest uppercase">
               Frequently Asked Questions
             </p>
-            <h2 className="font-mulish mb-4 max-w-md text-2xl leading-tight font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
+            <h2 className="font-mulish mb-4 max-w-md text-2xl leading-tight font-extrabold text-[#101b25] dark:text-[#e8edf2] sm:text-3xl lg:text-4xl">
               Everything you need to know before your stay
             </h2>
-            <p className="font-open-sans mb-8 max-w-md text-sm leading-relaxed text-gray-500 sm:text-base">
+            <p className="font-open-sans mb-8 max-w-md text-sm leading-relaxed text-gray-500 dark:text-[#7d8a96] sm:text-base">
               From booking to check-out, here are quick answers to the
               questions our guests ask most. Need more help? Reach out to our
               24/7 concierge any time.
@@ -62,8 +62,8 @@ export default function FaqSection() {
                   key={item.q}
                   className={`overflow-hidden rounded-xl border transition-all ${
                     isOpen
-                      ? "border-primary/30 bg-[#f0f5fa] shadow-sm"
-                      : "border-gray-200 bg-white"
+                      ? "border-primary/30 bg-[#f0f5fa] dark:bg-[#0a1622] shadow-sm"
+                      : "border-gray-200 dark:border-[#243443] bg-white dark:bg-[#101e2e]"
                   }`}
                 >
                   <button
@@ -72,7 +72,7 @@ export default function FaqSection() {
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-mulish text-base font-bold text-[#101b25] sm:text-lg">
+                    <span className="font-mulish text-base font-bold text-[#101b25] dark:text-[#e8edf2] sm:text-lg">
                       {item.q}
                     </span>
                     <span
@@ -87,7 +87,7 @@ export default function FaqSection() {
                   </button>
                   {isOpen && (
                     <div className="px-5 pb-5">
-                      <p className="font-open-sans text-sm leading-relaxed text-gray-600">
+                      <p className="font-open-sans text-sm leading-relaxed text-gray-600 dark:text-[#9aa5b0]">
                         {item.a}
                       </p>
                     </div>

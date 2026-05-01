@@ -44,7 +44,7 @@ function StarRating({ rating }: { rating: number }) {
           className={`h-5 w-5 ${
             i < rating
               ? "fill-amber-400 text-amber-400"
-              : "fill-gray-200 text-gray-200"
+              : "fill-gray-200 text-gray-200 dark:fill-[#243443] dark:text-[#243443]"
           }`}
         />
       ))}
@@ -80,29 +80,29 @@ export default function Testimonial() {
 
           {/* Content */}
           <div className="w-full">
-            <h2 className="mb-8 font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
+            <h2 className="mb-8 font-mulish text-2xl font-extrabold text-[#101b25] dark:text-[#e8edf2] sm:text-3xl lg:text-4xl">
               What our guests say
             </h2>
 
-            <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
+            <div className="rounded-xl border border-gray-100 dark:border-[#1d3145] bg-white dark:bg-[#101e2e] p-6 shadow-sm sm:p-8">
               <StarRating rating={active.rating} />
 
-              <p className="mt-4 font-open-sans text-sm text-gray-500">
-                <span className="font-semibold text-gray-800">
+              <p className="mt-4 font-open-sans text-sm text-gray-500 dark:text-[#7d8a96]">
+                <span className="font-semibold text-gray-800 dark:text-[#e8edf2]">
                   Date of stay:{" "}
                 </span>
                 {active.dateOfStay}
               </p>
 
-              <h3 className="mt-3 font-mulish text-lg font-bold text-[#101b25]">
+              <h3 className="mt-3 font-mulish text-lg font-bold text-[#101b25] dark:text-[#e8edf2]">
                 {active.title}
               </h3>
 
-              <p className="mt-2 font-open-sans text-sm leading-relaxed text-gray-500">
+              <p className="mt-2 font-open-sans text-sm leading-relaxed text-gray-500 dark:text-[#7d8a96]">
                 {active.review}
               </p>
 
-              <p className="mt-5 font-open-sans text-sm italic text-gray-600">
+              <p className="mt-5 font-open-sans text-sm italic text-gray-600 dark:text-[#9aa5b0]">
                 {active.name}
               </p>
             </div>
@@ -111,7 +111,7 @@ export default function Testimonial() {
             <div className="mt-6 flex gap-2">
               <button
                 onClick={prev}
-                className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-100"
+                className="flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 dark:border-[#243443] text-gray-500 dark:text-[#7d8a96] transition-colors hover:bg-gray-100 dark:hover:bg-[#243443]"
                 aria-label="Previous testimonial"
               >
                 <ChevronLeft className="h-5 w-5" />

@@ -133,23 +133,23 @@ const RoomBookingSidebar = ({
   };
 
   return (
-    <aside className="h-fit rounded-xl bg-[#f7fafd] p-6">
+    <aside className="h-fit rounded-xl bg-[#f7fafd] dark:bg-[#0a1622] p-6">
       <p className="font-mulish text-5xl font-extrabold text-primary">
         ${Math.round(nightlyPrice)}
-        <span className="ml-1 font-open-sans text-base font-normal text-[#707884]">
+        <span className="ml-1 font-open-sans text-base font-normal text-[#707884] dark:text-[#7d8a96]">
           / 1 night
         </span>
       </p>
 
       {/* Legend */}
       {bookedRanges.length > 0 && (
-        <div className="mt-4 flex items-center gap-4 text-xs text-[#707884]">
+        <div className="mt-4 flex items-center gap-4 text-xs text-[#707884] dark:text-[#7d8a96]">
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-3 w-3 rounded-sm bg-amber-100 border border-amber-300" />
             Booked
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="inline-block h-3 w-3 rounded-sm bg-white border border-[#cbd4de]" />
+            <span className="inline-block h-3 w-3 rounded-sm bg-white dark:bg-[#101e2e] border border-[#cbd4de] dark:border-[#3a4a5a]" />
             Available
           </span>
         </div>
@@ -161,7 +161,7 @@ const RoomBookingSidebar = ({
       >
         {/* Check-in */}
         <div>
-          <label className="mb-1 block font-mulish text-sm font-bold text-[#101b25]">
+          <label className="mb-1 block font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             Check-in
           </label>
           <div className="relative">
@@ -172,18 +172,18 @@ const RoomBookingSidebar = ({
                   prev === "checkIn" ? null : "checkIn",
                 )
               }
-              className="flex h-11 w-full items-center justify-between rounded-md border border-[#cbd4de] bg-white px-3 text-left font-open-sans text-sm text-[#667585] outline-none transition-colors hover:border-primary"
+              className="flex h-11 w-full items-center justify-between rounded-md border border-[#cbd4de] dark:border-[#3a4a5a] bg-white dark:bg-[#101e2e] px-3 text-left font-open-sans text-sm text-[#667585] dark:text-[#9aa5b0] outline-none transition-colors hover:border-primary"
             >
               <span>
                 {checkInDate
                   ? format(checkInDate, "dd MMM yyyy")
                   : "Add arrival date"}
               </span>
-              <CalendarDays className="h-4 w-4 text-[#99a5b2]" />
+              <CalendarDays className="h-4 w-4 text-[#99a5b2] dark:text-[#5a6775]" />
             </button>
 
             {openCalendar === "checkIn" && (
-              <div className="absolute left-0 top-12 z-30 rounded-lg border border-[#d9e1ea] bg-white p-2 shadow-xl">
+              <div className="absolute left-0 top-12 z-30 rounded-lg border border-[#d9e1ea] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-2 shadow-xl dark:shadow-none">
                 <Calendar
                   mode="single"
                   selected={checkInDate}
@@ -221,7 +221,7 @@ const RoomBookingSidebar = ({
 
         {/* Check-out */}
         <div>
-          <label className="mb-1 block font-mulish text-sm font-bold text-[#101b25]">
+          <label className="mb-1 block font-mulish text-sm font-bold text-[#101b25] dark:text-white">
             Check-out
           </label>
           <div className="relative">
@@ -232,18 +232,18 @@ const RoomBookingSidebar = ({
                   prev === "checkOut" ? null : "checkOut",
                 )
               }
-              className="flex h-11 w-full items-center justify-between rounded-md border border-[#cbd4de] bg-white px-3 text-left font-open-sans text-sm text-[#667585] outline-none transition-colors hover:border-primary"
+              className="flex h-11 w-full items-center justify-between rounded-md border border-[#cbd4de] dark:border-[#3a4a5a] bg-white dark:bg-[#101e2e] px-3 text-left font-open-sans text-sm text-[#667585] dark:text-[#9aa5b0] outline-none transition-colors hover:border-primary"
             >
               <span>
                 {checkOutDate
                   ? format(checkOutDate, "dd MMM yyyy")
                   : "Add departure date"}
               </span>
-              <CalendarDays className="h-4 w-4 text-[#99a5b2]" />
+              <CalendarDays className="h-4 w-4 text-[#99a5b2] dark:text-[#5a6775]" />
             </button>
 
             {openCalendar === "checkOut" && (
-              <div className="absolute left-0 top-12 z-30 rounded-lg border border-[#d9e1ea] bg-white p-2 shadow-xl">
+              <div className="absolute left-0 top-12 z-30 rounded-lg border border-[#d9e1ea] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-2 shadow-xl dark:shadow-none">
                 <Calendar
                   mode="single"
                   selected={checkOutDate}
@@ -274,13 +274,13 @@ const RoomBookingSidebar = ({
 
         {/* Nights summary */}
         {nights > 0 && checkInDate && checkOutDate && (
-          <div className="rounded-lg bg-white border border-[#e8edf2] p-3 text-sm">
-            <div className="flex justify-between text-[#707884]">
+          <div className="rounded-lg bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] p-3 text-sm">
+            <div className="flex justify-between text-[#707884] dark:text-[#7d8a96]">
               <span>
                 ${Math.round(nightlyPrice)} × {nights} night
                 {nights > 1 ? "s" : ""}
               </span>
-              <span className="font-bold text-[#101b25]">
+              <span className="font-bold text-[#101b25] dark:text-white">
                 ${Math.round(nightlyPrice * nights)}
               </span>
             </div>
@@ -288,7 +288,7 @@ const RoomBookingSidebar = ({
         )}
 
         {dateError ? (
-          <p className="font-open-sans text-xs text-red-600">{dateError}</p>
+          <p className="font-open-sans text-xs text-red-600 dark:text-red-400">{dateError}</p>
         ) : null}
 
         <button

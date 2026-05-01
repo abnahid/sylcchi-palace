@@ -25,15 +25,15 @@ const features = [
 
 export default function Accommodation() {
   return (
-    <section className="bg-[#f0f5fa] py-12 lg:py-24">
+    <section className="bg-[#f0f5fa] dark:bg-[#0a1622] py-12 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
           {/* Left side - Text content */}
           <div>
-            <h2 className="mb-4 max-w-md font-mulish text-2xl font-extrabold leading-tight text-[#101b25] sm:text-3xl lg:text-4xl">
+            <h2 className="mb-4 max-w-md font-mulish text-2xl font-extrabold leading-tight text-[#101b25] dark:text-[#e8edf2] sm:text-3xl lg:text-4xl">
               Discover refined comfort at Sylcchi Palace
             </h2>
-            <p className="mb-8 max-w-md font-open-sans text-sm leading-relaxed text-gray-500 sm:text-base">
+            <p className="mb-8 max-w-md font-open-sans text-sm leading-relaxed text-gray-500 dark:text-[#7d8a96] sm:text-base">
               Enjoy elegant rooms, modern facilities, and personalized service
               designed for both leisure and business travelers.
             </p>
@@ -46,10 +46,10 @@ export default function Accommodation() {
                     <feature.icon className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-mulish text-base font-bold text-[#101b25] sm:text-lg">
+                    <h3 className="font-mulish text-base font-bold text-[#101b25] dark:text-[#e8edf2] sm:text-lg">
                       {feature.title}
                     </h3>
-                    <p className="font-open-sans text-sm text-gray-500">
+                    <p className="font-open-sans text-sm text-gray-500 dark:text-[#7d8a96]">
                       {feature.description}
                     </p>
                   </div>
@@ -76,15 +76,15 @@ export default function Accommodation() {
                 </div>
 
                 {/* Room price card - bottom left, overlapping */}
-                <div className="absolute -left-3 bottom-8 z-10 w-48 rounded-xl bg-white p-3.5 shadow-lg sm:-left-8 sm:bottom-12 sm:w-56 sm:p-4 lg:-left-10 lg:bottom-14 lg:w-60 lg:p-5">
-                  <h4 className="mb-1 font-mulish text-sm font-bold text-[#101b25] lg:text-base">
+                <div className="absolute -left-3 bottom-8 z-10 w-48 rounded-xl bg-white dark:bg-[#101e2e] p-3.5 shadow-lg sm:-left-8 sm:bottom-12 sm:w-56 sm:p-4 lg:-left-10 lg:bottom-14 lg:w-60 lg:p-5">
+                  <h4 className="mb-1 font-mulish text-sm font-bold text-[#101b25] dark:text-[#e8edf2] lg:text-base">
                     Deluxe King Suite
                   </h4>
                   <div className="mb-2.5 flex items-baseline gap-1 sm:mb-3">
-                    <span className="font-mulish text-xl font-extrabold text-[#101b25] sm:text-2xl lg:text-3xl">
+                    <span className="font-mulish text-xl font-extrabold text-[#101b25] dark:text-[#e8edf2] sm:text-2xl lg:text-3xl">
                       $249
                     </span>
-                    <span className="font-open-sans text-xs text-gray-500 sm:text-sm">
+                    <span className="font-open-sans text-xs text-gray-500 dark:text-[#7d8a96] sm:text-sm">
                       / 1 night
                     </span>
                   </div>
@@ -94,12 +94,12 @@ export default function Accommodation() {
                 </div>
 
                 {/* Review card - top right, overlapping */}
-                <div className="absolute -right-3 -top-4 z-10 w-44 rounded-xl bg-white p-3 shadow-lg sm:-right-8 sm:-top-2 sm:w-52 sm:p-4 lg:-right-10 lg:top-4 lg:w-56 lg:p-5">
-                  <p className="mb-2 font-mulish text-xs font-bold leading-snug text-[#101b25] sm:text-sm lg:text-base">
+                <div className="absolute -right-3 -top-4 z-10 w-44 rounded-xl bg-white dark:bg-[#101e2e] p-3 shadow-lg sm:-right-8 sm:-top-2 sm:w-52 sm:p-4 lg:-right-10 lg:top-4 lg:w-56 lg:p-5">
+                  <p className="mb-2 font-mulish text-xs font-bold leading-snug text-[#101b25] dark:text-[#e8edf2] sm:text-sm lg:text-base">
                     Perfect stay in Sylhet with excellent rooms and service.
                   </p>
                   <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-gray-200 sm:h-8 sm:w-8">
+                    <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-gray-200 dark:bg-[#243443] sm:h-8 sm:w-8">
                       <Image
                         src="/Gallery/room-1.webp"
                         alt="Esmond Ward"
@@ -117,7 +117,7 @@ export default function Accommodation() {
                       ))}
                     </div>
                   </div>
-                  <p className="mt-1 font-mulish text-[11px] font-semibold text-[#101b25] sm:text-xs lg:text-sm">
+                  <p className="mt-1 font-mulish text-[11px] font-semibold text-[#101b25] dark:text-[#e8edf2] sm:text-xs lg:text-sm">
                     Guest Review
                   </p>
                 </div>

@@ -53,7 +53,7 @@ export default function GalleryClient() {
     <section className="py-12 lg:py-20">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
+          <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] dark:text-white sm:text-3xl lg:text-4xl">
             Photos of Sylcchi Palace
           </h2>
 
@@ -65,8 +65,8 @@ export default function GalleryClient() {
                 onClick={() => setActiveCategory(category)}
                 className={`rounded-md px-3 py-2 font-mulish text-sm font-semibold transition-colors ${
                   activeCategory === category
-                    ? "bg-secondary text-primary"
-                    : "text-gray-500 hover:text-primary"
+                    ? "bg-secondary text-primary dark:text-[#7fb3df]"
+                    : "text-gray-500 dark:text-[#7d8a96] hover:text-primary dark:hover:text-[#7fb3df]"
                 }`}
               >
                 {category}
@@ -80,7 +80,7 @@ export default function GalleryClient() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm"
+                className="overflow-hidden rounded-lg border border-slate-100 dark:border-[#1d3145] bg-white dark:bg-[#101e2e] shadow-sm"
               >
                 <Skeleton className="h-64 w-full" />
                 <div className="p-4 space-y-2">
@@ -95,7 +95,7 @@ export default function GalleryClient() {
           {filteredItems.map((item) => (
             <article
               key={item.id}
-              className="overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm"
+              className="overflow-hidden rounded-lg border border-slate-100 dark:border-[#1d3145] bg-white dark:bg-[#101e2e] shadow-sm"
             >
               <div className="relative h-64 w-full">
                 <button
@@ -117,10 +117,10 @@ export default function GalleryClient() {
               </div>
 
               <div className="p-4">
-                <p className="font-mulish text-lg font-bold text-[#101b25]">
+                <p className="font-mulish text-lg font-bold text-[#101b25] dark:text-white">
                   {item.title}
                 </p>
-                <p className="mt-1 font-open-sans text-sm text-[#5b6774]">
+                <p className="mt-1 font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                   {item.category}
                 </p>
               </div>
@@ -141,7 +141,7 @@ export default function GalleryClient() {
           <button
             type="button"
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#101b25]"
+            className="absolute top-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-[#101e2e] text-[#101b25] dark:text-white"
             aria-label="Close image preview"
           >
             <X className="h-5 w-5" />

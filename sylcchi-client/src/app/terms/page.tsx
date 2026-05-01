@@ -147,7 +147,7 @@ const sections = [
 
 export default function Page() {
   return (
-    <main className="bg-slate-50">
+    <main className="bg-slate-50 dark:bg-[#0a1622]">
       <section className="bg-[#245b8d] text-white">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center">
           <h1 className="font-mulish text-4xl font-extrabold md:text-5xl">
@@ -160,8 +160,8 @@ export default function Page() {
       </section>
 
       <section className="mx-auto max-w-4xl px-4 py-14">
-        <div className="rounded-2xl bg-white p-8 shadow-sm md:p-10">
-          <p className="text-sm leading-7 text-slate-600">
+        <div className="rounded-2xl bg-white dark:bg-[#101e2e] p-8 shadow-sm md:p-10">
+          <p className="text-sm leading-7 text-slate-600 dark:text-[#9aa5b0]">
             Welcome to Sylcchi Palace. These Terms & Conditions govern your
             booking, stay, and use of our website and services. Please read
             them carefully before making a reservation.
@@ -170,10 +170,10 @@ export default function Page() {
           <div className="mt-8 space-y-8">
             {sections.map((s) => (
               <div key={s.title}>
-                <h2 className="font-mulish text-lg font-bold text-slate-900">
+                <h2 className="font-mulish text-lg font-bold text-slate-900 dark:text-white">
                   {s.title}
                 </h2>
-                <div className="mt-2 text-sm leading-7 text-slate-600">
+                <div className="mt-2 text-sm leading-7 text-slate-600 dark:text-[#9aa5b0]">
                   {s.body}
                 </div>
               </div>

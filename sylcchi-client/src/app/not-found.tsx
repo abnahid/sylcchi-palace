@@ -2,15 +2,15 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-[70vh] items-center justify-center bg-[#f7fafd] px-4">
+    <main className="flex min-h-[70vh] items-center justify-center bg-[#f7fafd] dark:bg-[#0a1622] px-4">
       <div className="text-center">
-        <p className="font-mulish text-8xl font-extrabold text-primary/20">
+        <p className="font-mulish text-8xl font-extrabold text-primary/20 dark:text-[#7fb3df]/20">
           404
         </p>
-        <h1 className="mt-4 font-mulish text-3xl font-extrabold text-[#101b25]">
+        <h1 className="mt-4 font-mulish text-3xl font-extrabold text-[#101b25] dark:text-white">
           Page not found
         </h1>
-        <p className="mt-3 max-w-md font-open-sans text-sm leading-relaxed text-[#5f6c79]">
+        <p className="mt-3 max-w-md font-open-sans text-sm leading-relaxed text-[#5f6c79] dark:text-[#cbd2da]">
           The page you are looking for does not exist or has been moved. Let us
           help you find your way back.
         </p>
@@ -23,7 +23,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/rooms"
-            className="inline-flex rounded-md border border-primary px-6 py-3 font-mulish text-sm font-extrabold text-primary"
+            className="inline-flex rounded-md border border-primary px-6 py-3 font-mulish text-sm font-extrabold text-primary dark:text-[#7fb3df]"
           >
             Browse rooms
           </Link>

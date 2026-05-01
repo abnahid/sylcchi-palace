@@ -19,10 +19,10 @@ type RoomOtherRoomsSectionProps = {
 
 const RoomOtherRoomsSection = ({ roomCards }: RoomOtherRoomsSectionProps) => {
   return (
-    <section className="bg-[#f7fafd] py-12 lg:py-16">
+    <section className="bg-[#f7fafd] dark:bg-[#0a1622] py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-end justify-between gap-4">
-          <h2 className="font-mulish text-3xl font-extrabold text-[#101b25] sm:text-4xl">
+          <h2 className="font-mulish text-3xl font-extrabold text-[#101b25] dark:text-white sm:text-4xl">
             Other rooms
           </h2>
           <Link

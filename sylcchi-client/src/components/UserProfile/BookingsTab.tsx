@@ -31,15 +31,15 @@ const FILTER_OPTIONS: { value: FilterType; label: string }[] = [
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   CONFIRMED: {
     label: "Confirmed",
-    color: "text-emerald-600 bg-emerald-50 border-emerald-200",
+    color: "text-emerald-600 dark:text-green-400 bg-emerald-50 dark:bg-green-500/10 border-emerald-200 dark:border-green-500/30",
   },
   PENDING: {
     label: "Pending",
-    color: "text-amber-600 bg-amber-50 border-amber-200",
+    color: "text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30",
   },
   CANCELLED: {
     label: "Cancelled",
-    color: "text-red-500 bg-red-50 border-red-200",
+    color: "text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30",
   },
 };
 
@@ -80,19 +80,19 @@ export function BookingsTabContent({ userId }: { userId: string }) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 size={28} className="animate-spin text-[#235784]" />
+        <Loader2 size={28} className="animate-spin text-[#235784] dark:text-[#7fb3df]" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="rounded-[16px] border border-red-200 bg-white p-8 text-center">
+      <div className="rounded-[16px] border border-red-200 dark:border-red-500/30 bg-white dark:bg-[#101e2e] p-8 text-center">
         <AlertCircle size={36} className="mx-auto mb-3 text-red-400" />
-        <p className="text-[15px] font-bold text-[#040b11]">
+        <p className="text-[15px] font-bold text-[#040b11] dark:text-white">
           Could not load bookings
         </p>
-        <p className="mt-1 text-[13px] text-[#808385]">
+        <p className="mt-1 text-[13px] text-[#808385] dark:text-[#7d8a96]">
           {error?.message ?? "Please try again later."}
         </p>
       </div>
@@ -117,7 +117,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
               className={`rounded-full border px-4 py-1.5 text-[13px] transition-all ${
                 filter === f.value
                   ? "border-[#235784] bg-[#235784] text-white"
-                  : "border-[#e0e0e0] bg-white text-[#808385] hover:border-[#235784] hover:text-[#235784]"
+                  : "border-[#e0e0e0] dark:border-[#243443] bg-white dark:bg-[#101e2e] text-[#808385] dark:text-[#7d8a96] hover:border-[#235784] hover:text-[#235784] dark:hover:text-[#7fb3df]"
               }`}
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
             >
@@ -139,7 +139,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
           return (
             <div
               key={booking.id}
-              className="overflow-hidden rounded-[16px] border border-[#e8edf2] bg-white transition-shadow hover:shadow-md"
+              className="overflow-hidden rounded-[16px] border border-[#e8edf2] dark:border-[#243443] bg-white dark:bg-[#101e2e] transition-shadow hover:shadow-md"
             >
               <div className="flex flex-col sm:flex-row">
                 {roomImage && (
@@ -165,22 +165,22 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                         >
                           {cfg.label}
                         </span>
-                        <span className="flex items-center gap-1 text-[11px] text-[#808385]">
+                        <span className="flex items-center gap-1 text-[11px] text-[#808385] dark:text-[#7d8a96]">
                           <Hash size={10} /> {booking.bookingCode}
                         </span>
                         {booking.paymentStatus.toUpperCase() === "PAID" && (
-                          <span className="flex items-center gap-1 text-[11px] text-emerald-600">
+                          <span className="flex items-center gap-1 text-[11px] text-emerald-600 dark:text-green-400">
                             <CheckCircle size={10} /> Paid
                           </span>
                         )}
                         {booking.paymentStatus.toUpperCase() === "PARTIAL" && (
-                          <span className="flex items-center gap-1 text-[11px] text-blue-600">
+                          <span className="flex items-center gap-1 text-[11px] text-blue-600 dark:text-[#7fb3df]">
                             <CheckCircle size={10} /> Partial
                           </span>
                         )}
                       </div>
                       <p
-                        className="text-[15px] leading-snug text-[#040b11]"
+                        className="text-[15px] leading-snug text-[#040b11] dark:text-white"
                         style={{
                           fontFamily: "Mulish, sans-serif",
                           fontWeight: 700,
@@ -190,7 +190,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                       </p>
                     </div>
                     <p
-                      className="flex-shrink-0 text-[18px] text-[#235784]"
+                      className="flex-shrink-0 text-[18px] text-[#235784] dark:text-[#7fb3df]"
                       style={{
                         fontFamily: "Mulish, sans-serif",
                         fontWeight: 800,
@@ -201,19 +201,19 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                   </div>
 
                   {/* Meta */}
-                  <div className="mb-3 flex flex-wrap gap-4 text-[13px] text-[#808385]">
+                  <div className="mb-3 flex flex-wrap gap-4 text-[13px] text-[#808385] dark:text-[#7d8a96]">
                     <span className="flex items-center gap-1.5">
-                      <Calendar size={13} className="text-[#235784]" />
+                      <Calendar size={13} className="text-[#235784] dark:text-[#7fb3df]" />
                       {formatDate(booking.checkInDate)} —{" "}
                       {formatDate(booking.checkOutDate)}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Clock size={13} className="text-[#235784]" />
+                      <Clock size={13} className="text-[#235784] dark:text-[#7fb3df]" />
                       {booking.nights} night{booking.nights > 1 ? "s" : ""}
                     </span>
                     {Number(booking.paidAmount) > 0 && (
                       <span className="flex items-center gap-1.5">
-                        <CheckCircle size={13} className="text-green-500" />$
+                        <CheckCircle size={13} className="text-green-500 dark:text-green-400" />$
                         {Number(booking.paidAmount).toFixed(2)} paid
                       </span>
                     )}
@@ -223,7 +223,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                   <div className="flex items-center gap-3">
                     <Link
                       href={`/booking/confirmation?bookingId=${booking.id}`}
-                      className="flex items-center gap-1 text-[13px] text-[#235784] hover:underline"
+                      className="flex items-center gap-1 text-[13px] text-[#235784] dark:text-[#7fb3df] hover:underline"
                       style={{
                         fontFamily: "Mulish, sans-serif",
                         fontWeight: 700,
@@ -234,7 +234,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                     {statusKey === "CONFIRMED" &&
                       booking.checkin?.status === "CHECKED_IN" && (
                         <span
-                          className="flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-3 py-1 text-[12px] text-emerald-700"
+                          className="flex items-center gap-1 rounded-md bg-emerald-50 dark:bg-green-500/10 border border-emerald-200 dark:border-green-500/30 px-3 py-1 text-[12px] text-emerald-700 dark:text-green-400"
                           style={{
                             fontFamily: "Mulish, sans-serif",
                             fontWeight: 700,
@@ -246,7 +246,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                     {statusKey === "CONFIRMED" &&
                       booking.checkin?.status === "CHECKED_OUT" && (
                         <span
-                          className="flex items-center gap-1 rounded-md bg-slate-50 border border-slate-200 px-3 py-1 text-[12px] text-slate-500"
+                          className="flex items-center gap-1 rounded-md bg-slate-50 dark:bg-[#0a1622] border border-slate-200 dark:border-[#243443] px-3 py-1 text-[12px] text-slate-500 dark:text-[#7d8a96]"
                           style={{
                             fontFamily: "Mulish, sans-serif",
                             fontWeight: 700,
@@ -273,7 +273,7 @@ export function BookingsTabContent({ userId }: { userId: string }) {
                       <button
                         onClick={() => handleCancel(booking)}
                         disabled={cancellingId === booking.id}
-                        className="text-[13px] text-red-400 transition-colors hover:text-red-600 disabled:opacity-50"
+                        className="text-[13px] text-red-400 transition-colors hover:text-red-600 dark:hover:text-red-400 disabled:opacity-50"
                       >
                         {cancellingId === booking.id
                           ? "Cancelling..."
@@ -290,14 +290,14 @@ export function BookingsTabContent({ userId }: { userId: string }) {
         {/* Empty state */}
         {filtered.length === 0 && (
           <div className="py-16 text-center">
-            <BedDouble size={40} className="mx-auto mb-3 text-[#DDEAF6]" />
+            <BedDouble size={40} className="mx-auto mb-3 text-[#DDEAF6] dark:text-[#17354f]/40" />
             <p
-              className="mb-1 text-[16px] text-[#040b11]"
+              className="mb-1 text-[16px] text-[#040b11] dark:text-white"
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
             >
               No bookings found
             </p>
-            <p className="mb-4 text-[14px] text-[#808385]">
+            <p className="mb-4 text-[14px] text-[#808385] dark:text-[#7d8a96]">
               {filter !== "all"
                 ? `No ${filter.toLowerCase()} bookings yet.`
                 : "You haven't made any bookings yet."}

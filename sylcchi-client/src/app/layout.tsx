@@ -3,6 +3,7 @@ import { HotelJsonLd } from "@/components/StructuredData";
 import { mulish, openSans } from "@/font/fonts";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -53,14 +54,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(mulish.variable, openSans.variable)}>
+    <html
+      lang="en"
+      className={cn(mulish.variable, openSans.variable)}
+      suppressHydrationWarning
+    >
       <head>
         <HotelJsonLd />
       </head>
       <body className="bg-background text-foreground font-open-sans">
-        <QueryProvider>
-          <AppShell>{children}</AppShell>
-        </QueryProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProvider>
+            <AppShell>{children}</AppShell>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

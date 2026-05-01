@@ -13,11 +13,11 @@ const RoomBookingStepsSection = ({
   onImageError,
 }: RoomBookingStepsSectionProps) => {
   return (
-    <section className="bg-white py-12 lg:py-16">
+    <section className="bg-white dark:bg-[#101e2e] py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div>
-            <h2 className="mb-8 font-mulish text-3xl font-extrabold text-[#101b25] sm:text-4xl">
+            <h2 className="mb-8 font-mulish text-3xl font-extrabold text-[#101b25] dark:text-white sm:text-4xl">
               Stages of booking a room
             </h2>
 
@@ -28,10 +28,10 @@ const RoomBookingStepsSection = ({
                     {step.num}
                   </div>
                   <div>
-                    <h4 className="font-mulish text-lg font-bold text-[#101b25]">
+                    <h4 className="font-mulish text-lg font-bold text-[#101b25] dark:text-white">
                       {step.title}
                     </h4>
-                    <p className="mt-2 font-open-sans text-sm leading-relaxed text-[#5b6774] sm:text-[15px]">
+                    <p className="mt-2 font-open-sans text-sm leading-relaxed text-[#5b6774] dark:text-[#9aa5b0] sm:text-[15px]">
                       {step.desc}
                     </p>
                   </div>

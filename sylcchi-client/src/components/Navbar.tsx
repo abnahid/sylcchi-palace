@@ -1,5 +1,6 @@
 "use client";
 
+import ThemeToggle from "@/components/ThemeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -82,8 +83,8 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
-        isScrolled ? "shadow-md" : ""
+      className={`sticky top-0 z-50 bg-white transition-all duration-300 dark:bg-[#0b1218] dark:border-b dark:border-[#1d2b38] ${
+        isScrolled ? "shadow-md dark:shadow-none" : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-4">
@@ -115,8 +116,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`text-sm font-medium font-mulish transition-colors pb-2 border-b-2 ${
                   isActive(link.href)
-                    ? "text-blue-600 border-blue-600"
-                    : "text-gray-700 border-b-2 border-transparent hover:text-blue-600"
+                    ? "text-blue-600 border-blue-600 dark:text-[#7fb3df] dark:border-[#7fb3df]"
+                    : "text-gray-700 border-b-2 border-transparent hover:text-blue-600 dark:text-[#cbd2da] dark:hover:text-[#7fb3df]"
                 }`}
               >
                 {link.label}
@@ -125,6 +126,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
             {isSessionPending ? (
               <div className="flex items-center gap-2">
                 <div className="h-9 w-9 animate-pulse rounded-full bg-gray-100" />
@@ -262,12 +264,14 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Navigation */}
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild className="lg:hidden">
-              <Button variant="outline" size="icon">
-                <MenuIcon className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
+          <div className="flex items-center gap-2 lg:hidden">
+            <ThemeToggle />
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <MenuIcon className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
             <SheetContent
               side="right"
               overlayClassName="!bg-transparent !backdrop-blur-none"
@@ -398,7 +402,8 @@ export default function Navbar() {
                 </div>
               </div>
             </SheetContent>
-          </Sheet>
+            </Sheet>
+          </div>
         </nav>
       </div>
     </header>

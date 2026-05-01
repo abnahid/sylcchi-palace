@@ -33,7 +33,7 @@ const reviews = [
 
 const Reviews = () => {
   return (
-    <section className="bg-gray-100 py-10">
+    <section className="bg-gray-100 dark:bg-[#1a2b3d] py-10">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 lg:gap-24">
           {reviews.map((review) => (
@@ -41,13 +41,13 @@ const Reviews = () => {
               key={review.alt}
               className="flex flex-col items-center gap-2 text-center"
             >
-              <p className="text-3xl font-bold text-gray-800">
+              <p className="text-3xl font-bold text-gray-800 dark:text-[#e8edf2]">
                 {review.score}
-                <span className="text-base font-normal text-gray-500">
+                <span className="text-base font-normal text-gray-500 dark:text-[#7d8a96]">
                   {review.scoreLabel}
                 </span>
               </p>
-              <p className="text-sm text-gray-500">{review.detail}</p>
+              <p className="text-sm text-gray-500 dark:text-[#7d8a96]">{review.detail}</p>
               <Image
                 src={review.logo}
                 alt={review.alt}

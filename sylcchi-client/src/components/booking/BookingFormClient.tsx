@@ -203,9 +203,9 @@ function BookingFormContent() {
 
   if (isRoomsLoading) {
     return (
-      <main className="bg-[#f7fafd] py-10">
+      <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-10">
         <div className="mx-auto max-w-7xl px-4">
-          <p className="font-open-sans text-sm text-[#5b6774]">
+          <p className="font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
             Loading booking form...
           </p>
         </div>
@@ -215,13 +215,13 @@ function BookingFormContent() {
 
   if (!room || !checkInDate || !checkOutDate || nights < 1) {
     return (
-      <main className="bg-[#f7fafd] py-10">
+      <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-10">
         <div className="mx-auto max-w-3xl px-4">
-          <div className="rounded-2xl border border-[#dbe5ef] bg-white p-6 sm:p-8">
-            <h1 className="font-mulish text-2xl font-extrabold text-[#101b25]">
+          <div className="rounded-2xl border border-[#dbe5ef] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-6 sm:p-8">
+            <h1 className="font-mulish text-2xl font-extrabold text-[#101b25] dark:text-white">
               Booking details are missing
             </h1>
-            <p className="mt-2 font-open-sans text-sm text-[#5b6774]">
+            <p className="mt-2 font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
               Please return to a room page, select check-in and check-out dates,
               then click booking.
             </p>
@@ -243,7 +243,7 @@ function BookingFormContent() {
   const total = subtotal + vat;
 
   return (
-    <main className="bg-[#f7fafd] py-8 lg:py-12">
+    <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-8 lg:py-12">
       <div className="mx-auto max-w-7xl px-4">
         <BookingHeroSection
           title="Complete your booking"
@@ -251,7 +251,7 @@ function BookingFormContent() {
         />
 
         {!sessionUser ? (
-          <div className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 font-open-sans text-sm text-amber-700">
+          <div className="mb-6 rounded-xl border border-amber-300 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 px-4 py-3 font-open-sans text-sm text-amber-700 dark:text-amber-300">
             You need to sign in before final confirmation.
             <Link
               href={`/login?next=${encodeURIComponent(bookingPath)}`}
@@ -263,7 +263,7 @@ function BookingFormContent() {
         ) : null}
 
         {submitError ? (
-          <div className="mb-6 rounded-xl border border-red-300 bg-red-50 px-4 py-3 font-open-sans text-sm text-red-700">
+          <div className="mb-6 rounded-xl border border-red-300 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 font-open-sans text-sm text-red-700 dark:text-red-300">
             {submitError}
           </div>
         ) : null}

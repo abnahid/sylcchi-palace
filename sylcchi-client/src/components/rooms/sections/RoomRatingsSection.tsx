@@ -19,9 +19,9 @@ const RoomRatingsSection = ({ roomId }: RoomRatingsSectionProps) => {
 
   if (isLoading) {
     return (
-      <section className="bg-[#f7fafd] py-12">
+      <section className="bg-[#f7fafd] dark:bg-[#0a1622] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-sm text-[#808385]">
+          <div className="flex items-center gap-2 text-sm text-[#808385] dark:text-[#7d8a96]">
             <Loader2 className="h-4 w-4 animate-spin" /> Loading ratings...
           </div>
         </div>
@@ -31,16 +31,16 @@ const RoomRatingsSection = ({ roomId }: RoomRatingsSectionProps) => {
 
   if (!data || data.stats.total === 0) {
     return (
-      <section className="bg-[#f7fafd] py-12">
+      <section className="bg-[#f7fafd] dark:bg-[#0a1622] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl rounded-lg bg-white p-6 shadow-[0_2px_24px_0_rgba(30,49,66,0.08)]">
+          <div className="max-w-3xl rounded-lg bg-white dark:bg-[#101e2e] p-6 shadow-[0_2px_24px_0_rgba(30,49,66,0.08)] dark:shadow-none">
             <div className="flex items-center gap-3">
-              <Star className="h-6 w-6 text-[#d9e3ee]" />
+              <Star className="h-6 w-6 text-[#d9e3ee] dark:text-[#3a4a5a]" />
               <div>
-                <p className="font-mulish text-base font-bold text-[#101b25]">
+                <p className="font-mulish text-base font-bold text-[#101b25] dark:text-white">
                   No reviews yet
                 </p>
-                <p className="font-open-sans text-sm text-[#5b6774]">
+                <p className="font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                   Be the first to share your experience at this room.
                 </p>
               </div>
@@ -73,15 +73,15 @@ const RoomRatingsSection = ({ roomId }: RoomRatingsSectionProps) => {
       : { location: 0, comfort: 0, service: 0, pricing: 0 };
 
   return (
-    <section className="bg-[#f7fafd] py-12">
+    <section className="bg-[#f7fafd] dark:bg-[#0a1622] py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl rounded-lg bg-white p-12 shadow-[0_2px_24px_0_rgba(30,49,66,0.08)]">
+        <div className="max-w-3xl rounded-lg bg-white dark:bg-[#101e2e] p-12 shadow-[0_2px_24px_0_rgba(30,49,66,0.08)] dark:shadow-none">
           <div className="flex items-end gap-3">
-            <p className="font-mulish text-5xl font-extrabold text-[#101b25]">
+            <p className="font-mulish text-5xl font-extrabold text-[#101b25] dark:text-white">
               {stats.averageRating.toFixed(1)}
-              <span className="text-base font-normal text-[#5b6774]">/5</span>
+              <span className="text-base font-normal text-[#5b6774] dark:text-[#9aa5b0]">/5</span>
             </p>
-            <p className="pb-1 font-open-sans text-sm text-[#5b6774]">
+            <p className="pb-1 font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
               Based on {stats.total} review{stats.total !== 1 ? "s" : ""}
             </p>
           </div>
@@ -92,16 +92,16 @@ const RoomRatingsSection = ({ roomId }: RoomRatingsSectionProps) => {
                 key={key}
                 className="grid grid-cols-[74px_1fr_30px] items-center gap-3"
               >
-                <span className="font-open-sans text-sm text-[#5b6774]">
+                <span className="font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                   {CATEGORY_LABELS[key]}
                 </span>
-                <div className="h-1.5 rounded-full bg-[#d9e3ee]">
+                <div className="h-1.5 rounded-full bg-[#d9e3ee] dark:bg-[#243443]">
                   <div
                     className="h-1.5 rounded-full bg-primary transition-all"
                     style={{ width: `${(value / 5) * 100}%` }}
                   />
                 </div>
-                <span className="text-right font-open-sans text-sm text-[#5b6774]">
+                <span className="text-right font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
                   {value.toFixed(1)}
                 </span>
               </div>

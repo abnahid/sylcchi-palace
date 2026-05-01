@@ -40,10 +40,10 @@ function PaymentSuccessContent() {
   }, [bookingId, sessionId, router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7fafd]">
+    <div className="flex min-h-screen items-center justify-center bg-[#f7fafd] dark:bg-[#0a1622]">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 size={28} className="animate-spin text-[#235784]" />
-        <p className="text-sm text-[#808385]">Verifying your payment...</p>
+        <Loader2 size={28} className="animate-spin text-[#235784] dark:text-[#7fb3df]" />
+        <p className="text-sm text-[#808385] dark:text-[#7d8a96]">Verifying your payment...</p>
       </div>
     </div>
   );
@@ -54,7 +54,7 @@ export default function PaymentSuccessPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center">
-          <Loader2 size={28} className="animate-spin text-[#235784]" />
+          <Loader2 size={28} className="animate-spin text-[#235784] dark:text-[#7fb3df]" />
         </div>
       }
     >

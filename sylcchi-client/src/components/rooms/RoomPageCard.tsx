@@ -15,7 +15,7 @@ export default function RoomPageCard({ room }: RoomPageCardProps) {
   const roomDetailsHref = `/rooms/${room.slug}`;
 
   return (
-    <article className="group relative overflow-hidden rounded-md bg-white shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)] transition-shadow hover:shadow-[0px_10px_35px_0px_rgba(47,76,88,0.14)]">
+    <article className="group relative overflow-hidden rounded-md bg-white dark:bg-[#101e2e] shadow-[0px_0px_30px_0px_rgba(47,76,88,0.06)] transition-shadow hover:shadow-[0px_10px_35px_0px_rgba(47,76,88,0.14)]">
       <Link
         href={roomDetailsHref}
         aria-label={`View details for ${room.name}`}
@@ -39,14 +39,14 @@ export default function RoomPageCard({ room }: RoomPageCardProps) {
 
         <div className="relative z-20 flex flex-1 flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0 flex-1">
-            <h3 className="font-mulish text-2xl font-extrabold leading-tight text-[#101b25]">
+            <h3 className="font-mulish text-2xl font-extrabold leading-tight text-[#101b25] dark:text-white">
               {room.name}
             </h3>
-            <p className="mt-4.5 max-w-xl font-open-sans text-sm leading-6 text-[#5b6774]">
+            <p className="mt-4.5 max-w-xl font-open-sans text-sm leading-6 text-[#5b6774] dark:text-[#9aa5b0]">
               {room.description}
             </p>
 
-            <div className="mt-6.5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[#617080]">
+            <div className="mt-6.5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[#617080] dark:text-[#9aa5b0]">
               <span className="inline-flex items-center gap-1.5">
                 <UserRound className="h-4 w-4" /> {room.capacity} Sleeps
               </span>
@@ -59,15 +59,15 @@ export default function RoomPageCard({ room }: RoomPageCardProps) {
 
           <div className="flex min-w-44 flex-col items-start gap-7 lg:items-end">
             <div className="text-left lg:text-right space-y-7">
-              <p className="font-mulish text-4xl font-extrabold text-[#101b25]">
+              <p className="font-mulish text-4xl font-extrabold text-[#101b25] dark:text-white">
                 ${Math.round(nightlyPrice)}
-                <span className="ml-1 font-open-sans text-base font-normal text-[#707884]">
+                <span className="ml-1 font-open-sans text-base font-normal text-[#707884] dark:text-[#7d8a96]">
                   / 1 night
                 </span>
               </p>
-              <p className="mt-1 font-mulish text-xl font-extrabold text-[#101b25]">
+              <p className="mt-1 font-mulish text-xl font-extrabold text-[#101b25] dark:text-white">
                 ${weeklyPrice}
-                <span className="ml-1 font-open-sans text-sm font-normal text-[#707884]">
+                <span className="ml-1 font-open-sans text-sm font-normal text-[#707884] dark:text-[#7d8a96]">
                   / 7 nights
                 </span>
               </p>

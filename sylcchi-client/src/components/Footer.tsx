@@ -37,7 +37,7 @@ const contact = {
 export default function Footer() {
   return (
     <footer>
-      <div className="bg-[#245b8d] text-white">
+      <div className="bg-[#245b8d] text-white dark:bg-[#13283d]">
         <div className="max-w-7xl mx-auto px-4 py-14">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-5">
@@ -127,9 +127,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="bg-slate-50">
+      <div className="bg-slate-50 dark:bg-[#0f1c2c]">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center px-4 py-6 text-center">
-          <p className="text-sm text-slate-700 font-open-sans">
+          <p className="text-sm text-slate-700 font-open-sans dark:text-[#cbd2da]">
             © {new Date().getFullYear()} Sylcchi Palace. All rights reserved.
           </p>
           <ul className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 lg:mt-0">
@@ -137,14 +137,14 @@ export default function Footer() {
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="font-open-sans text-sm text-slate-600 transition-colors hover:text-[#245b8d]"
+                  className="font-open-sans text-sm text-slate-600 transition-colors hover:text-[#245b8d] dark:text-[#9aa5b0] dark:hover:text-[#7fb3df]"
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <p className="text-sm text-slate-500 mt-2">
+          <p className="text-sm text-slate-500 mt-2 dark:text-[#7d8a96]">
             Designed and developed by
             <Link
               href="https://abnahid.com"

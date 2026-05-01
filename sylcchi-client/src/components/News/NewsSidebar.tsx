@@ -48,7 +48,7 @@ export default function NewsSidebar({
               onSearchSubmit?.();
             }
           }}
-          className="flex-1 rounded-l-lg border border-[#e0e0e0] px-4 py-3 text-sm focus:border-primary focus:outline-none"
+          className="flex-1 rounded-l-lg border border-[#e0e0e0] dark:border-[#243443] dark:bg-[#101e2e] dark:text-[#e8edf2] px-4 py-3 text-sm focus:border-primary focus:outline-none"
         />
         <button
           type="button"
@@ -61,7 +61,7 @@ export default function NewsSidebar({
       </div>
 
       <div>
-        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11]">
+        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11] dark:text-white">
           Categories
         </h3>
         <div className="space-y-2">
@@ -71,7 +71,7 @@ export default function NewsSidebar({
             className={`w-full rounded-md px-4 py-2.5 text-left text-base transition-colors ${
               !activeCategory
                 ? "bg-primary text-white"
-                : "text-[#2c3c4a] hover:bg-[#f7fafd]"
+                : "text-[#2c3c4a] dark:text-[#e8edf2] hover:bg-[#f7fafd] dark:hover:bg-[#1a2b3d]"
             }`}
           >
             All
@@ -88,7 +88,7 @@ export default function NewsSidebar({
                 className={`w-full rounded-md px-4 py-2.5 text-left text-base transition-colors ${
                   active
                     ? "bg-primary text-white"
-                    : "text-[#2c3c4a] hover:bg-[#f7fafd]"
+                    : "text-[#2c3c4a] dark:text-[#e8edf2] hover:bg-[#f7fafd] dark:hover:bg-[#1a2b3d]"
                 }`}
               >
                 {category}
@@ -99,7 +99,7 @@ export default function NewsSidebar({
       </div>
 
       <div>
-        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11]">
+        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11] dark:text-white">
           Recommended articles
         </h3>
         <div className="space-y-4">
@@ -119,10 +119,10 @@ export default function NewsSidebar({
                 />
               </div>
               <div>
-                <p className="font-mulish text-sm leading-5 text-[#040b11]">
+                <p className="font-mulish text-sm leading-5 text-[#040b11] dark:text-white">
                   {item.title}
                 </p>
-                <p className="font-open-sans text-xs text-[#808385]">
+                <p className="font-open-sans text-xs text-[#808385] dark:text-[#7d8a96]">
                   {item.date}
                 </p>
               </div>
@@ -132,7 +132,7 @@ export default function NewsSidebar({
       </div>
 
       <div>
-        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11]">
+        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11] dark:text-white">
           Tag
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -144,7 +144,7 @@ export default function NewsSidebar({
               className={`rounded px-3 py-1 text-sm transition-colors ${
                 activeTag === tag
                   ? "bg-primary text-white"
-                  : "text-[#2c3c4a] hover:text-primary"
+                  : "text-[#2c3c4a] dark:text-[#e8edf2] hover:text-primary"
               }`}
             >
               {tag}
@@ -156,7 +156,7 @@ export default function NewsSidebar({
           <button
             type="button"
             onClick={onClearFilters}
-            className="mt-3 text-sm font-semibold text-primary hover:underline"
+            className="mt-3 text-sm font-semibold text-primary dark:text-[#7fb3df] hover:underline"
           >
             Clear filters
           </button>
@@ -164,14 +164,14 @@ export default function NewsSidebar({
       </div>
 
       <div>
-        <h3 className="mb-3 font-mulish text-xl font-bold text-[#040b11]">
+        <h3 className="mb-3 font-mulish text-xl font-bold text-[#040b11] dark:text-white">
           Subscribe to our mailing list
         </h3>
         <div className="flex">
           <input
             type="email"
             placeholder="Email address"
-            className="flex-1 rounded-l-lg border border-[#e0e0e0] px-4 py-3 text-sm focus:border-primary focus:outline-none"
+            className="flex-1 rounded-l-lg border border-[#e0e0e0] dark:border-[#243443] dark:bg-[#101e2e] dark:text-[#e8edf2] px-4 py-3 text-sm focus:border-primary focus:outline-none"
           />
           <button
             type="button"
@@ -184,7 +184,7 @@ export default function NewsSidebar({
       </div>
 
       <div>
-        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11]">
+        <h3 className="mb-4 font-mulish text-xl font-bold text-[#040b11] dark:text-white">
           Instagram
         </h3>
         <div className="grid grid-cols-3 gap-2">

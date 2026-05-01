@@ -13,7 +13,7 @@ export default function HostelRooms() {
     <section className="py-12 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-8 flex items-center justify-between gap-4">
-          <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
+          <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] dark:text-[#e8edf2] sm:text-3xl lg:text-4xl">
             Sylcchi Palace rooms
           </h2>
           <Link

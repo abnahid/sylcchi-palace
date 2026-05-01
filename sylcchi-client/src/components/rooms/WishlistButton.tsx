@@ -58,8 +58,8 @@ export default function WishlistButton({
       aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
       className={`flex items-center justify-center rounded-full p-2 transition-all ${
         isInWishlist
-          ? "bg-red-50 text-red-500 hover:bg-red-100"
-          : "bg-white/80 text-gray-500 hover:bg-white hover:text-red-500"
+          ? "bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100"
+          : "bg-white/80 dark:bg-[#101e2e]/80 text-gray-500 dark:text-[#7d8a96] hover:bg-white dark:hover:bg-[#101e2e] hover:text-red-500"
       } backdrop-blur-sm disabled:opacity-50 ${className}`}
     >
       <Heart size={18} className={isInWishlist ? "fill-current" : ""} />

@@ -23,10 +23,10 @@ const RoomsSection = () => {
   );
 
   return (
-    <section className="bg-[#f7fafd] py-12 lg:py-16">
+    <section className="bg-[#f7fafd] dark:bg-[#0a1622] py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="font-mulish text-3xl font-extrabold text-[#101b25] sm:text-4xl">
+          <h2 className="font-mulish text-3xl font-extrabold text-[#101b25] dark:text-white sm:text-4xl">
             Our rooms & suites
           </h2>
 

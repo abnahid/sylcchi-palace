@@ -43,16 +43,16 @@ function StatCard({
   label: string;
 }) {
   return (
-    <div className="bg-[#f7fafd] border border-[#e8edf2] rounded-[12px] p-4 text-center">
-      <div className="flex justify-center mb-2 text-[#235784]">{icon}</div>
+    <div className="bg-[#f7fafd] dark:bg-[#0a1622] border border-[#e8edf2] dark:border-[#243443] rounded-[12px] p-4 text-center">
+      <div className="flex justify-center mb-2 text-[#235784] dark:text-[#7fb3df]">{icon}</div>
       <p
-        className="text-[#040b11] text-[22px]"
+        className="text-[#040b11] dark:text-white text-[22px]"
         style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
       >
         {value}
       </p>
       <p
-        className="text-[#808385] text-[12px]"
+        className="text-[#808385] dark:text-[#7d8a96] text-[12px]"
         style={{ fontFamily: "Open Sans, sans-serif" }}
       >
         {label}
@@ -87,16 +87,16 @@ export function ProfileTabContent({
   return (
     <div className="space-y-6">
       {!user.emailVerified && (
-        <div className="rounded-[16px] border border-amber-200 bg-amber-50 p-5">
+        <div className="rounded-[16px] border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p
-                className="flex items-center gap-2 text-[15px] text-amber-900"
+                className="flex items-center gap-2 text-[15px] text-amber-900 dark:text-amber-300"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
               >
                 <MailCheck size={17} /> Verify your email to secure your account
               </p>
-              <p className="mt-1 text-[13px] text-amber-800">
+              <p className="mt-1 text-[13px] text-amber-800 dark:text-amber-300">
                 We will send a one-time OTP code to {user.email}.
               </p>
             </div>
@@ -118,7 +118,7 @@ export function ProfileTabContent({
           </div>
 
           {requestOtpMutation.isError && (
-            <p className="mt-3 flex items-center gap-1.5 text-[12px] text-red-600">
+            <p className="mt-3 flex items-center gap-1.5 text-[12px] text-red-600 dark:text-red-400">
               <AlertCircle size={13} />
               {requestOtpMutation.error?.message ??
                 "Could not send verification OTP. Please try again."}
@@ -127,24 +127,24 @@ export function ProfileTabContent({
         </div>
       )}
 
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] p-6">
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] p-6">
         <div className="flex items-center justify-between mb-4">
           <h3
-            className="text-[#040b11] text-[17px] flex items-center gap-2"
+            className="text-[#040b11] dark:text-white text-[17px] flex items-center gap-2"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
-            <BedDouble size={16} className="text-[#235784]" /> About Me
+            <BedDouble size={16} className="text-[#235784] dark:text-[#7fb3df]" /> About Me
           </h3>
           <button
             onClick={onEditClick}
-            className="flex items-center gap-1 text-[#235784] text-[13px] hover:underline"
+            className="flex items-center gap-1 text-[#235784] dark:text-[#7fb3df] text-[13px] hover:underline"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 600 }}
           >
             <Edit3 size={13} /> Edit
           </button>
         </div>
         <p
-          className="text-[#2c3c4a] text-[15px] leading-[1.7] mb-5"
+          className="text-[#2c3c4a] dark:text-[#e8edf2] text-[15px] leading-[1.7] mb-5"
           style={{ fontFamily: "Open Sans, sans-serif" }}
         >
           {user.bio || "No bio added yet."}
@@ -173,18 +173,18 @@ export function ProfileTabContent({
             },
           ].map(({ icon, label, value }) => (
             <div key={label} className="flex items-start gap-3">
-              <span className="text-[#235784] mt-0.5 shrink-0 text-lg">
+              <span className="text-[#235784] dark:text-[#7fb3df] mt-0.5 shrink-0 text-lg">
                 {icon}
               </span>
               <div>
                 <p
-                  className="text-[#808385] text-[11px] uppercase tracking-wide mb-0.5"
+                  className="text-[#808385] dark:text-[#7d8a96] text-[11px] uppercase tracking-wide mb-0.5"
                   style={{ fontFamily: "Open Sans, sans-serif" }}
                 >
                   {label}
                 </p>
                 <p
-                  className="text-[#2c3c4a] text-[14px] break-all"
+                  className="text-[#2c3c4a] dark:text-[#e8edf2] text-[14px] break-all"
                   style={{ fontFamily: "Open Sans, sans-serif" }}
                 >
                   {value}
@@ -197,7 +197,7 @@ export function ProfileTabContent({
 
       <div>
         <h3
-          className="text-[#040b11] text-[16px] mb-3"
+          className="text-[#040b11] dark:text-white text-[16px] mb-3"
           style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
         >
           Your Stats
@@ -226,17 +226,17 @@ export function ProfileTabContent({
         </div>
       </div>
 
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] p-6">
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] p-6">
         <h3
-          className="text-[#040b11] text-[17px] mb-4 flex items-center gap-2"
+          className="text-[#040b11] dark:text-white text-[17px] mb-4 flex items-center gap-2"
           style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
         >
-          <Clock size={16} className="text-[#235784]" /> Account Info
+          <Clock size={16} className="text-[#235784] dark:text-[#7fb3df]" /> Account Info
         </h3>
         <div className="space-y-3">
-          <div className="pb-3 border-b border-[#f0f4f8]">
+          <div className="pb-3 border-b border-[#f0f4f8] dark:border-[#1d3145]">
             <p
-              className="text-[#808385] text-[12px] uppercase tracking-wide mb-1"
+              className="text-[#808385] dark:text-[#7d8a96] text-[12px] uppercase tracking-wide mb-1"
               style={{ fontFamily: "Open Sans, sans-serif" }}
             >
               Email Status
@@ -248,30 +248,30 @@ export function ProfileTabContent({
                 }`}
               />
               {user.emailVerified && (
-                <RiVerifiedBadgeFill className="text-primary" size={16} />
+                <RiVerifiedBadgeFill className="text-primary dark:text-[#7fb3df]" size={16} />
               )}
-              <p className="text-[#2c3c4a] text-[14px]">
+              <p className="text-[#2c3c4a] dark:text-[#e8edf2] text-[14px]">
                 {user.emailVerified ? "Email Verified" : "Pending Verification"}
               </p>
             </div>
           </div>
-          <div className="pb-3 border-b border-[#f0f4f8] last:border-0 last:pb-0">
+          <div className="pb-3 border-b border-[#f0f4f8] dark:border-[#1d3145] last:border-0 last:pb-0">
             <p
-              className="text-[#808385] text-[12px] uppercase tracking-wide mb-1"
+              className="text-[#808385] dark:text-[#7d8a96] text-[12px] uppercase tracking-wide mb-1"
               style={{ fontFamily: "Open Sans, sans-serif" }}
             >
               Account Role
             </p>
-            <p className="text-[#2c3c4a] text-[14px] capitalize">{user.role}</p>
+            <p className="text-[#2c3c4a] dark:text-[#e8edf2] text-[14px] capitalize">{user.role}</p>
           </div>
           <div className="pb-3">
             <p
-              className="text-[#808385] text-[12px] uppercase tracking-wide mb-1"
+              className="text-[#808385] dark:text-[#7d8a96] text-[12px] uppercase tracking-wide mb-1"
               style={{ fontFamily: "Open Sans, sans-serif" }}
             >
               Member Since
             </p>
-            <p className="text-[#2c3c4a] text-[14px]">
+            <p className="text-[#2c3c4a] dark:text-[#e8edf2] text-[14px]">
               {new Date(user.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",

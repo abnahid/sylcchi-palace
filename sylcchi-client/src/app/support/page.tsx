@@ -45,7 +45,7 @@ const faqs = [
 
 export default function Page() {
   return (
-    <main className="bg-slate-50">
+    <main className="bg-slate-50 dark:bg-[#0a1622]">
       <section className="bg-[#245b8d] text-white">
         <div className="mx-auto max-w-5xl px-4 py-16 text-center">
           <h1 className="font-mulish text-4xl font-extrabold md:text-5xl">
@@ -60,52 +60,52 @@ export default function Page() {
 
       <section className="mx-auto max-w-5xl px-4 py-14">
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h3 className="font-mulish text-lg font-bold text-[#245b8d]">
+          <div className="rounded-2xl bg-white dark:bg-[#101e2e] p-6 shadow-sm">
+            <h3 className="font-mulish text-lg font-bold text-[#245b8d] dark:text-[#7fb3df]">
               Call us
             </h3>
-            <p className="mt-2 text-sm text-slate-600">Front desk · 24/7</p>
+            <p className="mt-2 text-sm text-slate-600 dark:text-[#9aa5b0]">Front desk · 24/7</p>
             <a
               href="tel:+8801819334455"
-              className="mt-3 block text-base font-semibold text-slate-800 hover:text-[#245b8d]"
+              className="mt-3 block text-base font-semibold text-slate-800 dark:text-[#e8edf2] hover:text-[#245b8d] dark:hover:text-[#7fb3df]"
             >
               +880 1819-334455
             </a>
             <a
               href="tel:+8801677998877"
-              className="mt-1 block text-base font-semibold text-slate-800 hover:text-[#245b8d]"
+              className="mt-1 block text-base font-semibold text-slate-800 dark:text-[#e8edf2] hover:text-[#245b8d] dark:hover:text-[#7fb3df]"
             >
               +880 1677-998877
             </a>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h3 className="font-mulish text-lg font-bold text-[#245b8d]">
+          <div className="rounded-2xl bg-white dark:bg-[#101e2e] p-6 shadow-sm">
+            <h3 className="font-mulish text-lg font-bold text-[#245b8d] dark:text-[#7fb3df]">
               Email
             </h3>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-slate-600 dark:text-[#9aa5b0]">
               We reply within 2 hours
             </p>
             <a
               href="mailto:support@sylcchipalace.com"
-              className="mt-3 block text-base font-semibold text-slate-800 hover:text-[#245b8d]"
+              className="mt-3 block text-base font-semibold text-slate-800 dark:text-[#e8edf2] hover:text-[#245b8d] dark:hover:text-[#7fb3df]"
             >
               support@sylcchipalace.com
             </a>
             <a
               href="mailto:info@sylcchipalace.com"
-              className="mt-1 block text-base font-semibold text-slate-800 hover:text-[#245b8d]"
+              className="mt-1 block text-base font-semibold text-slate-800 dark:text-[#e8edf2] hover:text-[#245b8d] dark:hover:text-[#7fb3df]"
             >
               info@sylcchipalace.com
             </a>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h3 className="font-mulish text-lg font-bold text-[#245b8d]">
+          <div className="rounded-2xl bg-white dark:bg-[#101e2e] p-6 shadow-sm">
+            <h3 className="font-mulish text-lg font-bold text-[#245b8d] dark:text-[#7fb3df]">
               Visit us
             </h3>
-            <p className="mt-2 text-sm text-slate-600">Front desk reception</p>
-            <p className="mt-3 text-sm leading-6 text-slate-700">
+            <p className="mt-2 text-sm text-slate-600 dark:text-[#9aa5b0]">Front desk reception</p>
+            <p className="mt-3 text-sm leading-6 text-slate-700 dark:text-[#cbd2da]">
               Dargah Gate Road
               <br />
               Sylhet 3100, Bangladesh
@@ -114,19 +114,19 @@ export default function Page() {
         </div>
 
         <div className="mt-14">
-          <h2 className="font-mulish text-2xl font-extrabold text-slate-900">
+          <h2 className="font-mulish text-2xl font-extrabold text-slate-900 dark:text-white">
             Frequently asked questions
           </h2>
-          <div className="mt-6 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+          <div className="mt-6 divide-y divide-slate-200 dark:divide-[#243443] rounded-2xl border border-slate-200 dark:border-[#243443] bg-white dark:bg-[#101e2e]">
             {faqs.map((item) => (
               <details key={item.q} className="group p-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between text-base font-semibold text-slate-800">
+                <summary className="flex cursor-pointer list-none items-center justify-between text-base font-semibold text-slate-800 dark:text-[#e8edf2]">
                   <span>{item.q}</span>
-                  <span className="ml-4 text-[#245b8d] transition-transform group-open:rotate-45">
+                  <span className="ml-4 text-[#245b8d] dark:text-[#7fb3df] transition-transform group-open:rotate-45">
                     +
                   </span>
                 </summary>
-                <p className="mt-3 text-sm leading-6 text-slate-600">
+                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-[#9aa5b0]">
                   {item.a}
                 </p>
               </details>

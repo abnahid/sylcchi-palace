@@ -7,10 +7,10 @@ const homeNews = newsPosts.slice(0, 3);
 
 const Newspage = () => {
   return (
-    <section className="bg-[#f7fafd] py-12 lg:py-16">
+    <section className="bg-[#f7fafd] dark:bg-[#0a1622] py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
-          <h2 className="font-mulish text-3xl font-extrabold text-[#040b11]">
+          <h2 className="font-mulish text-3xl font-extrabold text-[#040b11] dark:text-white">
             Sylcchi Palace news
           </h2>
           <Link
@@ -24,7 +24,7 @@ const Newspage = () => {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {homeNews.map((item) => (
             <Link href={`/news/${item.slug}`} key={item.id} className="block">
-              <article className="overflow-hidden rounded-[12px] bg-white shadow-[0px_2px_30px_0px_rgba(47,76,88,0.06)] transition-shadow hover:shadow-md">
+              <article className="overflow-hidden rounded-[12px] bg-white dark:bg-[#101e2e] shadow-[0px_2px_30px_0px_rgba(47,76,88,0.06)] transition-shadow hover:shadow-md">
                 <div className="relative h-50">
                   <Image
                     src={item.coverImage}
@@ -33,21 +33,21 @@ const Newspage = () => {
                     className="object-cover"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  <div className="absolute top-0 left-0 rounded-br-[8px] bg-white/90 px-4 py-2 backdrop-blur-sm">
-                    <span className="text-[14px] text-[#235784]">
+                  <div className="absolute top-0 left-0 rounded-br-[8px] bg-white/90 dark:bg-[#101e2e]/90 px-4 py-2 backdrop-blur-sm">
+                    <span className="text-[14px] text-[#235784] dark:text-[#7fb3df]">
                       {item.tag}
                     </span>
                   </div>
                 </div>
 
                 <div className="p-5">
-                  <h3 className="mb-3 font-mulish text-[18px] font-bold text-[#040b11]">
+                  <h3 className="mb-3 font-mulish text-[18px] font-bold text-[#040b11] dark:text-white">
                     {item.title}
                   </h3>
-                  <p className="mb-3 font-open-sans text-[15px] leading-[1.6] text-[#2c3c4a]">
+                  <p className="mb-3 font-open-sans text-[15px] leading-[1.6] text-[#2c3c4a] dark:text-[#e8edf2]">
                     {item.excerpt}
                   </p>
-                  <div className="flex flex-wrap items-center gap-4 text-[13px] text-[#808385]">
+                  <div className="flex flex-wrap items-center gap-4 text-[13px] text-[#808385] dark:text-[#7d8a96]">
                     <span className="inline-flex items-center gap-1.5">
                       <FiCalendar className="h-3.5 w-3.5" /> {item.date}
                     </span>

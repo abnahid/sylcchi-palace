@@ -81,7 +81,7 @@ export default function RoomDetailClient({
         ]}
       />
 
-      <section className="bg-white py-8 lg:py-12">
+      <section className="bg-white dark:bg-[#101e2e] py-8 lg:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="relative">
             <RoomGallerySection

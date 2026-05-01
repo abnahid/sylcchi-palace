@@ -42,28 +42,28 @@ export default function NewsClient() {
   };
 
   return (
-    <section className="bg-white py-10 lg:py-14">
+    <section className="bg-white dark:bg-[#101e2e] py-10 lg:py-14">
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
-            <p className="font-open-sans text-sm text-[#808385]">
+            <p className="font-open-sans text-sm text-[#808385] dark:text-[#7d8a96]">
               Showing {posts.length} article{posts.length === 1 ? "" : "s"}
             </p>
 
             {posts.length > 0 ? (
               posts.map((post) => <NewsCard key={post.id} post={post} />)
             ) : (
-              <div className="rounded-xl border border-dashed border-[#d8e2ec] p-8 text-center">
-                <h3 className="font-mulish text-xl font-bold text-[#040b11]">
+              <div className="rounded-xl border border-dashed border-[#d8e2ec] dark:border-[#243443] p-8 text-center">
+                <h3 className="font-mulish text-xl font-bold text-[#040b11] dark:text-white">
                   No matching news found
                 </h3>
-                <p className="mt-2 font-open-sans text-sm text-[#808385]">
+                <p className="mt-2 font-open-sans text-sm text-[#808385] dark:text-[#7d8a96]">
                   Try a different category, tag, or search keyword.
                 </p>
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-4 rounded-md bg-[#eef4fb] px-4 py-2 text-sm font-semibold text-primary"
+                  className="mt-4 rounded-md bg-[#eef4fb] dark:bg-[#17354f]/40 px-4 py-2 text-sm font-semibold text-primary dark:text-[#7fb3df]"
                 >
                   Reset filters
                 </button>

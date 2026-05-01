@@ -26,7 +26,7 @@ export default function PhotoRooms() {
       <div className="mx-auto max-w-7xl px-4">
         {/* Header with title and category tabs */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] sm:text-3xl lg:text-4xl">
+          <h2 className="font-mulish text-2xl font-extrabold text-[#101b25] dark:text-[#e8edf2] sm:text-3xl lg:text-4xl">
             Photos of our rooms
           </h2>
           <div className="flex flex-wrap gap-4">
@@ -38,7 +38,7 @@ export default function PhotoRooms() {
                 className={`font-mulish text-sm font-semibold transition-colors ${
                   activeCategory === category
                     ? "text-primary underline underline-offset-4"
-                    : "text-gray-500 hover:text-primary"
+                    : "text-gray-500 dark:text-[#7d8a96] hover:text-primary"
                 }`}
               >
                 {category}

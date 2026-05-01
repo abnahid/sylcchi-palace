@@ -49,14 +49,14 @@ export function WishlistTabContent() {
   if (list.length === 0) {
     return (
       <div className="text-center py-20">
-        <Heart size={48} className="text-[#DDEAF6] mx-auto mb-4" />
+        <Heart size={48} className="text-[#DDEAF6] dark:text-[#17354f]/40 mx-auto mb-4" />
         <p
-          className="text-[#040b11] text-[18px] mb-2"
+          className="text-[#040b11] dark:text-white text-[18px] mb-2"
           style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
         >
           Your wishlist is empty
         </p>
-        <p className="text-[#808385] text-[14px] mb-6">
+        <p className="text-[#808385] dark:text-[#7d8a96] text-[14px] mb-6">
           Browse rooms and save your favourites here.
         </p>
         <Link
@@ -72,16 +72,16 @@ export function WishlistTabContent() {
 
   return (
     <div>
-      <p className="text-[#808385] text-[14px] mb-5">
+      <p className="text-[#808385] dark:text-[#7d8a96] text-[14px] mb-5">
         {list.length} saved room{list.length !== 1 ? "s" : ""}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
         {list.map((room) => (
           <div
             key={room.id}
-            className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden group hover:shadow-lg transition-shadow"
+            className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] overflow-hidden group hover:shadow-lg transition-shadow"
           >
-            <div className="relative h-40 overflow-hidden bg-[#DDEAF6]">
+            <div className="relative h-40 overflow-hidden bg-[#DDEAF6] dark:bg-[#17354f]/40">
               {resolveRoomImage(room) ? (
                 <img
                   src={resolveRoomImage(room)}
@@ -90,12 +90,12 @@ export function WishlistTabContent() {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Heart size={32} className="text-[#235784]" />
+                  <Heart size={32} className="text-[#235784] dark:text-[#7fb3df]" />
                 </div>
               )}
               {resolveRoomTag(room) && (
                 <span
-                  className="absolute top-3 left-3 bg-white/90 text-[#235784] text-[11px] px-2.5 py-1 rounded-full"
+                  className="absolute top-3 left-3 bg-white/90 dark:bg-[#101e2e]/90 text-[#235784] dark:text-[#7fb3df] text-[11px] px-2.5 py-1 rounded-full"
                   style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
                 >
                   {resolveRoomTag(room)}
@@ -103,7 +103,7 @@ export function WishlistTabContent() {
               )}
               <button
                 onClick={() => handleRemove(resolveRoomId(room))}
-                className="absolute top-3 right-3 w-8 h-8 bg-white/90 hover:bg-red-50 rounded-full flex items-center justify-center transition-colors"
+                className="absolute top-3 right-3 w-8 h-8 bg-white/90 dark:bg-[#101e2e]/90 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full flex items-center justify-center transition-colors"
                 title="Remove from wishlist"
                 disabled={removeFromWishlist.isPending || !resolveRoomId(room)}
               >
@@ -116,7 +116,7 @@ export function WishlistTabContent() {
             </div>
             <div className="p-4">
               <p
-                className="text-[#040b11] text-[15px] leading-snug mb-2"
+                className="text-[#040b11] dark:text-white text-[15px] leading-snug mb-2"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 {resolveRoomName(room)}
@@ -131,7 +131,7 @@ export function WishlistTabContent() {
                   {resolveRoomRating(room) && (
                     <>
                       <span
-                        className="text-[#2c3c4a] text-[13px]"
+                        className="text-[#2c3c4a] dark:text-[#e8edf2] text-[13px]"
                         style={{
                           fontFamily: "Open Sans, sans-serif",
                           fontWeight: 600,
@@ -139,19 +139,19 @@ export function WishlistTabContent() {
                       >
                         {resolveRoomRating(room)}
                       </span>
-                      <span className="text-[#808385] text-[12px]">
+                      <span className="text-[#808385] dark:text-[#7d8a96] text-[12px]">
                         ({resolveRoomReviews(room) ?? 0})
                       </span>
                     </>
                   )}
                 </div>
                 <p
-                  className="text-[#235784] text-[16px]"
+                  className="text-[#235784] dark:text-[#7fb3df] text-[16px]"
                   style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
                 >
                   ${resolveRoomPrice(room)}
                   <span
-                    className="text-[#808385] text-[12px]"
+                    className="text-[#808385] dark:text-[#7d8a96] text-[12px]"
                     style={{ fontWeight: 400 }}
                   >
                     /night
@@ -160,7 +160,7 @@ export function WishlistTabContent() {
               </div>
               <Link
                 href={getRoomDetailPath(room)}
-                className="flex items-center justify-center gap-1.5 w-full bg-[#DDEAF6] hover:bg-[#c5d9ee] text-[#235784] py-2.5 rounded-[8px] text-[13px] transition-colors"
+                className="flex items-center justify-center gap-1.5 w-full bg-[#DDEAF6] dark:bg-[#17354f]/40 hover:bg-[#c5d9ee] dark:hover:bg-[#17354f]/60 text-[#235784] dark:text-[#7fb3df] py-2.5 rounded-[8px] text-[13px] transition-colors"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 View Room

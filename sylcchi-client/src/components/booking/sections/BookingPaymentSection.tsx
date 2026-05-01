@@ -28,8 +28,8 @@ export default function BookingPaymentSection({
   onPaymentMethodChange,
 }: BookingPaymentSectionProps) {
   return (
-    <section className="rounded-2xl border border-[#dbe5ef] bg-white p-5 sm:p-6">
-      <h2 className="font-mulish text-xl font-extrabold text-[#101b25]">
+    <section className="rounded-2xl border border-[#dbe5ef] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-5 sm:p-6">
+      <h2 className="font-mulish text-xl font-extrabold text-[#101b25] dark:text-white">
         Payment method
       </h2>
 
@@ -44,14 +44,14 @@ export default function BookingPaymentSection({
               onClick={() => onPaymentMethodChange(option.value)}
               className={`rounded-xl border px-4 py-3 text-left transition-colors ${
                 active
-                  ? "border-primary bg-[#eaf3fb]"
-                  : "border-[#dbe5ef] bg-white hover:border-primary/60"
+                  ? "border-primary bg-[#eaf3fb] dark:bg-[#17354f]/40"
+                  : "border-[#dbe5ef] dark:border-[#243443] bg-white dark:bg-[#101e2e] hover:border-primary/60"
               }`}
             >
-              <p className="font-mulish text-sm font-extrabold text-[#101b25]">
+              <p className="font-mulish text-sm font-extrabold text-[#101b25] dark:text-white">
                 {option.title}
               </p>
-              <p className="mt-1 font-open-sans text-xs text-[#5f6c79]">
+              <p className="mt-1 font-open-sans text-xs text-[#5f6c79] dark:text-[#9aa5b0]">
                 {option.desc}
               </p>
             </button>

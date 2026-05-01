@@ -79,13 +79,13 @@ function BookingConfirmationContent() {
 
   if (!bookingId) {
     return (
-      <main className="bg-[#f7fafd] py-10">
+      <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-10">
         <div className="mx-auto max-w-3xl px-4">
-          <div className="rounded-2xl border border-[#dbe5ef] bg-white p-6 sm:p-8">
-            <h1 className="font-mulish text-2xl font-extrabold text-[#101b25]">
+          <div className="rounded-2xl border border-[#dbe5ef] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-6 sm:p-8">
+            <h1 className="font-mulish text-2xl font-extrabold text-[#101b25] dark:text-white">
               Booking not found
             </h1>
-            <p className="mt-2 font-open-sans text-sm text-[#5b6774]">
+            <p className="mt-2 font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
               A booking id was not provided. Please go back to the rooms page.
             </p>
             <Link
@@ -102,11 +102,11 @@ function BookingConfirmationContent() {
 
   if (isLoading) {
     return (
-      <main className="bg-[#f7fafd] py-10">
+      <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-10">
         <div className="mx-auto max-w-3xl px-4">
-          <div className="flex items-center gap-3 rounded-2xl border border-[#dbe5ef] bg-white p-8">
+          <div className="flex items-center gap-3 rounded-2xl border border-[#dbe5ef] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-8">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            <p className="font-open-sans text-sm text-[#5b6774]">
+            <p className="font-open-sans text-sm text-[#5b6774] dark:text-[#9aa5b0]">
               Loading booking details...
             </p>
           </div>
@@ -117,16 +117,16 @@ function BookingConfirmationContent() {
 
   if (isError || !booking) {
     return (
-      <main className="bg-[#f7fafd] py-10">
+      <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-10">
         <div className="mx-auto max-w-3xl px-4">
-          <div className="rounded-2xl border border-red-200 bg-white p-6 sm:p-8">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
-              <AlertCircle className="h-7 w-7 text-red-500" />
+          <div className="rounded-2xl border border-red-200 dark:border-red-500/30 bg-white dark:bg-[#101e2e] p-6 sm:p-8">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
+              <AlertCircle className="h-7 w-7 text-red-500 dark:text-red-400" />
             </div>
-            <h1 className="font-mulish text-2xl font-extrabold text-[#101b25]">
+            <h1 className="font-mulish text-2xl font-extrabold text-[#101b25] dark:text-white">
               Could not load booking
             </h1>
-            <p className="mt-2 font-open-sans text-sm leading-relaxed text-[#5f6c79]">
+            <p className="mt-2 font-open-sans text-sm leading-relaxed text-[#5f6c79] dark:text-[#9aa5b0]">
               {error?.message ?? "Something went wrong. Please try again later."}
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -164,11 +164,11 @@ function BookingConfirmationContent() {
       : normalizedBooking === "CONFIRMED" && normalizedPayment !== "PAID";
 
   return (
-    <main className="bg-[#f7fafd] py-8 lg:py-12">
+    <main className="bg-[#f7fafd] dark:bg-[#0a1622] py-8 lg:py-12">
       <div className="mx-auto max-w-4xl space-y-6 px-4">
         {/* Action error */}
         {actionError && (
-          <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-open-sans text-sm text-red-700">
+          <div className="flex items-center gap-2 rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 font-open-sans text-sm text-red-700 dark:text-red-300">
             <AlertCircle className="h-4 w-4 shrink-0" />
             {actionError}
           </div>
@@ -219,7 +219,7 @@ function BookingConfirmationContent() {
           </Link>
           <Link
             href="/rooms"
-            className="inline-flex w-full items-center justify-center rounded-md border border-[#dbe5ef] px-5 py-3 font-mulish text-sm font-extrabold text-[#5f6c79] sm:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-md border border-[#dbe5ef] dark:border-[#243443] px-5 py-3 font-mulish text-sm font-extrabold text-[#5f6c79] dark:text-[#9aa5b0] sm:w-auto"
           >
             Book another room
           </Link>
@@ -229,7 +229,7 @@ function BookingConfirmationContent() {
             <button
               type="button"
               onClick={() => setShowCancelConfirm(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-red-200 px-5 py-3 font-mulish text-sm font-extrabold text-red-600 transition-colors hover:bg-red-50 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-red-200 dark:border-red-500/30 px-5 py-3 font-mulish text-sm font-extrabold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 sm:w-auto"
             >
               <Ban className="h-4 w-4" /> Cancel booking
             </button>
@@ -238,11 +238,11 @@ function BookingConfirmationContent() {
 
         {/* Cancel confirmation */}
         {showCancelConfirm && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-5">
-            <p className="font-mulish text-sm font-bold text-red-800">
+          <div className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-5">
+            <p className="font-mulish text-sm font-bold text-red-800 dark:text-red-300">
               Are you sure you want to cancel this booking?
             </p>
-            <p className="mt-1 font-open-sans text-sm text-red-700">
+            <p className="mt-1 font-open-sans text-sm text-red-700 dark:text-red-300">
               {Number(booking.paidAmount) > 0
                 ? "Refund eligibility depends on how far your check-in date is. Cancellations 7+ days before check-in receive a full refund."
                 : "This action cannot be undone."}
@@ -252,7 +252,7 @@ function BookingConfirmationContent() {
                 type="button"
                 onClick={handleCancel}
                 disabled={cancelMutation.isPending}
-                className="inline-flex items-center gap-2 rounded-md bg-red-600 px-4 py-2 font-mulish text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-70"
+                className="inline-flex items-center gap-2 rounded-md bg-red-600 dark:bg-red-700 px-4 py-2 font-mulish text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-70"
               >
                 {cancelMutation.isPending ? (
                   <>
@@ -265,7 +265,7 @@ function BookingConfirmationContent() {
               <button
                 type="button"
                 onClick={() => setShowCancelConfirm(false)}
-                className="rounded-md border border-red-200 px-4 py-2 font-mulish text-sm font-bold text-red-700 transition-colors hover:bg-red-100"
+                className="rounded-md border border-red-200 dark:border-red-500/30 px-4 py-2 font-mulish text-sm font-bold text-red-700 dark:text-red-300 transition-colors hover:bg-red-100 dark:hover:bg-red-500/15"
               >
                 Keep booking
               </button>

@@ -164,11 +164,11 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
   return (
     <div className="space-y-6">
       {/* Profile Photo */}
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
-          <Camera size={16} className="text-[#235784]" />
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#f0f4f8] dark:border-[#1d3145] flex items-center gap-2">
+          <Camera size={16} className="text-[#235784] dark:text-[#7fb3df]" />
           <h3
-            className="text-[#040b11] text-[16px]"
+            className="text-[#040b11] dark:text-white text-[16px]"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Profile Photo
@@ -177,7 +177,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
         <div className="p-6">
           <div className="flex items-center gap-5">
             <div className="relative shrink-0">
-              <div className="w-20 h-20 rounded-full overflow-hidden border-3 border-white shadow-lg bg-[#DDEAF6]">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-3 border-white dark:border-[#1d3145] shadow-lg bg-[#DDEAF6] dark:bg-[#17354f]/40">
                 {user.image ? (
                   <img
                     src={user.image}
@@ -186,7 +186,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <User size={36} className="text-[#235784]" />
+                    <User size={36} className="text-[#235784] dark:text-[#7fb3df]" />
                   </div>
                 )}
                 {uploadImage.isPending && (
@@ -205,7 +205,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
             </div>
             <div className="min-w-0 flex-1">
               <p
-                className="text-[#040b11] text-[15px] mb-1"
+                className="text-[#040b11] dark:text-white text-[15px] mb-1"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 {user.name}
@@ -213,23 +213,23 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
               <button
                 onClick={() => avatarInputRef.current?.click()}
                 disabled={uploadImage.isPending}
-                className="flex items-center gap-2 border-2 border-[#e0e0e0] hover:border-[#235784] hover:text-[#235784] text-[#5f6c79] px-4 py-2 rounded-[8px] text-[13px] transition-all disabled:opacity-50"
+                className="flex items-center gap-2 border-2 border-[#e0e0e0] dark:border-[#243443] hover:border-[#235784] hover:text-[#235784] dark:hover:text-[#7fb3df] text-[#5f6c79] dark:text-[#cbd2da] px-4 py-2 rounded-[8px] text-[13px] transition-all disabled:opacity-50"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 <Camera size={13} />
                 {uploadImage.isPending ? "Uploading..." : "Change Photo"}
               </button>
-              <p className="text-[#808385] text-[11px] mt-2">
+              <p className="text-[#808385] dark:text-[#7d8a96] text-[11px] mt-2">
                 JPEG, PNG, or WebP — max 1MB. Image will be auto-cropped to
                 square.
               </p>
               {uploadImage.isSuccess && (
-                <p className="flex items-center gap-1.5 text-green-600 text-[12px] mt-1.5">
+                <p className="flex items-center gap-1.5 text-green-600 dark:text-green-400 text-[12px] mt-1.5">
                   <CheckCircle size={12} /> Photo updated successfully!
                 </p>
               )}
               {uploadImage.isError && (
-                <p className="flex items-center gap-1.5 text-red-500 text-[12px] mt-1.5">
+                <p className="flex items-center gap-1.5 text-red-500 dark:text-red-400 text-[12px] mt-1.5">
                   <AlertCircle size={12} /> {uploadImage.error.message}
                 </p>
               )}
@@ -239,11 +239,11 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
       </div>
 
       {/* Personal Information */}
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
-          <User size={16} className="text-[#235784]" />
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#f0f4f8] dark:border-[#1d3145] flex items-center gap-2">
+          <User size={16} className="text-[#235784] dark:text-[#7fb3df]" />
           <h3
-            className="text-[#040b11] text-[16px]"
+            className="text-[#040b11] dark:text-white text-[16px]"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Personal Information
@@ -253,7 +253,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label
-                className="block text-[#040b11] text-[13px] mb-1.5"
+                className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Full Name
@@ -264,15 +264,15 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                 onChange={(e) =>
                   setProfileForm((p) => ({ ...p, name: e.target.value }))
                 }
-                className="w-full border-2 border-[#e0e0e0] focus:border-[#235784] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] focus:outline-none transition-colors"
+                className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] focus:border-[#235784] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] focus:outline-none transition-colors"
               />
               {fieldErrors.name && (
-                <p className="mt-1 text-xs text-red-500">{fieldErrors.name}</p>
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400">{fieldErrors.name}</p>
               )}
             </div>
             <div>
               <label
-                className="block text-[#040b11] text-[13px] mb-1.5"
+                className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Email Address (Fixed)
@@ -281,9 +281,9 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                 type="email"
                 value={user.email}
                 disabled
-                className="w-full border-2 border-[#e0e0e0] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] bg-[#f7fafd] cursor-not-allowed opacity-60"
+                className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] bg-[#f7fafd] dark:bg-[#0a1622] cursor-not-allowed opacity-60"
               />
-              <p className="mt-1 text-xs text-[#808385]">
+              <p className="mt-1 text-xs text-[#808385] dark:text-[#7d8a96]">
                 Email is fixed. Use the verification flow for email changes.
               </p>
             </div>
@@ -291,7 +291,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label
-                className="block text-[#040b11] text-[13px] mb-1.5"
+                className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Phone Number
@@ -299,7 +299,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
               <div className="relative">
                 <Phone
                   size={14}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808385]"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808385] dark:text-[#7d8a96]"
                 />
                 <input
                   type="tel"
@@ -307,16 +307,16 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                   onChange={(e) =>
                     setProfileForm((p) => ({ ...p, phone: e.target.value }))
                   }
-                  className="w-full border-2 border-[#e0e0e0] focus:border-[#235784] rounded-[8px] pl-9 pr-4 py-2.5 text-[14px] text-[#2c3c4a] focus:outline-none transition-colors"
+                  className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] focus:border-[#235784] rounded-[8px] pl-9 pr-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] focus:outline-none transition-colors"
                 />
               </div>
               {fieldErrors.phone && (
-                <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400">{fieldErrors.phone}</p>
               )}
             </div>
             <div>
               <label
-                className="block text-[#040b11] text-[13px] mb-1.5"
+                className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Location
@@ -324,7 +324,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
               <div className="relative">
                 <MapPin
                   size={14}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808385]"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808385] dark:text-[#7d8a96]"
                 />
                 <input
                   type="text"
@@ -334,16 +334,16 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                     setProfileForm((p) => ({ ...p, location: e.target.value }))
                   }
                   placeholder="City, Country"
-                  className="w-full border-2 border-[#e0e0e0] focus:border-[#235784] rounded-[8px] pl-9 pr-4 py-2.5 text-[14px] text-[#2c3c4a] focus:outline-none transition-colors"
+                  className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] focus:border-[#235784] rounded-[8px] pl-9 pr-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] focus:outline-none transition-colors"
                 />
               </div>
               <div className="mt-1 flex items-center justify-between">
                 {fieldErrors.location ? (
-                  <p className="text-xs text-red-500">{fieldErrors.location}</p>
+                  <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.location}</p>
                 ) : (
                   <span />
                 )}
-                <p className="text-xs text-[#808385]">
+                <p className="text-xs text-[#808385] dark:text-[#7d8a96]">
                   {profileForm.location.length}/100
                 </p>
               </div>
@@ -352,7 +352,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label
-                className="block text-[#040b11] text-[13px] mb-1.5"
+                className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Website
@@ -360,7 +360,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
               <div className="relative">
                 <Globe
                   size={14}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808385]"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808385] dark:text-[#7d8a96]"
                 />
                 <input
                   type="url"
@@ -369,18 +369,18 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                     setProfileForm((p) => ({ ...p, website: e.target.value }))
                   }
                   placeholder="https://yourwebsite.com"
-                  className="w-full border-2 border-[#e0e0e0] focus:border-[#235784] rounded-[8px] pl-9 pr-4 py-2.5 text-[14px] text-[#2c3c4a] focus:outline-none transition-colors"
+                  className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] focus:border-[#235784] rounded-[8px] pl-9 pr-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] focus:outline-none transition-colors"
                 />
               </div>
               {fieldErrors.website && (
-                <p className="mt-1 text-xs text-red-500">
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400">
                   {fieldErrors.website}
                 </p>
               )}
             </div>
             <div>
               <label
-                className="block text-[#040b11] text-[13px] mb-1.5"
+                className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Nationality
@@ -392,17 +392,17 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                 onChange={(e) =>
                   setProfileForm((p) => ({ ...p, nationality: e.target.value }))
                 }
-                className="w-full border-2 border-[#e0e0e0] focus:border-[#235784] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] focus:outline-none transition-colors"
+                className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] focus:border-[#235784] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] focus:outline-none transition-colors"
               />
               <div className="mt-1 flex items-center justify-between">
                 {fieldErrors.nationality ? (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-red-500 dark:text-red-400">
                     {fieldErrors.nationality}
                   </p>
                 ) : (
                   <span />
                 )}
-                <p className="text-xs text-[#808385]">
+                <p className="text-xs text-[#808385] dark:text-[#7d8a96]">
                   {profileForm.nationality.length}/100
                 </p>
               </div>
@@ -410,7 +410,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
           </div>
           <div>
             <label
-              className="block text-[#040b11] text-[13px] mb-1.5"
+              className="block text-[#040b11] dark:text-white text-[13px] mb-1.5"
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
             >
               Bio
@@ -423,27 +423,27 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                 setProfileForm((p) => ({ ...p, bio: e.target.value }))
               }
               placeholder="Tell other travellers about yourself..."
-              className="w-full border-2 border-[#e0e0e0] focus:border-[#235784] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] focus:outline-none transition-colors resize-none"
+              className="w-full border-2 border-[#e0e0e0] dark:border-[#243443] focus:border-[#235784] rounded-[8px] px-4 py-2.5 text-[14px] text-[#2c3c4a] dark:text-[#e8edf2] focus:outline-none transition-colors resize-none"
             />
             <div className="mt-1 flex items-center justify-between">
               {fieldErrors.bio ? (
-                <p className="text-xs text-red-500">{fieldErrors.bio}</p>
+                <p className="text-xs text-red-500 dark:text-red-400">{fieldErrors.bio}</p>
               ) : (
                 <span />
               )}
-              <p className="text-[#808385] text-[12px]">
+              <p className="text-[#808385] dark:text-[#7d8a96] text-[12px]">
                 {profileForm.bio.length}/36
               </p>
             </div>
           </div>
           {profileError && (
-            <p className="text-sm text-red-600">{profileError}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{profileError}</p>
           )}
           <div className="flex items-center gap-3 pt-1">
             <button
               type="submit"
               disabled={updateProfile.isPending}
-              className="flex items-center gap-2 bg-[#235784] hover:bg-[#1a4a6d] disabled:bg-[#c0cdd6] text-white px-6 py-2.5 rounded-[8px] text-[14px] transition-all"
+              className="flex items-center gap-2 bg-[#235784] hover:bg-[#1a4a6d] disabled:bg-[#c0cdd6] dark:disabled:bg-[#3a4a5a] text-white px-6 py-2.5 rounded-[8px] text-[14px] transition-all"
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
             >
               {updateProfile.isPending ? (
@@ -457,7 +457,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
               )}
             </button>
             {profileSaved && (
-              <span className="flex items-center gap-1.5 text-green-600 text-[13px]">
+              <span className="flex items-center gap-1.5 text-green-600 dark:text-green-400 text-[13px]">
                 <CheckCircle size={14} /> Saved!
               </span>
             )}
@@ -466,18 +466,18 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
       </div>
 
       {/* Change Password */}
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
-          <Lock size={16} className="text-[#235784]" />
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#f0f4f8] dark:border-[#1d3145] flex items-center gap-2">
+          <Lock size={16} className="text-[#235784] dark:text-[#7fb3df]" />
           <h3
-            className="text-[#040b11] text-[16px]"
+            className="text-[#040b11] dark:text-white text-[16px]"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Change Password
           </h3>
         </div>
         <div className="p-6">
-          <p className="text-[14px] text-[#5f6c79] mb-4">
+          <p className="text-[14px] text-[#5f6c79] dark:text-[#cbd2da] mb-4">
             To change your password, we will send a verification code to your
             email address for security.
           </p>
@@ -492,11 +492,11 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
       </div>
 
       {/* Notifications */}
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
-          <Bell size={16} className="text-[#235784]" />
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#f0f4f8] dark:border-[#1d3145] flex items-center gap-2">
+          <Bell size={16} className="text-[#235784] dark:text-[#7fb3df]" />
           <h3
-            className="text-[#040b11] text-[16px]"
+            className="text-[#040b11] dark:text-white text-[16px]"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Notifications
@@ -511,7 +511,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
               >
                 <div className="flex-1 min-w-0">
                   <p
-                    className="text-[#040b11] text-[14px]"
+                    className="text-[#040b11] dark:text-white text-[14px]"
                     style={{
                       fontFamily: "Mulish, sans-serif",
                       fontWeight: 700,
@@ -520,7 +520,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                     {NOTIF_LABELS[key].title}
                   </p>
                   <p
-                    className="text-[#808385] text-[12px]"
+                    className="text-[#808385] dark:text-[#7d8a96] text-[12px]"
                     style={{ fontFamily: "Open Sans, sans-serif" }}
                   >
                     {NOTIF_LABELS[key].sub}
@@ -530,7 +530,7 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
                   type="button"
                   onClick={() => toggleNotif(key)}
                   className={`relative w-11 h-6 rounded-full transition-all shrink-0 ${
-                    notifs[key] ? "bg-[#235784]" : "bg-[#c0cdd6]"
+                    notifs[key] ? "bg-[#235784]" : "bg-[#c0cdd6] dark:bg-[#3a4a5a]"
                   }`}
                 >
                   <span
@@ -546,11 +546,11 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
       </div>
 
       {/* Privacy and Security */}
-      <div className="bg-white border border-[#e8edf2] rounded-[16px] overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#f0f4f8] flex items-center gap-2">
-          <Shield size={16} className="text-[#235784]" />
+      <div className="bg-white dark:bg-[#101e2e] border border-[#e8edf2] dark:border-[#243443] rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#f0f4f8] dark:border-[#1d3145] flex items-center gap-2">
+          <Shield size={16} className="text-[#235784] dark:text-[#7fb3df]" />
           <h3
-            className="text-[#040b11] text-[16px]"
+            className="text-[#040b11] dark:text-white text-[16px]"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Privacy and Security
@@ -569,20 +569,20 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
           ].map(({ label, sub }) => (
             <button
               key={label}
-              className="w-full flex items-center justify-between px-4 py-3 border border-[#e8edf2] rounded-[10px] hover:border-[#235784] hover:bg-[#f7fafd] transition-all group text-left"
+              className="w-full flex items-center justify-between px-4 py-3 border border-[#e8edf2] dark:border-[#243443] rounded-[10px] hover:border-[#235784] hover:bg-[#f7fafd] dark:hover:bg-[#1a2b3d] transition-all group text-left"
             >
               <div>
                 <p
-                  className="text-[#2c3c4a] text-[14px]"
+                  className="text-[#2c3c4a] dark:text-[#e8edf2] text-[14px]"
                   style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
                 >
                   {label}
                 </p>
-                <p className="text-[#808385] text-[12px]">{sub}</p>
+                <p className="text-[#808385] dark:text-[#7d8a96] text-[12px]">{sub}</p>
               </div>
               <ChevronRight
                 size={15}
-                className="text-[#808385] group-hover:translate-x-1 transition-transform"
+                className="text-[#808385] dark:text-[#7d8a96] group-hover:translate-x-1 transition-transform"
               />
             </button>
           ))}
@@ -590,11 +590,11 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-white border border-red-200 rounded-[16px] overflow-hidden">
-        <div className="px-6 py-4 border-b border-red-100 flex items-center gap-2">
-          <AlertCircle size={16} className="text-red-500" />
+      <div className="bg-white dark:bg-[#101e2e] border border-red-200 dark:border-red-500/30 rounded-[16px] overflow-hidden">
+        <div className="px-6 py-4 border-b border-red-100 dark:border-red-500/30 flex items-center gap-2">
+          <AlertCircle size={16} className="text-red-500 dark:text-red-400" />
           <h3
-            className="text-red-600 text-[16px]"
+            className="text-red-600 dark:text-red-400 text-[16px]"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Danger Zone
@@ -604,14 +604,14 @@ export function SettingsTabContent({ user }: SettingsTabContentProps) {
           <button
             onClick={handleSignOut}
             disabled={signOutMutation.isPending}
-            className="flex items-center justify-center gap-2 border-2 border-[#e0e0e0] text-[#808385] hover:border-[#235784] hover:text-[#235784] px-5 py-2.5 rounded-[8px] text-[14px] transition-all disabled:opacity-50"
+            className="flex items-center justify-center gap-2 border-2 border-[#e0e0e0] dark:border-[#243443] text-[#808385] dark:text-[#7d8a96] hover:border-[#235784] hover:text-[#235784] dark:hover:text-[#7fb3df] px-5 py-2.5 rounded-[8px] text-[14px] transition-all disabled:opacity-50"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
           >
             <LogOut size={15} />{" "}
             {signOutMutation.isPending ? "Signing out..." : "Sign Out"}
           </button>
           <button
-            className="flex items-center justify-center gap-2 border-2 border-red-200 text-red-500 hover:bg-red-50 px-5 py-2.5 rounded-[8px] text-[14px] transition-all"
+            className="flex items-center justify-center gap-2 border-2 border-red-200 dark:border-red-500/30 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 px-5 py-2.5 rounded-[8px] text-[14px] transition-all"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
           >
             <Trash2 size={15} /> Delete Account

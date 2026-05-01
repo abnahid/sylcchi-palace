@@ -27,11 +27,11 @@ export default function RoomCard({ room }: RoomCardProps) {
           className="object-cover"
         />
 
-        <div className="absolute right-0 bottom-10 rounded-l-md bg-white px-3.5 py-2.5 text-sm shadow-sm">
+        <div className="absolute right-0 bottom-10 rounded-l-md bg-white dark:bg-[#101e2e] px-3.5 py-2.5 text-sm shadow-sm">
           <span className="font-mulish text-[22px] font-extrabold text-foreground">
             ${room.price}
           </span>
-          <span className="ml-1  text-[#707884]">/ 1 night</span>
+          <span className="ml-1  text-[#707884] dark:text-[#9aa5b0]">/ 1 night</span>
         </div>
       </div>
 
@@ -40,7 +40,7 @@ export default function RoomCard({ room }: RoomCardProps) {
           {room.name}
         </h3>
 
-        <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2  text-[#4e5a69]">
+        <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2  text-[#4e5a69] dark:text-[#cbd2da]">
           <span className="flex items-center gap-1">
             <UserRound size={14} /> {room.sleeps} Sleeps
           </span>

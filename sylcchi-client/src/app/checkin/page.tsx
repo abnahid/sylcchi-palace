@@ -85,7 +85,7 @@ function CheckinPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f8fafc] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#f8fafc] to-white dark:from-[#0a1622] dark:to-[#101e2e]">
       <div className="mx-auto max-w-lg px-4 py-16">
         {/* Header */}
         <div className="mb-10 text-center">
@@ -93,12 +93,12 @@ function CheckinPageContent() {
             <ClipboardCheck size={28} className="text-white" />
           </div>
           <h1
-            className="text-3xl text-[#040b11] mb-2"
+            className="text-3xl text-[#040b11] dark:text-white mb-2"
             style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
           >
             Online Check-in
           </h1>
-          <p className="text-[15px] text-[#808385]">
+          <p className="text-[15px] text-[#808385] dark:text-[#7d8a96]">
             Check in before you arrive for a smoother experience
           </p>
         </div>
@@ -115,7 +115,7 @@ function CheckinPageContent() {
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
                     isActive
                       ? "bg-[#235784] text-white shadow-md"
-                      : "bg-[#e8edf2] text-[#808385]"
+                      : "bg-[#e8edf2] dark:bg-[#243443] text-[#808385] dark:text-[#7d8a96]"
                   }`}
                 >
                   {step === "done" && i <= 2 ? (
@@ -125,14 +125,14 @@ function CheckinPageContent() {
                   )}
                 </div>
                 <span
-                  className={`text-sm ${isActive ? "font-semibold text-[#040b11]" : "text-[#808385]"}`}
+                  className={`text-sm ${isActive ? "font-semibold text-[#040b11] dark:text-white" : "text-[#808385] dark:text-[#7d8a96]"}`}
                   style={{ fontFamily: "Mulish, sans-serif" }}
                 >
                   {label}
                 </span>
                 {i < 2 && (
                   <div
-                    className={`h-px w-8 ${isActive ? "bg-[#235784]" : "bg-[#e8edf2]"}`}
+                    className={`h-px w-8 ${isActive ? "bg-[#235784]" : "bg-[#e8edf2] dark:bg-[#243443]"}`}
                   />
                 )}
               </div>
@@ -142,21 +142,21 @@ function CheckinPageContent() {
 
         {/* Step 1: Lookup */}
         {step === "lookup" && (
-          <div className="rounded-2xl border border-[#e8edf2] bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-[#e8edf2] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-6 shadow-sm">
             <h2
-              className="text-lg text-[#040b11] mb-1"
+              className="text-lg text-[#040b11] dark:text-white mb-1"
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
             >
               Verify Your Booking
             </h2>
-            <p className="text-[13px] text-[#808385] mb-5">
+            <p className="text-[13px] text-[#808385] dark:text-[#7d8a96] mb-5">
               Enter your booking code and the email used when booking. We'll
               send a verification code.
             </p>
             <form onSubmit={handleLookup} className="space-y-4">
               <div>
                 <label
-                  className="mb-1 block text-[13px] font-semibold text-[#040b11]"
+                  className="mb-1 block text-[13px] font-semibold text-[#040b11] dark:text-white"
                   style={{ fontFamily: "Mulish, sans-serif" }}
                 >
                   Booking Code
@@ -167,12 +167,12 @@ function CheckinPageContent() {
                   onChange={(e) => setBookingCode(e.target.value)}
                   placeholder="e.g. BK-ABC123"
                   required
-                  className="w-full rounded-lg border border-[#e0e0e0] px-4 py-2.5 text-sm text-[#040b11] placeholder-[#b0b0b0] outline-none transition-colors focus:border-[#235784]"
+                  className="w-full rounded-lg border border-[#e0e0e0] dark:border-[#243443] px-4 py-2.5 text-sm text-[#040b11] dark:text-white placeholder-[#b0b0b0] dark:placeholder-[#7d8a96] outline-none transition-colors focus:border-[#235784]"
                 />
               </div>
               <div>
                 <label
-                  className="mb-1 block text-[13px] font-semibold text-[#040b11]"
+                  className="mb-1 block text-[13px] font-semibold text-[#040b11] dark:text-white"
                   style={{ fontFamily: "Mulish, sans-serif" }}
                 >
                   Email Address
@@ -183,11 +183,11 @@ function CheckinPageContent() {
                   onChange={(e) => setIdentity(e.target.value)}
                   placeholder="guest@email.com"
                   required
-                  className="w-full rounded-lg border border-[#e0e0e0] px-4 py-2.5 text-sm text-[#040b11] placeholder-[#b0b0b0] outline-none transition-colors focus:border-[#235784]"
+                  className="w-full rounded-lg border border-[#e0e0e0] dark:border-[#243443] px-4 py-2.5 text-sm text-[#040b11] dark:text-white placeholder-[#b0b0b0] dark:placeholder-[#7d8a96] outline-none transition-colors focus:border-[#235784]"
                 />
               </div>
               {error && (
-                <p className="text-[13px] text-red-500">{error}</p>
+                <p className="text-[13px] text-red-500 dark:text-red-400">{error}</p>
               )}
               <button
                 type="submit"
@@ -207,20 +207,20 @@ function CheckinPageContent() {
 
         {/* Step 2: OTP */}
         {step === "otp" && (
-          <div className="rounded-2xl border border-[#e8edf2] bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-[#e8edf2] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-6 shadow-sm">
             <h2
-              className="text-lg text-[#040b11] mb-1"
+              className="text-lg text-[#040b11] dark:text-white mb-1"
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
             >
               Enter Verification Code
             </h2>
-            <p className="text-[13px] text-[#808385] mb-5">
+            <p className="text-[13px] text-[#808385] dark:text-[#7d8a96] mb-5">
               We've sent a 6-digit code to <strong>{identity}</strong>.
             </p>
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div>
                 <label
-                  className="mb-1 block text-[13px] font-semibold text-[#040b11]"
+                  className="mb-1 block text-[13px] font-semibold text-[#040b11] dark:text-white"
                   style={{ fontFamily: "Mulish, sans-serif" }}
                 >
                   OTP Code
@@ -232,11 +232,11 @@ function CheckinPageContent() {
                   placeholder="Enter 6-digit code"
                   maxLength={6}
                   required
-                  className="w-full rounded-lg border border-[#e0e0e0] px-4 py-2.5 text-center text-lg font-mono tracking-widest text-[#040b11] outline-none transition-colors focus:border-[#235784]"
+                  className="w-full rounded-lg border border-[#e0e0e0] dark:border-[#243443] px-4 py-2.5 text-center text-lg font-mono tracking-widest text-[#040b11] dark:text-white outline-none transition-colors focus:border-[#235784]"
                 />
               </div>
               {error && (
-                <p className="text-[13px] text-red-500">{error}</p>
+                <p className="text-[13px] text-red-500 dark:text-red-400">{error}</p>
               )}
               <div className="flex gap-3">
                 <button
@@ -245,7 +245,7 @@ function CheckinPageContent() {
                     setStep("lookup");
                     setError("");
                   }}
-                  className="flex-1 rounded-lg border border-[#e0e0e0] px-4 py-2.5 text-sm font-semibold text-[#808385] transition-colors hover:bg-[#f8fafc]"
+                  className="flex-1 rounded-lg border border-[#e0e0e0] dark:border-[#243443] px-4 py-2.5 text-sm font-semibold text-[#808385] dark:text-[#7d8a96] transition-colors hover:bg-[#f8fafc] dark:hover:bg-[#1a2b3d]"
                 >
                   Back
                 </button>
@@ -271,36 +271,36 @@ function CheckinPageContent() {
           <div className="space-y-4">
             {/* Booking summary */}
             {bookingInfo && (
-              <div className="rounded-2xl border border-[#e8edf2] bg-white p-5">
+              <div className="rounded-2xl border border-[#e8edf2] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-5">
                 <p
-                  className="text-[13px] uppercase tracking-wider text-[#808385] mb-3"
+                  className="text-[13px] uppercase tracking-wider text-[#808385] dark:text-[#7d8a96] mb-3"
                   style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
                 >
                   Your Booking
                 </p>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
-                    <p className="text-[#808385] text-xs">Room</p>
-                    <p className="font-semibold text-[#040b11]">
+                    <p className="text-[#808385] dark:text-[#7d8a96] text-xs">Room</p>
+                    <p className="font-semibold text-[#040b11] dark:text-white">
                       {(bookingInfo.room as { name?: string })?.name ?? "—"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[#808385] text-xs">Total</p>
-                    <p className="font-semibold text-[#040b11]">
+                    <p className="text-[#808385] dark:text-[#7d8a96] text-xs">Total</p>
+                    <p className="font-semibold text-[#040b11] dark:text-white">
                       ${Number(bookingInfo.total ?? 0).toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[#808385] text-xs">Paid</p>
-                    <p className="font-semibold text-emerald-600">
+                    <p className="text-[#808385] dark:text-[#7d8a96] text-xs">Paid</p>
+                    <p className="font-semibold text-emerald-600 dark:text-green-400">
                       ${Number(bookingInfo.paid ?? 0).toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[#808385] text-xs">Due</p>
+                    <p className="text-[#808385] dark:text-[#7d8a96] text-xs">Due</p>
                     <p
-                      className={`font-semibold ${Number(bookingInfo.due ?? 0) > 0 ? "text-red-500" : "text-[#808385]"}`}
+                      className={`font-semibold ${Number(bookingInfo.due ?? 0) > 0 ? "text-red-500 dark:text-red-400" : "text-[#808385] dark:text-[#7d8a96]"}`}
                     >
                       ${Number(bookingInfo.due ?? 0).toLocaleString()}
                     </p>
@@ -309,20 +309,20 @@ function CheckinPageContent() {
               </div>
             )}
 
-            <div className="rounded-2xl border border-[#e8edf2] bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-[#e8edf2] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-6 shadow-sm">
               <h2
-                className="text-lg text-[#040b11] mb-1"
+                className="text-lg text-[#040b11] dark:text-white mb-1"
                 style={{ fontFamily: "Mulish, sans-serif", fontWeight: 700 }}
               >
                 Complete Check-in
               </h2>
-              <p className="text-[13px] text-[#808385] mb-5">
+              <p className="text-[13px] text-[#808385] dark:text-[#7d8a96] mb-5">
                 You're verified. Add any notes and complete your check-in.
               </p>
               <form onSubmit={handleComplete} className="space-y-4">
                 <div>
                   <label
-                    className="mb-1 block text-[13px] font-semibold text-[#040b11]"
+                    className="mb-1 block text-[13px] font-semibold text-[#040b11] dark:text-white"
                     style={{ fontFamily: "Mulish, sans-serif" }}
                   >
                     Notes (optional)
@@ -332,11 +332,11 @@ function CheckinPageContent() {
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Special requests, early arrival, etc."
                     rows={3}
-                    className="w-full rounded-lg border border-[#e0e0e0] px-4 py-2.5 text-sm text-[#040b11] placeholder-[#b0b0b0] outline-none transition-colors focus:border-[#235784] resize-none"
+                    className="w-full rounded-lg border border-[#e0e0e0] dark:border-[#243443] px-4 py-2.5 text-sm text-[#040b11] dark:text-white placeholder-[#b0b0b0] dark:placeholder-[#7d8a96] outline-none transition-colors focus:border-[#235784] resize-none"
                   />
                 </div>
                 {error && (
-                  <p className="text-[13px] text-red-500">{error}</p>
+                  <p className="text-[13px] text-red-500 dark:text-red-400">{error}</p>
                 )}
                 <button
                   type="submit"
@@ -357,24 +357,24 @@ function CheckinPageContent() {
 
         {/* Step 4: Done */}
         {step === "done" && (
-          <div className="rounded-2xl border border-[#e8edf2] bg-white p-8 text-center shadow-sm">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
-              <CheckCircle size={32} className="text-emerald-600" />
+          <div className="rounded-2xl border border-[#e8edf2] dark:border-[#243443] bg-white dark:bg-[#101e2e] p-8 text-center shadow-sm">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-green-500/10">
+              <CheckCircle size={32} className="text-emerald-600 dark:text-green-400" />
             </div>
             <h2
-              className="text-xl text-[#040b11] mb-2"
+              className="text-xl text-[#040b11] dark:text-white mb-2"
               style={{ fontFamily: "Mulish, sans-serif", fontWeight: 800 }}
             >
               You're Checked In!
             </h2>
-            <p className="text-[14px] text-[#808385] mb-6">
+            <p className="text-[14px] text-[#808385] dark:text-[#7d8a96] mb-6">
               Your online check-in is complete. Show this confirmation at the
               front desk when you arrive.
             </p>
-            <div className="inline-block rounded-xl bg-[#f0f5fa] px-6 py-3 mb-6">
-              <p className="text-xs text-[#808385] mb-1">Booking Code</p>
+            <div className="inline-block rounded-xl bg-[#f0f5fa] dark:bg-[#17354f]/40 px-6 py-3 mb-6">
+              <p className="text-xs text-[#808385] dark:text-[#7d8a96] mb-1">Booking Code</p>
               <p
-                className="text-xl text-[#235784] font-mono"
+                className="text-xl text-[#235784] dark:text-[#7fb3df] font-mono"
                 style={{ fontWeight: 800 }}
               >
                 {bookingCode}
@@ -400,8 +400,8 @@ export default function CheckinPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center">
-          <Loader2 size={28} className="animate-spin text-[#235784]" />
+        <div className="flex min-h-screen items-center justify-center dark:bg-[#0a1622]">
+          <Loader2 size={28} className="animate-spin text-[#235784] dark:text-[#7fb3df]" />
         </div>
       }
     >

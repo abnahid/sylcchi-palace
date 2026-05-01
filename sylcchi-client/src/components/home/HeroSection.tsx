@@ -47,25 +47,25 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="bg-white pt-4 pb-8 sm:pt-6 sm:pb-16">
+    <section className="bg-white dark:bg-[#101e2e] pt-4 pb-8 sm:pt-6 sm:pb-16">
       <div className="mx-auto w-full max-w-370 px-3 sm:px-6">
         <div className="grid grid-cols-1 overflow-visible lg:grid-cols-2">
-          <div className="bg-[#edf1f5] px-4 py-8 sm:px-10 sm:py-12 lg:px-20 lg:py-16">
-            <h1 className="max-w-130 font-mulish text-4xl font-extrabold leading-[1.08] text-[#0d1720] sm:text-5xl">
+          <div className="bg-[#edf1f5] dark:bg-[#0a1622] px-4 py-8 sm:px-10 sm:py-12 lg:px-20 lg:py-16">
+            <h1 className="max-w-130 font-mulish text-4xl font-extrabold leading-[1.08] text-[#0d1720] dark:text-white sm:text-5xl">
               {heroContent.title}
             </h1>
 
             <div className="mt-7 flex max-w-117.5 items-start gap-4">
               <span className="mt-1 h-18 w-0.75 shrink-0 bg-[#2e5f8c]" />
-              <p className="font-open-sans text-[14px] leading-6 text-[#5b6774]">
+              <p className="font-open-sans text-[14px] leading-6 text-[#5b6774] dark:text-[#9aa5b0]">
                 {heroContent.description}
               </p>
             </div>
 
-            <div className="relative z-10 mt-8 w-full max-w-162.5 rounded-md bg-white ring-1 ring-black/5">
+            <div className="relative z-10 mt-8 w-full max-w-162.5 rounded-md bg-white dark:bg-[#101e2e] ring-1 ring-black/5 dark:ring-white/10">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                <div className="relative border-b border-[#eff2f5] px-4 py-3 md:border-r md:border-b-0">
-                  <p className="font-mulish text-[12px] font-bold text-[#101b25]">
+                <div className="relative border-b border-[#eff2f5] dark:border-[#1d3145] px-4 py-3 md:border-r md:border-b-0">
+                  <p className="font-mulish text-[12px] font-bold text-[#101b25] dark:text-[#e8edf2]">
                     Check-in
                   </p>
                   <button
@@ -75,7 +75,7 @@ export default function HeroSection() {
                         prev === "checkIn" ? null : "checkIn",
                       )
                     }
-                    className="mt-1 flex w-full items-center gap-2 text-left text-[#7e8894]"
+                    className="mt-1 flex w-full items-center gap-2 text-left text-[#7e8894] dark:text-[#7d8a96]"
                   >
                     <CalendarDays className="h-3.5 w-3.5" />
                     <span className="font-open-sans text-[13px]">
@@ -86,7 +86,7 @@ export default function HeroSection() {
                   </button>
 
                   {openCalendar === "checkIn" && (
-                    <div className="absolute  z-80 rounded-lg border bg-white p-2 shadow-xl">
+                    <div className="absolute  z-80 rounded-lg border dark:border-[#243443] bg-white dark:bg-[#101e2e] p-2 shadow-xl">
                       <Calendar
                         mode="single"
                         selected={checkInDate}
@@ -110,8 +110,8 @@ export default function HeroSection() {
                   )}
                 </div>
 
-                <div className="relative border-b border-[#eff2f5] px-4 py-3 md:border-r md:border-b-0">
-                  <p className="font-mulish text-[12px] font-bold text-[#101b25]">
+                <div className="relative border-b border-[#eff2f5] dark:border-[#1d3145] px-4 py-3 md:border-r md:border-b-0">
+                  <p className="font-mulish text-[12px] font-bold text-[#101b25] dark:text-[#e8edf2]">
                     Check-out
                   </p>
                   <button
@@ -121,7 +121,7 @@ export default function HeroSection() {
                         prev === "checkOut" ? null : "checkOut",
                       )
                     }
-                    className="mt-1 flex w-full items-center gap-2 text-left text-[#7e8894]"
+                    className="mt-1 flex w-full items-center gap-2 text-left text-[#7e8894] dark:text-[#7d8a96]"
                   >
                     <CalendarDays className="h-3.5 w-3.5" />
                     <span className="font-open-sans text-[13px]">
@@ -132,7 +132,7 @@ export default function HeroSection() {
                   </button>
 
                   {openCalendar === "checkOut" && (
-                    <div className="absolute  z-80 rounded-lg border bg-white p-2 shadow-xl">
+                    <div className="absolute  z-80 rounded-lg border dark:border-[#243443] bg-white dark:bg-[#101e2e] p-2 shadow-xl">
                       <Calendar
                         mode="single"
                         selected={checkOutDate}
@@ -149,11 +149,11 @@ export default function HeroSection() {
                   )}
                 </div>
 
-                <div className="border-b border-[#eff2f5] px-4 py-3 md:border-r md:border-b-0 lg:border-r">
-                  <p className="font-mulish text-[12px] font-bold text-[#101b25]">
+                <div className="border-b border-[#eff2f5] dark:border-[#1d3145] px-4 py-3 md:border-r md:border-b-0 lg:border-r">
+                  <p className="font-mulish text-[12px] font-bold text-[#101b25] dark:text-[#e8edf2]">
                     Guests
                   </p>
-                  <div className="mt-1 flex items-center gap-2 text-[#7e8894]">
+                  <div className="mt-1 flex items-center gap-2 text-[#7e8894] dark:text-[#7d8a96]">
                     <UserRound className="h-3.5 w-3.5" />
                     <select
                       value={guests}
